@@ -6,7 +6,6 @@
   >
 
     <div
-      role="grid"
       class="grid grid-cols-1 gap-4 mx-auto w-full md:grid-cols-2 lg:grid-cols-4 max-w-8xl md:gap-8"
     >
 
@@ -15,7 +14,6 @@
         :key="feature.title"
         class="flex flex-col gap-4 p-4 rounded-lg bg-primary/5"
         :aria-label="feature.title"
-        role="gridcell"
       >
     
         <div class="flex justify-center items-center p-2 rounded-lg bg-primary/5 w-fit">
