@@ -7,8 +7,12 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/eslint',
     '@nuxt/image',
+    '@nuxtjs/supabase',
   ],
   ssr: true,
+  imports: {
+    dirs: ['utils/types'],
+  },
   devtools: { enabled: true },
   app: {
     rootTag: 'main',
@@ -29,5 +33,18 @@ export default defineNuxtConfig({
     config: {
       stylistic: true,
     },
+  },
+  supabase: {
+    url: process.env.NUXT_PUBLIC_SUPABASE_URL,
+    key: process.env.NUXT_PUBLIC_SUPABASE_KEY,
+    serviceKey: process.env.NUXT_SUPABASE_SERVICE_KEY,
+    redirectOptions: {
+      login: '/auth',
+      callback: '/auth/confirm',
+      include: [],
+      exclude: ['/'],
+      saveRedirectToCookie: true,
+    },
+    cookiePrefix: 'keepdotdev-auth-token',
   },
 })

@@ -9,13 +9,16 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint . --fix",
-    "stage": "npx nuxt typecheck && npm run lint && npx nuxt build && git add ."
+    "stage": "npx nuxt typecheck && npm run lint && npx nuxt build && git add .",
+    "supabase:generate": "npx supabase gen types --lang=typescript --project-id vbltsumaosfttexrhzzz > utils/types/database.d.ts",
+    "supabase:generate:local": "npx supabase gen types --lang=typescript --local > utils/types/database.d.ts"
   },
   "dependencies": {
     "@favorodera/nuxt-helper": "^0.0.7",
     "@nuxt/eslint": "^1.4.1",
     "@nuxt/image": "^1.10.0",
     "@nuxt/ui": "^3.2.0",
+    "@nuxtjs/supabase": "^1.5.2",
     "@tailwindcss/vite": "^4.1.10",
     "nuxt": "^3.17.5",
     "pinia": "^3.0.3",

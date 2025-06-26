@@ -12,11 +12,11 @@
       <div
         v-for="feature in features"
         :key="feature.title"
-        class="flex flex-col gap-4 p-4 rounded-lg bg-primary/5"
+        class="flex flex-col gap-4 p-4 rounded-lg bg-neutral-800"
         :aria-label="feature.title"
       >
     
-        <div class="flex justify-center items-center p-2 rounded-lg bg-primary/5 w-fit">
+        <div class="flex justify-center items-center p-2 rounded-lg bg-neutral-800 w-fit">
           <UIcon
             :name="feature.icon"
             class="size-5"
