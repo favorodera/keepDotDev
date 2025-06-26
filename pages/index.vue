@@ -1,10 +1,11 @@
 <template>
 
-  <main>
+  <main class="flex flex-col min-h-screen">
 
     <LandingPageNav />
     <LandingPageHero />
     <LandingPageFeatures />
+    <LandingPageFooter />
     
   </main>
   
