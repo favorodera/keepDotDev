@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+@import "@nuxt/ui";
+
+@theme static {
+    --font-public-sans: 'Public Sans', sans-serif;
+
+    --container-8xl: 90rem;
+}
+  
+:root {
+    --ui-primary: black;
+    scroll-behavior: smooth;
+    scroll-padding-top: 1rem;
+}
+  
+.dark {
+    --ui-primary: white;
+}
+
+#app {
+    font-family: var(--font-public-sans);
+}
+
