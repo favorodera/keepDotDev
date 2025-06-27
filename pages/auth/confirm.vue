@@ -4,6 +4,7 @@
   
     <AuthNav />
     <AuthConfirmCard />
+    <LandingPageFooter />
   
   </main>
   

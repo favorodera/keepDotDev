@@ -4,6 +4,7 @@
 
     <AuthNav />
     <AuthInCard />
+    <LandingPageFooter />
 
   </main>
 
