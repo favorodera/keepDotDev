@@ -23,6 +23,15 @@ export default defineNuxtConfig({
     layoutTransition: { name: 'layout', mode: 'out-in' },
   },
   css: ['~/assets/css/main.css'],
+  experimental: {
+    defaults: {
+      useAsyncData: {
+        deep: true,
+        value: undefined,
+        errorValue: undefined,
+      },
+    },
+  },
   compatibilityDate: '2025-05-15',
   vite: {
     plugins: [

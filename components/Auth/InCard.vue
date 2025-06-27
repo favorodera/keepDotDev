@@ -28,7 +28,6 @@
 
       <div class="flex flex-col gap-2 w-full">
 
-        
         <UButton
           v-for="provider in oAuthProviders"
           :key="provider.name"
@@ -38,7 +37,7 @@
           square
           size="lg"
           variant="outline"
-          @click="provider.action"
+          @click="provider.action()"
         />
 
       </div>
@@ -51,17 +50,13 @@
 
 
 <script setup lang="ts">
-
 const oAuthProviders = [
   {
     name: 'GitHub',
     icon: 'lucide:github',
-    action: () => {},
+    action: async () => await oAuthLogin('github'),
   },
-  
 ]
-
 </script>
-
 
 

@@ -1,17 +1,18 @@
 <template>
 
   <main class="flex flex-col min-h-screen">
-
+  
     <AuthNav />
-    <AuthInCard />
-
+    <AuthConfirmCard />
+  
   </main>
-
+  
 </template>
 
 <script lang="ts" setup>
 useSeoMeta({
-  title: '| Login',
-  description: 'Login to your account',
+  title: '| Confirm Login',
+  description: 'Confirm your login',
 })
 </script>
+  
