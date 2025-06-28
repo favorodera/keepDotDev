@@ -1,5 +1,5 @@
 <template>
-  <UApp>
+  <UApp :toaster="{ position: 'top-right', progress: false, duration: 4000 }">
     <NuxtRouteAnnouncer />
     <NuxtLoadingIndicator color="white" />
     <NuxtPage />

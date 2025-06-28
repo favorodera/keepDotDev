@@ -1,24 +1,40 @@
 <template>
 
-  <section class="flex-auto px-4 py-24 w-full z-2 md:px-6 md:py-32">
+  <section
+    aria-label="Authentication"
+    class="flex-auto px-4 py-24 w-full z-2 md:px-6 md:py-32"
+  >
 
-    <div class="flex flex-col gap-8 justify-center items-center px-4 py-8 mx-auto w-full max-w-lg rounded-lg border border-neutral-800">
+    <div
+      role="main"
+      class="flex flex-col gap-8 justify-center items-center px-4 py-8 mx-auto w-full max-w-lg rounded-lg border border-neutral-800"
+    >
 
-
-      <header class="flex gap-1 justify-center items-center pb-4 w-full border-b border-neutral-800">
+      <header
+        role="banner"
+        class="flex gap-1 justify-center items-center pb-4 w-full border-b border-neutral-800"
+      >
 
         <UIcon
           name="lucide:shield"
           class="size-6"
+          aria-hidden="true"
         />
 
-        <h1 class="text-xl font-semibold leading-none text-center">
+        <h1
+          id="auth-title"
+          class="text-xl font-semibold leading-none text-center"
+        >
           Authentication
         </h1>
 
       </header>
 
-      <div class="flex flex-col gap-2 w-full">
+      <div
+        role="group"
+        aria-labelledby="auth-title"
+        class="flex flex-col gap-2 w-full"
+      >
 
         <UButton
           v-for="provider in oAuthProviders"
@@ -35,7 +51,7 @@
       </div>
 
     </div>
-    
+
   </section>
 
 </template>
