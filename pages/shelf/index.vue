@@ -20,7 +20,7 @@ const { data: userProfileResponse, error: userProfileError, status: userProfileS
   AsyncError
 >(
   'user-profile',
-  () => $fetch('/api/user-profile', { method: 'GET' }),
+  () => $fetch('/api/user-profile', { method: 'GET', headers: useRequestHeaders(['cookie']) }),
 )
 
 watch([userProfileError, userProfileStatus], ([newError, newStatus]) => {

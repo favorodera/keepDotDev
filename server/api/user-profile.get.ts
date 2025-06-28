@@ -1,17 +1,17 @@
-import { serverSupabaseClient } from '#supabase/server'
+import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
 
   try {
-    const authenticatedUser = event.context.authenticatedUser
+    const authenticatedUser = await serverSupabaseUser(event)
 
-    // if (!authenticatedUser) {
-    //   throw createError({
-    //     statusCode: 401,
-    //     statusMessage: 'Unauthorized',
-    //     message: 'You must be logged in to access this resource',
-    //   })
-    // }
+    if (!authenticatedUser) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Unauthorized',
+        message: 'You must be logged in to access this resource',
+      })
+    }
 
     const serverClient = await serverSupabaseClient(event)
 
