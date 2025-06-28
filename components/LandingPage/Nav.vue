@@ -17,7 +17,6 @@
           icon="lucide:lock"
           size="lg"
           to="/auth"
-          aria-label="Login"
         />
       </li>
 

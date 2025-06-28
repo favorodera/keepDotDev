@@ -8,10 +8,11 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/image',
     '@nuxtjs/supabase',
+    '@pinia/nuxt',
   ],
   ssr: true,
   imports: {
-    dirs: ['utils/types'],
+    dirs: ['./utils/**', './stores/**'],
   },
   devtools: { enabled: true },
   app: {
@@ -42,6 +43,9 @@ export default defineNuxtConfig({
     config: {
       stylistic: true,
     },
+  },
+  pinia: {
+    storesDirs: ['./stores/**'],
   },
   supabase: {
     url: process.env.NUXT_PUBLIC_SUPABASE_URL,
