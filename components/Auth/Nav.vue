@@ -4,9 +4,7 @@
     <ul class="flex justify-between items-center mx-auto w-full max-w-8xl">
   
       <li>
-        <ULink to="/">
-          <Logo />
-        </ULink>
+        <Logo />
       </li>
   
     </ul>

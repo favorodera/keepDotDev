@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
     const { data, error } = await serverClient
       .from('users')
-      .select('email,metadata')
+      .select('*')
       .match({ id: authenticatedUser.id, email: authenticatedUser.email })
       .single()
 

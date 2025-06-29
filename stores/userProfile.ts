@@ -1,14 +1,27 @@
 import type { RealtimeChannel } from '@supabase/supabase-js'
+import type { AsyncSuccess, DatabaseUser, AsyncError } from '~/utils/types'
+import { useDynamicFetch } from '#imports'
 
-const userProfileStore = defineStore('userProfile', () => {
+export const useUserProfileStore = defineStore('userProfile', () => {
   const client = useSupabaseClient()
-
-  const user = useSupabaseUser()
+  const toast = useToast()
   const realtimeChannel = ref<RealtimeChannel | null>(null)
-  
 
+  const {
+    data: userProfileResponse,
+    status: userProfileStatus,
+    error: userProfileError,
+    execute: getUserProfile,
+  } = useDynamicFetch<AsyncSuccess<{ user: DatabaseUser }>, AsyncError>('/api/user-profile', {
+    method: 'GET',
+    headers: useRequestHeaders(['cookie']),
+    immediate: false,
+  })
+
+  const userProfile = computed(() => userProfileResponse.value?.user)
+  
   function subscribe() {
-    if (!user.value) return
+    if (!userProfile.value) return
 
     unsubscribe()
 
@@ -17,8 +30,8 @@ const userProfileStore = defineStore('userProfile', () => {
         event: '*',
         schema: 'public',
         table: 'users',
-        filter: `id=eq.${user.value.id}`,
-      }, () => refreshNuxtData('user-profile'))
+        filter: `id=eq.${userProfile.value.id}`,
+      }, () => getUserProfile())
       .subscribe()
   }
 
@@ -29,15 +42,33 @@ const userProfileStore = defineStore('userProfile', () => {
     }
   }
 
+  const isRefresh = computed(() => !!userProfile.value && userProfileStatus.value === 'pending')
+
+  watch([userProfile, userProfileError, userProfileStatus], ([newUserProfile, newError, newStatus]) => {
+    if (newUserProfile) subscribe()
+    if (!newUserProfile) unsubscribe()
+
+    if (newError && newStatus === 'error') {
+      toast.add({
+        title: newError.data?.message || 'Error fetching user profile',
+        color: 'error',
+        icon: 'lucide:alert-circle',
+      })
+    }
+  }, { immediate: true, deep: true })
+
   return {
-    user,
+    userProfile,
+    userProfileStatus,
+    userProfileError,
+    isRefresh,
     subscribe,
     unsubscribe,
+    getUserProfile,
   }
 })
 
-export default userProfileStore
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(userProfileStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useUserProfileStore, import.meta.hot))
 }

@@ -9,9 +9,18 @@
       class="size-5"
     />
 
-    <span class="text-[1.125rem]">
+    <span
+      v-if="!hideText"
+      class="text-[1.125rem]"
+    >
       Keep.Dev
     </span>
   </div>
 
 </template>
+
+<script lang="ts" setup>
+defineProps<{
+  hideText?: boolean
+}>()
+</script>

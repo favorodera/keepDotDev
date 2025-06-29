@@ -10,6 +10,7 @@ export type AsyncError = NuxtError<{
 }>
 
 export type DatabaseUser = {
+  id: string
   email: string
   metadata: {
     name: string
