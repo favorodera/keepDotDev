@@ -1,13 +1,23 @@
 <template>
   <main class="flex flex-col min-h-screen">
 
-    <ShelfNav />
+    <section class="flex w-full flex-auto max-w-8xl mx-auto">
+
+      <ShelfSideBar ref="sideBar" />
+
+      <ShelfNav>
+      
+      </ShelfNav>
+
+    </section>
 
   </main>
 </template>
 
 <script lang="ts" setup>
 const toast = useToast()
+
+const sideBar = useTemplateRef('sideBar')
 
 const { getUserProfile, subscribeToRealtime } = useUserProfileStore()
 const { userProfile, userProfileFetchStatus, userProfileFetchError } = storeToRefs(useUserProfileStore())

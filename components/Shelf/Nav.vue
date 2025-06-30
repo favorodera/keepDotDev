@@ -1,8 +1,17 @@
 <template>
   <nav class="sticky -top-1 z-10 p-4 w-full bg-default">
   
-    <ul class="flex justify-end items-center mx-auto w-full max-w-8xl">
+    <ul class="flex justify-between md:justify-end items-center mx-auto w-full max-w-8xl">
 
+      <li>
+        <UButton
+          class="md:hidden"
+          icon="lucide:menu"
+          variant="ghost"
+        />
+      </li>
+
+      
       <li>
         <UAvatar
           v-if="userProfile && userProfileFetchStatus === 'success'"
@@ -16,7 +25,7 @@
           class="w-9 h-9 rounded-full"
         />
       </li>
-  
+
     </ul>
   
   </nav>
