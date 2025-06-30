@@ -17,7 +17,12 @@
     --ui-primary: white;
 }
 
-#app {
+html, body {
+    overscroll-behavior: contain;
     font-family: var(--font-public-sans);
+}
+
+#app {
+    font-family: inherit;
 }
 

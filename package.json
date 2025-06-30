@@ -21,6 +21,7 @@
     "@pinia/nuxt": "^0.11.1",
     "@supabase/supabase-js": "^2.50.2",
     "@tailwindcss/vite": "^4.1.10",
+    "@vueuse/nuxt": "^13.4.0",
     "nuxt": "^3.17.5",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.3.0",

@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxtjs/supabase',
     '@pinia/nuxt',
+    '@vueuse/nuxt',
   ],
   ssr: true,
   imports: {

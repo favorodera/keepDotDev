@@ -1,13 +1,16 @@
 <template>
-  <main class="flex flex-col min-h-screen">
+  <main
+    ref="pageRef"
+    class="flex flex-col min-h-screen touch-none"
+  >
 
-    <section class="flex w-full flex-auto max-w-8xl mx-auto">
+    <section class="flex overflow-hidden relative flex-auto mx-auto w-full max-w-8xl">
 
-      <ShelfSideBar ref="sideBar" />
+      <ClientOnly>
+        <ShelfSideBar ref="sidebarRef" />
+      </ClientOnly>
 
-      <ShelfNav>
-      
-      </ShelfNav>
+      <ShelfNav />
 
     </section>
 
@@ -15,14 +18,42 @@
 </template>
 
 <script lang="ts" setup>
+const pageRef = useTemplateRef('pageRef')
+const sidebarRef = useTemplateRef('sidebarRef')
+
+const { toggleSidebar, isVisible, isExpanded } = useSideBar()
 const toast = useToast()
 
-const sideBar = useTemplateRef('sideBar')
+const { lengthX } = useSwipe(pageRef, {
+  passive: false,
+  onSwipeEnd(event, direction) {
+    if (!pageRef.value) return
+    
+    const threshold = pageRef.value.offsetWidth * 0.3
+    const absLengthX = Math.abs(lengthX.value)
+    
+    if (absLengthX >= threshold) {
+      if (direction === 'right' && !isVisible.value) {
+        toggleSidebar()
+      } else if (direction === 'left' && isVisible.value) {
+        toggleSidebar()
+      }
+    }
+  },
+  threshold: 25,
+})
+
+onClickOutside(sidebarRef, () => {
+  if (isVisible.value || isExpanded.value) {
+    toggleSidebar()
+  }
+})
+
 
 const { getUserProfile, subscribeToRealtime } = useUserProfileStore()
 const { userProfile, userProfileFetchStatus, userProfileFetchError } = storeToRefs(useUserProfileStore())
 
-await useAsyncData('user-profile', () => getUserProfile(), { server: false })
+await useLazyAsyncData('user-profile', () => getUserProfile())
 
 watch([userProfile, userProfileFetchStatus, userProfileFetchError], ([newUserProfile, newUserProfileFetchStatus, newUserProfileFetchError]) => {
   if (newUserProfile && newUserProfileFetchStatus === 'success') {

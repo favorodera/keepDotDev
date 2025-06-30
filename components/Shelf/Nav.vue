@@ -1,14 +1,24 @@
 <template>
   <nav class="sticky -top-1 z-10 p-4 w-full bg-default">
   
-    <ul class="flex justify-between md:justify-end items-center mx-auto w-full max-w-8xl">
+    <ul class="flex justify-between items-center mx-auto w-full md:justify-end max-w-8xl">
 
       <li>
-        <UButton
-          class="md:hidden"
-          icon="lucide:menu"
-          variant="ghost"
-        />
+        <ClientOnly>
+          <UTooltip
+            :content="{
+              side: 'right',
+            }"
+            text="Open Sidebar"
+          >
+            <UButton
+              class="md:hidden"
+              icon="lucide:panel-left-open"
+              variant="ghost"
+              @click="toggleSidebar()"
+            />
+          </UTooltip>
+        </ClientOnly>
       </li>
 
       
@@ -35,5 +45,7 @@
 
 <script lang="ts" setup>
 const { userProfile, isThisDataRefresh, userProfileFetchStatus } = storeToRefs(useUserProfileStore())
+
+const { toggleSidebar } = useSideBar()
 </script>
-  
+ 
