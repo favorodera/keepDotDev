@@ -10,7 +10,13 @@
         <ShelfSideBar ref="sidebarRef" />
       </ClientOnly>
 
-      <ShelfNav />
+      <section class="flex overflow-hidden flex-col flex-auto">
+
+        <ShelfNav />
+
+        <ShelfBody />
+
+      </section>
 
     </section>
 

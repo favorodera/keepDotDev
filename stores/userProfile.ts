@@ -4,9 +4,9 @@ import type { AsyncSuccess, DatabaseUser, DynamicFetchError } from '~/utils/type
 export const useUserProfileStore = defineStore('userProfile', () => {
   const client = useSupabaseClient()
   const realtimeChannel = ref<RealtimeChannel | null>(null)
+  const userProfile = useState<DatabaseUser | null>('userProfile', () => null)
 
   const {
-    data: userProfileData,
     status: userProfileFetchStatus,
     error: userProfileFetchError,
     execute: getUserProfile,
@@ -14,9 +14,13 @@ export const useUserProfileStore = defineStore('userProfile', () => {
     method: 'GET',
     headers: useRequestHeaders(['cookie']),
     immediate: false,
+    onResponse({ response }) {
+      if (response.ok) {
+        userProfile.value = response._data.user
+      }
+    },
   })
 
-  const userProfile = computed(() => userProfileData.value?.user)
   
   function subscribeToRealtime(userId: string) {
 
