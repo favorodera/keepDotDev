@@ -6,12 +6,12 @@
 
     <UIcon
       name="lucide:library-big"
-      class="size-5"
+      class="size-4"
     />
 
     <span
       v-if="!hideText"
-      class="text-[1.125rem]"
+      class="text-3"
     >
       Keep.Dev
     </span>

@@ -9,6 +9,12 @@ export type AsyncError = NuxtError<{
   message: string
 }>
 
+export type DynamicFetchError = {
+  statusCode: number
+  statusMessage: string
+  message: string
+}
+
 export type DatabaseUser = {
   id: string
   email: string

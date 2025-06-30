@@ -1,6 +1,6 @@
 <template>
 
-  <footer class="p-4 mt-auto w-full border-t border-neutral-800 md:p-6">
+  <footer class="p-4 mt-auto w-full border-t border-default">
 
     <section
       class="w-full max-w-8xl mx-auto flex flex-col items-center gap-4 text-sm text-neutral-400

@@ -10,7 +10,7 @@ export default async function (provider: Provider) {
     const { error } = await client.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `https://keepdotdev.vercel.app/auth/confirm`,
+        redirectTo: `http://localhost:3000/auth/confirm`,
       },
     })
 

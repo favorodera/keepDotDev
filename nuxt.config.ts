@@ -27,9 +27,8 @@ export default defineNuxtConfig({
   experimental: {
     defaults: {
       useAsyncData: {
-        deep: true,
-        value: undefined,
-        errorValue: undefined,
+        value: 'undefined',
+        errorValue: 'undefined',
       },
     },
   },

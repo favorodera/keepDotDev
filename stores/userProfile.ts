@@ -1,69 +1,53 @@
 import type { RealtimeChannel } from '@supabase/supabase-js'
-import type { AsyncSuccess, DatabaseUser, AsyncError } from '~/utils/types'
-import { useDynamicFetch } from '#imports'
+import type { AsyncSuccess, DatabaseUser, DynamicFetchError } from '~/utils/types/app'
 
 export const useUserProfileStore = defineStore('userProfile', () => {
   const client = useSupabaseClient()
-  const toast = useToast()
   const realtimeChannel = ref<RealtimeChannel | null>(null)
 
   const {
-    data: userProfileResponse,
-    status: userProfileStatus,
-    error: userProfileError,
+    data: userProfileData,
+    status: userProfileFetchStatus,
+    error: userProfileFetchError,
     execute: getUserProfile,
-  } = useDynamicFetch<AsyncSuccess<{ user: DatabaseUser }>, AsyncError>('/api/user-profile', {
+  } = useDynamicFetch<AsyncSuccess<{ user: DatabaseUser }>, DynamicFetchError>('/api/user-profile', {
     method: 'GET',
     headers: useRequestHeaders(['cookie']),
     immediate: false,
   })
 
-  const userProfile = computed(() => userProfileResponse.value?.user)
+  const userProfile = computed(() => userProfileData.value?.user)
   
-  function subscribe() {
-    if (!userProfile.value) return
+  function subscribeToRealtime(userId: string) {
 
-    unsubscribe()
+    unsubscribeFromRealtime()
 
     realtimeChannel.value = client.channel('public:users-profile')
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
         table: 'users',
-        filter: `id=eq.${userProfile.value.id}`,
+        filter: `id=eq.${userId}`,
       }, () => getUserProfile())
       .subscribe()
   }
 
-  function unsubscribe() {
+  function unsubscribeFromRealtime() {
     if (realtimeChannel.value) {
       realtimeChannel.value.unsubscribe()
       realtimeChannel.value = null
     }
   }
 
-  const isRefresh = computed(() => !!userProfile.value && userProfileStatus.value === 'pending')
-
-  watch([userProfile, userProfileError, userProfileStatus], ([newUserProfile, newError, newStatus]) => {
-    if (newUserProfile) subscribe()
-    if (!newUserProfile) unsubscribe()
-
-    if (newError && newStatus === 'error') {
-      toast.add({
-        title: newError.data?.message || 'Error fetching user profile',
-        color: 'error',
-        icon: 'lucide:alert-circle',
-      })
-    }
-  }, { immediate: true, deep: true })
+  const isThisDataRefresh = computed(() => !!userProfile.value && userProfileFetchStatus.value === 'pending')
 
   return {
     userProfile,
-    userProfileStatus,
-    userProfileError,
-    isRefresh,
-    subscribe,
-    unsubscribe,
+    userProfileFetchStatus,
+    userProfileFetchError,
+    isThisDataRefresh,
+    subscribeToRealtime,
+    unsubscribeFromRealtime,
     getUserProfile,
   }
 })
