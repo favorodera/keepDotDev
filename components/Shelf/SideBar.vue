@@ -74,7 +74,6 @@
             :to="item.to "
             active-variant="soft"
             exact
-            @mouseenter="!isMobile && !isExpanded ? toggleSidebar() : null"
           />
         </UTooltip>
 
