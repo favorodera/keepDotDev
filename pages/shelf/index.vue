@@ -61,7 +61,16 @@ const { userProfile, userProfileFetchStatus, userProfileFetchError } = storeToRe
 
 await useLazyAsyncData('user-profile', () => getUserProfile())
 
-watch([userProfile, userProfileFetchStatus, userProfileFetchError], ([newUserProfile, newUserProfileFetchStatus, newUserProfileFetchError]) => {
+watch([
+  userProfile,
+  userProfileFetchStatus,
+  userProfileFetchError,
+],
+([
+  newUserProfile,
+  newUserProfileFetchStatus,
+  newUserProfileFetchError,
+]) => {
   if (newUserProfile && newUserProfileFetchStatus === 'success') {
     subscribeToRealtime(newUserProfile.id)
   }

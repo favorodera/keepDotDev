@@ -13,7 +13,7 @@
         'overflow-hidden transition-all flex flex-col border-x border-default bg-default': true,
         'w-16': !isExpanded && !isMobile,
         'w-64': isExpanded && !isMobile,
-        'absolute top-0 left-0 z-20 w-full h-screen': isVisible && isMobile,
+        'absolute top-0 left-0 z-20 w-full h-dvh': isVisible && isMobile,
         'hidden': !isVisible && isMobile,
       }"
       class="transition-all duration-300"
@@ -51,7 +51,7 @@
         class="flex flex-col gap-2 p-4 border-t border-default"
       >
         <UTooltip
-          v-for="item in navigationItems[0]"
+          v-for="item in navigationItems"
           :key="item.label"
           :disabled="isExpanded"
           :content="{
@@ -71,8 +71,7 @@
             ]"
             variant="ghost"
             square
-            :to="'to' in item ? item.to : undefined"
-            :click="'action' in item ? item.action : undefined"
+            :to="item.to "
             active-variant="soft"
             exact
             @mouseenter="!isMobile && !isExpanded ? toggleSidebar() : null"
@@ -83,18 +82,13 @@
 
       <footer class="flex flex-col gap-2 p-4 mt-auto border-t border-default">
         <UTooltip
-          v-for="item in navigationItems[navigationItems.length - 1]"
-          :key="item.label"
           :disabled="isExpanded"
           :content="{
             side: 'right',
           }"
-          :text="item.label"
+          text="Logout"
         >
           <UButton
-            :key="item.label"
-            :click="'action' in item ? item.action : undefined"
-            :to="'to' in item ? item.to : undefined"
             active-variant="soft"
             exact
             :class="[
@@ -103,10 +97,11 @@
                 'pr-6': !isExpanded,
               },
             ]"
-            :label="item.label"
-            :icon="item.icon"
+            label="Logout"
+            icon="lucide:log-out"
             variant="ghost"
             square
+            @click="signOutModal.open()"
           />
         </UTooltip>
       </footer>
@@ -118,22 +113,19 @@
 
 
 <script lang="ts" setup>
-const { isVisible, isExpanded, toggleSidebar, isMobile } = useSideBar()
+import { LazyShelfSignOutModal } from '#components'
 
-const navigationItems = [
-  [
-    {
-      icon: 'lucide:library',
-      label: 'Shelf',
-      to: '/shelf',
-    },
-  ],
-  [
-    {
-      icon: 'lucide:log-out',
-      label: 'Logout',
-      action: () => {},
-    },
-  ],
-]
+const { isVisible, isExpanded, toggleSidebar, isMobile } = useSideBar()
+const overlay = useOverlay()
+
+const signOutModal = overlay.create(LazyShelfSignOutModal)
+
+const navigationItems = ref([
+  {
+    icon: 'lucide:library',
+    label: 'Shelf',
+    to: '/shelf',
+  },
+])
+
 </script>

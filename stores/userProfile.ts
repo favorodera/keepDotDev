@@ -10,18 +10,23 @@ export const useUserProfileStore = defineStore('userProfile', () => {
     status: userProfileFetchStatus,
     error: userProfileFetchError,
     execute: getUserProfile,
-  } = useDynamicFetch<AsyncSuccess<{ user: DatabaseUser }>, DynamicFetchError>('/api/user-profile', {
+  } = useDollarFetch<AsyncSuccess<{ user: DatabaseUser }>, DynamicFetchError>('/api/user-profile', {
     method: 'GET',
     headers: useRequestHeaders(['cookie']),
-    immediate: false,
     onResponse({ response }) {
       if (response.ok) {
         userProfile.value = response._data.user
       }
     },
-  })
+  }, false)
 
-  
+  function unsubscribeFromRealtime() {
+    if (realtimeChannel.value) {
+      realtimeChannel.value.unsubscribe()
+      realtimeChannel.value = null
+    }
+  }
+
   function subscribeToRealtime(userId: string) {
 
     unsubscribeFromRealtime()
@@ -36,12 +41,6 @@ export const useUserProfileStore = defineStore('userProfile', () => {
       .subscribe()
   }
 
-  function unsubscribeFromRealtime() {
-    if (realtimeChannel.value) {
-      realtimeChannel.value.unsubscribe()
-      realtimeChannel.value = null
-    }
-  }
 
   const isThisDataRefresh = computed(() => !!userProfile.value && userProfileFetchStatus.value === 'pending')
 

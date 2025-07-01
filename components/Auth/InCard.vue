@@ -41,6 +41,7 @@
           :key="provider.name"
           :label="provider.name"
           :icon="provider.icon"
+          loading-auto
           block
           square
           variant="outline"
@@ -57,12 +58,13 @@
 
 
 <script setup lang="ts">
+const { signInWithOAuth } = useAuth()
 
 const oAuthProviders = [
   {
     name: 'Login with GitHub',
     icon: 'lucide:github',
-    action: async () => await oAuthLogin('github'),
+    action: async () => await signInWithOAuth('github'),
   },
 ]
 </script>
