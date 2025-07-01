@@ -27,7 +27,7 @@
 const pageRef = useTemplateRef('pageRef')
 const sidebarRef = useTemplateRef('sidebarRef')
 
-const { toggleSidebar, isVisible, isExpanded } = useSideBar()
+const { toggleSidebar, isVisible } = useSideBar()
 const toast = useToast()
 
 const { lengthX } = useSwipe(pageRef, {
@@ -49,11 +49,6 @@ const { lengthX } = useSwipe(pageRef, {
   threshold: 25,
 })
 
-onClickOutside(sidebarRef, () => {
-  if (isVisible.value || isExpanded.value) {
-    toggleSidebar()
-  }
-})
 
 
 const { getUserProfile, subscribeToRealtime } = useUserProfileStore()

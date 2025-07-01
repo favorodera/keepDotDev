@@ -12,10 +12,10 @@
 
       <header
         role="banner"
-        class="flex gap-6 justify-center flex-col items-center pb-4 w-full border-b border-neutral-800"
+        class="flex flex-col gap-6 justify-center items-center pb-4 w-full border-b border-neutral-800"
       >
 
-        <div class="flex gap-1 justify-center items-center bg-elevated rounded-lg p-2">
+        <div class="flex gap-1 justify-center items-center p-2 rounded-lg bg-elevated">
           <Logo />
         </div>
 
