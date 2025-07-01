@@ -13,19 +13,18 @@
   
       <header
         role="banner"
-        class="flex gap-1 justify-center items-center pb-4 w-full border-b border-neutral-800"
+        class="flex gap-6 justify-center flex-col items-center pb-4 w-full border-b border-neutral-800"
       >
   
-        <UIcon
-          name="lucide:shield"
-          class="size-6"
-        />
+        <div class="flex gap-1 justify-center items-center bg-elevated rounded-lg p-2">
+          <Logo />
+        </div>
   
         <h1
           id="auth-confirmation-title"
-          class="text-xl font-semibold leading-none text-center"
+          class="text-lg font-medium text-center"
         >
-          Authentication
+          {{ user ? 'Authentication successful!' : error.name ? 'Authentication failed!' : 'Confirming authentication...' }}
         </h1>
   
       </header>
@@ -45,10 +44,6 @@
             'size-16': true,
           }"
         />
-
-        <p class="text-sm text-center text-neutral-400">
-          {{ user ? 'Authentication successful!' : 'Confirming authentication...' }}
-        </p>
 
       </div>
 

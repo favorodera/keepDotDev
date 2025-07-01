@@ -12,20 +12,18 @@
 
       <header
         role="banner"
-        class="flex gap-1 justify-center items-center pb-4 w-full border-b border-neutral-800"
+        class="flex gap-6 justify-center flex-col items-center pb-4 w-full border-b border-neutral-800"
       >
 
-        <UIcon
-          name="lucide:shield"
-          class="size-6"
-          aria-hidden="true"
-        />
+        <div class="flex gap-1 justify-center items-center bg-elevated rounded-lg p-2">
+          <Logo />
+        </div>
 
         <h1
           id="auth-title"
-          class="text-xl font-semibold leading-none text-center"
+          class="text-lg font-medium text-center"
         >
-          Authentication
+          Sign in to your account
         </h1>
 
       </header>
@@ -39,12 +37,11 @@
         <UButton
           v-for="provider in oAuthProviders"
           :key="provider.name"
-          :label="provider.name"
+          :label="`Sign in with ${provider.name}`"
           :icon="provider.icon"
           loading-auto
           block
           square
-          variant="outline"
           @click="provider.action()"
         />
 
@@ -62,7 +59,7 @@ const { signInWithOAuth } = useAuth()
 
 const oAuthProviders = [
   {
-    name: 'Login with GitHub',
+    name: 'GitHub',
     icon: 'lucide:github',
     action: async () => await signInWithOAuth('github'),
   },
