@@ -88,7 +88,7 @@ watch(
 
     if (newUser && !error.value.name) {
       const path = redirectInfo.pluck()
-      return navigateTo(path || '/shelf')
+      return navigateTo(path || '/library')
     }
   },
   { immediate: true },

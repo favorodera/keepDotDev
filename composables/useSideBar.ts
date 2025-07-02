@@ -26,6 +26,8 @@ export default function () {
     isVisible,
     isExpanded,
     toggleSidebar,
+    toggleVisibility,
+    toggleExpansion,
     isMobile,
   }
 }

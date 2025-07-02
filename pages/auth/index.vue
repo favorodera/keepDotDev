@@ -11,6 +11,10 @@
 </template>
 
 <script lang="ts" setup>
+definePageMeta({
+  colorMode: 'dark',
+})
+
 useSeoMeta({
   title: '| Login',
   description: 'Login to your account',

@@ -51,7 +51,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/auth',
       callback: '/auth/confirm',
-      include: ['/shelf'],
+      include: ['/library'],
       exclude: ['/'],
       saveRedirectToCookie: true,
     },
