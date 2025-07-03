@@ -3,11 +3,10 @@
   <footer class="p-4 mt-auto w-full border-t border-default">
 
     <section
-      class="w-full max-w-8xl mx-auto flex flex-col items-center gap-4 text-sm text-neutral-400
-             md:flex-row md:justify-between md:items-center"
+      class="flex flex-col gap-4 items-center mx-auto w-full text-sm max-w-8xl text-muted md:flex-row md:justify-between md:items-center"
     >
 
-      <p class="text-center md:text-left w-full md:w-auto">
+      <p class="w-full text-center md:text-left md:w-auto">
         Released under the MIT License
       </p>
 

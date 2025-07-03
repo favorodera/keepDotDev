@@ -9,6 +9,50 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      shelves: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          items: Json[]
+          name: string
+          owner_id: string
+          owner_metadata: Json
+          tags: Json[]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          items?: Json[]
+          name: string
+          owner_id: string
+          owner_metadata?: Json
+          tags: Json[]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          items?: Json[]
+          name?: string
+          owner_id?: string
+          owner_metadata?: Json
+          tags?: Json[]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'shelves_owner_id_fkey'
+            columns: ['owner_id']
+            isOneToOne: false
+            referencedRelation: 'users'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       users: {
         Row: {
           email: string

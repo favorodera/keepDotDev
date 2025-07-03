@@ -25,3 +25,28 @@ export type DatabaseUser = {
     user_name: string
   }
 }
+
+export type Tag = string
+
+export type ShelfItem = {
+  id: number
+  name: string
+  description: string
+  created_at: string
+  updated_at: string
+  shelf: Pick<Shelf, 'id' | 'owner_id' | 'owner_metadata' | 'name' | 'description'>
+  content: string
+  tags: Tag[]
+}
+
+export type Shelf = {
+  owner_id: string
+  owner_metadata: Pick<DatabaseUser, 'metadata'>
+  id: number
+  name: string
+  description: string
+  created_at: string
+  updated_at: string
+  items: ShelfItem[]
+  tags: Tag[]
+}

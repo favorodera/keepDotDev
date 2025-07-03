@@ -29,7 +29,7 @@
          
         </h1>
 
-        <p class="text-base text-neutral-300 z-2">
+        <p class="text-base text-muted z-2">
           Effortlessly organize, document, and share your code snippets.
         </p>
 

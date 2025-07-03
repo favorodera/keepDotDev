@@ -24,14 +24,14 @@
       
       <li>
         <UAvatar
-          v-if="userProfile && userProfileFetchStatus === 'success'"
-          :src="userProfile.metadata.avatar_url"
-          :alt="userProfile.metadata.full_name"
+          v-if="user"
+          :src="user.user_metadata.avatar_url"
+          :alt="user.user_metadata.full_name"
           size="md"
         />
 
         <USkeleton
-          v-else-if="userProfileFetchStatus === 'pending' && !isThisDataRefresh"
+          v-else-if="!user"
           class="w-9 h-9 rounded-full"
         />
       </li>
@@ -44,7 +44,7 @@
 
 
 <script lang="ts" setup>
-const { userProfile, isThisDataRefresh, userProfileFetchStatus } = storeToRefs(useUserProfileStore())
+const user = useSupabaseUser()
 
 const { toggleSidebar } = useSideBar()
 </script>

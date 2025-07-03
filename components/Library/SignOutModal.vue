@@ -2,6 +2,7 @@
 
   <UModal
     title="Sign Out"
+    description="Sign out of your account"
     modal
     :ui="{
       content: 'max-w-sm',

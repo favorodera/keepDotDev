@@ -17,10 +17,9 @@ export default defineEventHandler(async (event) => {
     const serverClient = await serverSupabaseClient<Database>(event)
 
     const { data, error } = await serverClient
-      .from('users')
+      .from('shelves')
       .select('*')
-      .match({ id: authenticatedUser.id, email: authenticatedUser.email })
-      .single()
+      .eq('owner_id', authenticatedUser.id)
 
     if (error) {
       throw createError({
@@ -32,11 +31,10 @@ export default defineEventHandler(async (event) => {
 
     return {
       statusMessage: 'OPERATION_SUCCESSFUL',
-      message: 'User profile fetched successfully',
-      user: data,
+      message: 'Shelves fetched successfully',
+      shelves: data,
     }
   } catch (error) {
     return catchError(error)
   }
-
 })

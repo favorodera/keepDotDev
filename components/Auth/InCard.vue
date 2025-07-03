@@ -16,7 +16,10 @@
       >
 
         <div class="flex gap-1 justify-center items-center p-2 rounded-lg bg-elevated">
-          <Logo />
+          <Logo
+            hide-text
+            icon-class="size-8"
+          />
         </div>
 
         <h1

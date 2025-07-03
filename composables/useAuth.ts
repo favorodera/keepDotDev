@@ -32,7 +32,7 @@ export default function () {
       client.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `http://localhost:3000/auth/confirm`,
+          redirectTo: `https://keepdotdev.vercel.app/auth/confirm`,
         },
       }),
     )

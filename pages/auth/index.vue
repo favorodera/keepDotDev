@@ -16,7 +16,6 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: '| Login',
-  description: 'Login to your account',
+  title: '| Authentication',
 })
 </script>

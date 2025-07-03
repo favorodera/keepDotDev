@@ -1,5 +1,12 @@
+import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 import type { Database } from '~/utils/types/database'
+
+const bodySchema = z.object({
+  name: z.string().min(1),
+  description: z.string().min(1),
+  tags: z.array(z.string()).min(1),
+})
 
 export default defineEventHandler(async (event) => {
 
@@ -14,13 +21,24 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    const { name, description, tags } = await readValidatedBody(event, body => bodySchema.parse(body))
+
     const serverClient = await serverSupabaseClient<Database>(event)
 
-    const { data, error } = await serverClient
-      .from('users')
-      .select('*')
-      .match({ id: authenticatedUser.id, email: authenticatedUser.email })
-      .single()
+    const { error } = await serverClient
+      .from('shelves')
+      .insert({
+        name,
+        description,
+        tags,
+        owner_id: authenticatedUser.id,
+        owner_metadata: {
+          name: authenticatedUser.user_metadata.name,
+          full_name: authenticatedUser.user_metadata.full_name,
+          avatar_url: authenticatedUser.user_metadata.avatar_url,
+          user_name: authenticatedUser.user_metadata.user_name,
+        },
+      })
 
     if (error) {
       throw createError({
@@ -32,11 +50,9 @@ export default defineEventHandler(async (event) => {
 
     return {
       statusMessage: 'OPERATION_SUCCESSFUL',
-      message: 'User profile fetched successfully',
-      user: data,
+      message: 'Shelf created successfully',
     }
   } catch (error) {
     return catchError(error)
   }
-
 })

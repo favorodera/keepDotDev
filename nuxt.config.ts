@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   ],
   ssr: true,
   imports: {
-    dirs: ['./utils/**', './stores/**'],
+    dirs: ['utils/**', 'stores/**'],
   },
   devtools: { enabled: true },
   app: {

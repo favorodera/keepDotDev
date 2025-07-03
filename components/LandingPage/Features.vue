@@ -31,7 +31,7 @@
             {{ feature.title }}
           </h2>
 
-          <p class="text-base text-neutral-400">
+          <p class="text-base text-muted">
             {{ feature.description }}
           </p>
         

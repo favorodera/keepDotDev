@@ -8,16 +8,16 @@
     <section class="flex overflow-hidden relative flex-auto mx-auto w-full max-w-8xl">
 
       <ClientOnly fallback-tag="aside">
-        <ShelfSideBar />
+        <LibrarySideBar />
 
         <template #fallback>
-          <aside class="overflow-hidden hidden  flex-col flex-auto w-full transition-all max-w-16 border-x border-default bg-default md:relative h-dvh md:flex" />
+          <aside class="hidden overflow-hidden flex-col flex-auto w-full transition-all max-w-16 border-x border-default bg-default md:relative h-dvh md:flex" />
         </template>
         
       </ClientOnly>
 
       <section class="flex overflow-hidden flex-col flex-auto">
-        <ShelfNav />
+        <LibraryNav />
 
         <slot />
       </section>
@@ -33,7 +33,6 @@
 const pageRef = useTemplateRef('pageRef')
 
 const { toggleSidebar, isVisible } = useSideBar()
-const toast = useToast()
 
 const { lengthX } = useSwipe(pageRef, {
   passive: false,
@@ -53,36 +52,4 @@ const { lengthX } = useSwipe(pageRef, {
   },
   threshold: 25,
 })
-
-
-
-const { getUserProfile, subscribeToRealtime } = useUserProfileStore()
-const { userProfile, userProfileFetchStatus, userProfileFetchError } = storeToRefs(useUserProfileStore())
-
-await useLazyAsyncData('user-profile', () => getUserProfile())
-
-watch([
-  userProfile,
-  userProfileFetchStatus,
-  userProfileFetchError,
-],
-([
-  newUserProfile,
-  newUserProfileFetchStatus,
-  newUserProfileFetchError,
-]) => {
-  if (newUserProfile && newUserProfileFetchStatus === 'success') {
-    subscribeToRealtime(newUserProfile.id)
-  }
-
-  if (newUserProfileFetchError && newUserProfileFetchStatus === 'error') {
-    toast.add({
-      title: newUserProfileFetchError.data?.message || 'Error fetching profile data',
-      color: 'error',
-      icon: 'lucide:alert-circle',
-    })
-  }
-
-
-}, { immediate: true, deep: true })
 </script>

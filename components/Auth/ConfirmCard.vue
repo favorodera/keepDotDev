@@ -17,7 +17,10 @@
       >
   
         <div class="flex gap-1 justify-center items-center bg-elevated rounded-lg p-2">
-          <Logo />
+          <Logo
+            hide-text
+            icon-class="size-8"
+          />
         </div>
   
         <h1
@@ -39,7 +42,7 @@
         <UIcon
           :name="user ? 'lucide:check-circle':'lucide:loader'"
           :class="{
-            'animate-spin text-neutral-400': !user,
+            'animate-spin text-muted': !user,
             'text-primary': user,
             'size-16': true,
           }"

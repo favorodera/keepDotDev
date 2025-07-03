@@ -9,7 +9,7 @@
   >
     <div
       v-if="isVisible && isMobile"
-      class="fixed top-0 left-0 z-20 w-full h-dvh bg-elevated/75 backdrop-blur-sm transition-all duration-300"
+      class="fixed top-0 left-0 z-20 w-full transition-all duration-300 h-dvh bg-elevated/75"
       @click="toggleSidebar"
     />
   </Transition>
@@ -25,10 +25,10 @@
     <aside
       v-if="isVisible || !isMobile"
       :class="{
-        'overflow-hidden transition-all flex flex-col border-x border-default bg-default': true,
-        'w-16': !isExpanded && !isMobile,
-        'w-2xs': isExpanded && !isMobile,
-        'absolute top-0 left-0 z-20 w-full max-w-2xs h-dvh': isVisible && isMobile,
+        'overflow-hidden transition-all w-full flex flex-col border-x border-default bg-default': true,
+        'max-w-16': !isExpanded && !isMobile,
+        'max-w-2xs': isExpanded && !isMobile,
+        'absolute top-0 left-0 z-20  max-w-2xs h-dvh': isVisible && isMobile,
         'hidden': !isVisible && isMobile,
       }"
       class="transition-all duration-300"
@@ -78,7 +78,6 @@
             icon="lucide:plus"
             variant="solid"
             square
-            to="/library/new"
             :class="[
               'overflow-hidden transition-all duration-300',
               {
@@ -86,6 +85,7 @@
               },
             ]"
             exact
+            @click="newShelfModal.open()"
           />
         </UTooltip>
 
@@ -199,12 +199,13 @@
 
 
 <script lang="ts" setup>
-import { LazyShelfSignOutModal } from '#components'
+import { LazyLibraryNewShelfModal, LazyLibrarySignOutModal } from '#components'
 
 const { isVisible, isExpanded, toggleSidebar, isMobile, toggleVisibility, toggleExpansion } = useSideBar()
 const overlay = useOverlay()
 
-const signOutModal = overlay.create(LazyShelfSignOutModal)
+const signOutModal = overlay.create(LazyLibrarySignOutModal)
+const newShelfModal = overlay.create(LazyLibraryNewShelfModal)
 
 watch([isVisible, isExpanded, isMobile], ([visible, expanded, mobile]) => {
   if (visible && !mobile) {

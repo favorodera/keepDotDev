@@ -1,13 +1,14 @@
 <template>
   <main class="flex overflow-hidden flex-col flex-auto justify-center items-center">
 
-    <ShelfBody />
+    <LibraryShelves />
 
   </main>
 </template>
 
 <script lang="ts" setup>
-const { userProfile } = storeToRefs(useUserProfileStore())
+const user = useSupabaseUser()
+
 definePageMeta({
   layout: 'authenticated',
   colorMode: 'dark',
@@ -15,11 +16,21 @@ definePageMeta({
 
 useSeoMeta({
   title: () => {
-    if (userProfile.value) {
-      return `| ${userProfile.value?.metadata.full_name} | Library`
+    if (user.value) {
+      return `| ${user.value.user_metadata.full_name} | Library`
     }
     return '| Library'
   },
 })
+
+onMounted(() => {
+  shelvesStore().subscribeToRealtime()
+})
+
+onUnmounted(() => {
+  shelvesStore().unsubscribeFromRealtime()
+})
+
+
 </script>
 

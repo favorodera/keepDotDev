@@ -16,8 +16,7 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: '| Confirm Login',
-  description: 'Confirm your login',
+  title: '| Confirm Authentication',
 })
 </script>
   

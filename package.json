@@ -9,11 +9,10 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint . --fix",
-    "stage": "npx nuxt typecheck && npm run lint && npx nuxt build && git add .",
     "supabase:generate": "npx supabase gen types typescript --project-id vbltsumaosfttexrhzzz --schema public > utils/types/database.d.ts"
   },
   "dependencies": {
-    "@favorodera/nuxt-helper": "^1.0.0",
+    "@favorodera/nuxt-helper": "^1.0.1",
     "@nuxt/eslint": "^1.4.1",
     "@nuxt/image": "^1.10.0",
     "@nuxt/ui": "^3.2.0",
