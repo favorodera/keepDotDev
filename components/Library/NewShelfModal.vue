@@ -88,6 +88,7 @@
         label="Cancel"
         variant="outline"
         square
+        :disabled="status === 'pending'"
         block
         size="lg"
         @click="emit('close', false)"

@@ -35,7 +35,7 @@
           <ULink
             v-for="shelf in paginatedShelves"
             :key="shelf.id"
-            class="flex flex-col gap-2 p-4 rounded-md border transition-all duration-300 shelf-card hover:shadow border-default hover:shadow-neutral-700"
+            class="flex flex-col gap-2 p-4 relative rounded-md border transition-all duration-300 shelf-card hover:shadow border-default hover:shadow-neutral-700"
             :to="`/library/shelf-${shelf.id}`"
           >
 
@@ -57,6 +57,9 @@
                 </span>
               </div>
             </header>
+
+            <!-- Dropdown for edit,delete,star -->
+       
 
           </ULink>
         </TransitionGroup>

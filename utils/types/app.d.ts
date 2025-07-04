@@ -49,4 +49,5 @@ export type Shelf = {
   updated_at: string
   items: ShelfItem[]
   tags: Tag[]
+  starred: boolean
 }

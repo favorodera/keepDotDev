@@ -17,7 +17,12 @@ const shelvesStore = defineStore('all-shelves', () => {
     headers: useRequestHeaders(['cookie']),
     onResponse({ response }) {
       if (response.ok) {
-        shelves.value = response._data.shelves as Shelf[]
+        const responseShelves = response._data.shelves as Shelf[]
+        shelves.value = responseShelves.sort((shelfA, shelfB) => {
+          if (shelfA.starred && !shelfB.starred) return -1
+          if (!shelfA.starred && shelfB.starred) return 1
+          return new Date(shelfB.updated_at).getTime() - new Date(shelfA.updated_at).getTime()
+        })
       }
     },
   }, false)
