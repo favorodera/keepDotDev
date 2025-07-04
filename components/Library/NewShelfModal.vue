@@ -122,7 +122,7 @@ const { isVisible } = useSideBar()
 
 const { execute, status, error } = useDollarFetch<AsyncSuccess, AsyncError>('/api/shelves/new', {
   method: 'POST',
-}, false) // Instantiate the request but don't execute it immediately
+}, false)
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required!'),
@@ -137,7 +137,7 @@ const state = reactive<z.infer<typeof schema>>({
 })
 
 async function onSubmit() {
-  await execute({ body: state }) // Execute the request with the state
+  await execute({ body: state })
 }
 
 watch([status, error], ([newStatus, newError]) => {
