@@ -33,6 +33,7 @@
               root: 'w-full',
             }"
             placeholder="Enter a name for the shelf"
+            :disabled="status === 'pending'"
             size="lg"
           />
         </UFormField>
@@ -49,6 +50,7 @@
             v-model="state.description"
             :rows="2"
             placeholder="Enter a detailed description of the shelf"
+            :disabled="status === 'pending'"
             size="lg"
             :ui="{
               root: 'w-full',
@@ -73,6 +75,7 @@
             }"
             placeholder="Enter tags for the shelf"
             size="lg"
+            :disabled="status === 'pending'"
           />
         </UFormField>
       </UForm>
@@ -119,7 +122,7 @@ const { isVisible } = useSideBar()
 
 const { execute, status, error } = useDollarFetch<AsyncSuccess, AsyncError>('/api/shelves/new', {
   method: 'POST',
-}, false)
+}, false) // Instantiate the request but don't execute it immediately
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required!'),
@@ -134,7 +137,7 @@ const state = reactive<z.infer<typeof schema>>({
 })
 
 async function onSubmit() {
-  await execute({ body: state })
+  await execute({ body: state }) // Execute the request with the state
 }
 
 watch([status, error], ([newStatus, newError]) => {
