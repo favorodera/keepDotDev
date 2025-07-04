@@ -159,6 +159,11 @@
             to="/library"
             active-variant="soft"
             exact
+            @click="() => {
+              if (isMobile) {
+                toggleSidebar()
+              }
+            }"
           />
         </UTooltip>
 

@@ -117,6 +117,7 @@ import type { AsyncError, AsyncSuccess } from '~/utils/types/app'
 
 const toast = useToast()
 const emit = defineEmits<{ close: [boolean] }>()
+const { toggleSidebar, isMobile } = useSideBar()
 
 const { execute, status, error } = useDollarFetch<AsyncSuccess, AsyncError>('/api/shelves/new', {
   method: 'POST',
@@ -140,6 +141,10 @@ async function onSubmit() {
 
 watch([status, error], ([newStatus, newError]) => {
   if (newStatus === 'success') {
+    if (isMobile) {
+      toggleSidebar()
+    }
+
     emit('close', false)
     toast.add({
       title: `Shelf "${state.name}" created`,
