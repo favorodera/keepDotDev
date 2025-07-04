@@ -13,7 +13,7 @@
   
       <header
         role="banner"
-        class="flex gap-6 justify-center flex-col items-center pb-4 w-full border-b border-neutral-800"
+        class="flex gap-6 justify-center flex-col items-center pb-4 w-full border-b border-default"
       >
   
         <div class="flex gap-1 justify-center items-center bg-elevated rounded-lg p-2">

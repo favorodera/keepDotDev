@@ -43,7 +43,6 @@
           required
           description="A detailed description of the shelf"
           help="Max 100 characters"
-          hint="Optional"
         >
         
           <UTextarea
@@ -64,7 +63,6 @@
           label="Tags"
           required
           description="Tags to help you organize your shelf"
-          hint="Optional"
           help="Max 5 tags"
         >
     
@@ -117,7 +115,7 @@ import type { AsyncError, AsyncSuccess } from '~/utils/types/app'
 
 const toast = useToast()
 const emit = defineEmits<{ close: [boolean] }>()
-const { toggleSidebar, isMobile } = useSideBar()
+const { isVisible } = useSideBar()
 
 const { execute, status, error } = useDollarFetch<AsyncSuccess, AsyncError>('/api/shelves/new', {
   method: 'POST',
@@ -141,9 +139,7 @@ async function onSubmit() {
 
 watch([status, error], ([newStatus, newError]) => {
   if (newStatus === 'success') {
-    if (isMobile) {
-      toggleSidebar()
-    }
+    isVisible.value = false
 
     emit('close', false)
     toast.add({

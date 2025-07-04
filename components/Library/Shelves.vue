@@ -4,6 +4,18 @@
     class="flex flex-col flex-auto items-start p-4 w-full"
   >
 
+    <UButton
+      size="xs"
+      :label="shelvesFetchStatus === 'pending' && isThisDataRefresh ? 'Refreshing...' : 'Refresh'"
+      icon="lucide:refresh-cw"
+      :loading="shelvesFetchStatus === 'pending' && isThisDataRefresh"
+      :disabled="shelvesFetchStatus === 'pending'"
+      variant="ghost"
+      color="neutral"
+      class="mb-4 ml-auto"
+      @click="refresh()"
+    />
+
     <template v-if="(shelvesFetchStatus === 'success' || isThisDataRefresh) && shelves.length > 0">
       <section class="flex flex-col flex-auto gap-4 justify-between w-full">
 
@@ -137,7 +149,7 @@ const { shelves, shelvesFetchStatus, shelvesFetchError, isThisDataRefresh } = st
 
 const newShelfModal = overlay.create(LazyLibraryNewShelfModal)
 
-await useLazyAsyncData('all-shelves', () => getShelves())
+const { refresh } = await useLazyAsyncData('all-shelves', () => getShelves())
 
 const shelvesGridContainer = useTemplateRef('shelvesGridContainer')
 const itemsPerPage = ref(1)
