@@ -76,7 +76,7 @@
           <UButton
             label="New Shelf"
             icon="lucide:plus"
-            variant="solid"
+            variant="soft"
             square
             :class="[
               'overflow-hidden transition-all duration-300',
@@ -99,7 +99,7 @@
           <UButton
             label="Mega Search"
             icon="lucide:search"
-            variant="outline"
+            variant="ghost"
             :class="[
               'overflow-hidden transition-all duration-300',
               {
@@ -120,7 +120,7 @@
           <UButton
             label="Ask AI"
             icon="lucide:bot"
-            variant="outline"
+            variant="ghost"
             :class="[
               'overflow-hidden transition-all duration-300',
               {
@@ -154,10 +154,10 @@
                 'pr-6': !isExpanded,
               },
             ]"
-            variant="outline"
+            variant="ghost"
             square
             to="/library"
-            active-variant="subtle"
+            active-variant="soft"
             exact
           />
         </UTooltip>
