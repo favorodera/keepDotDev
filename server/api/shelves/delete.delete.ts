@@ -1,8 +1,12 @@
+import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 import type { Database } from '~/utils/types/database'
 
-export default defineEventHandler(async (event) => {
+const querySchema = z.object({
+  shelfId: z.string(),
+})
 
+export default defineEventHandler(async (event) => {
   try {
     const authenticatedUser = await serverSupabaseUser(event)
 
@@ -14,12 +18,15 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    const { shelfId } = await getValidatedQuery(event, query => querySchema.parse(query))
+
     const serverClient = await serverSupabaseClient<Database>(event)
 
-    const { data, error } = await serverClient
-      .from('users')
-      .select('*')
-      .match({ id: authenticatedUser.id, email: authenticatedUser.email })
+    const { error, data } = await serverClient
+      .from('shelves')
+      .delete()
+      .match({ id: shelfId, owner_id: authenticatedUser.id })
+      .select('name')
       .single()
 
     if (error) {
@@ -32,11 +39,9 @@ export default defineEventHandler(async (event) => {
 
     return {
       statusMessage: 'OPERATION_SUCCESSFUL',
-      message: 'User profile fetched successfully',
-      user: data,
+      message: `Shelf "${data.name}" deleted successfully`,
     }
   } catch (error) {
     return catchError(error)
   }
-
 })

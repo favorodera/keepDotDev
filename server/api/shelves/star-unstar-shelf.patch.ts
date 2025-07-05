@@ -3,8 +3,10 @@ import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 import type { Database } from '~/utils/types/database'
 
 const bodySchema = z.object({
-  action: z.enum(['star', 'unstar']),
-  shelfId: z.string(),
+  action: z.enum(['star', 'unstar'], {
+    errorMap: () => ({ message: 'Action is required' }),
+  }),
+  shelfId: z.string().nonempty('Shelf ID is required'),
 })
 
 export default defineEventHandler(async (event) => {
@@ -25,10 +27,12 @@ export default defineEventHandler(async (event) => {
 
     const serverClient = await serverSupabaseClient<Database>(event)
 
-    const { error } = await serverClient
+    const { error, data } = await serverClient
       .from('shelves')
       .update({ starred: action === 'star' })
       .match({ id: shelfId, owner_id: authenticatedUser.id })
+      .select('name')
+      .single()
 
     if (error) {
       throw createError({
@@ -40,7 +44,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       statusMessage: 'OPERATION_SUCCESSFUL',
-      message: `Shelf ${action === 'star' ? 'starred' : 'unstarred'} successfully`,
+      message: `Shelf "${data.name}" ${action === 'star' ? 'starred' : 'unstarred'} successfully`,
     }
   } catch (error) {
     return catchError(error)

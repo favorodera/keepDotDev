@@ -1,8 +1,7 @@
 <template>
 
   <UModal
-    title="New Shelf"
-    :description="`Create a new shelf to organize your documentation`"
+    :title="shelf ? 'Edit Shelf' : 'New Shelf'"
     :dismissible="false"
     modal
     :ui="{
@@ -11,10 +10,20 @@
     :close="{ onClick: () => emit('close', false) }"
   >
 
+    <template #description>
+      <span v-if="shelf">
+        Edit <span class="font-bold">{{ shelf.name }}</span> shelf
+      </span>
+      <span v-else>
+        Create a new shelf to organize your documentation
+      </span>
+    </template>
+
     <template #body>
 
       <UForm
-        id="new-shelf-form"
+        id="new-and-edit-shelf-form"
+        ref="formRef"
         :state
         :schema
         class="space-y-4"
@@ -97,9 +106,9 @@
       <UButton
         label="Create"
         type="submit"
-        form="new-shelf-form"
+        form="new-and-edit-shelf-form"
         :loading="status === 'pending'"
-        :disabled="status === 'pending'"
+        :disabled="status === 'pending' || !isNewStateDifferentFromOldState"
         color="primary"
         square
         block
@@ -115,14 +124,20 @@
 
 <script lang="ts" setup>
 import z from 'zod'
-import type { AsyncError, AsyncSuccess } from '~/utils/types/app'
+import type { AsyncError, AsyncSuccess, Shelf } from '~/utils/types/app'
+
+const props = defineProps<{
+  shelf?: Pick<Shelf, 'name' | 'description' | 'tags' | 'id' | 'owner_id'>
+}>()
 
 const toast = useToast()
 const emit = defineEmits<{ close: [boolean] }>()
 const { isVisible } = useSideBar()
 
-const { execute, status, error } = useDollarFetch<AsyncSuccess, AsyncError>('/api/shelves/new', {
-  method: 'POST',
+const formRef = useTemplateRef('formRef')
+
+const { execute, status, error } = useDollarFetch<AsyncSuccess, AsyncError>(props.shelf ? '/api/shelves/edit' : '/api/shelves/new', {
+  method: props.shelf ? 'PATCH' : 'POST',
 }, false)
 
 const schema = z.object({
@@ -131,14 +146,32 @@ const schema = z.object({
   tags: z.array(z.string()).min(1, 'Tags are required!').max(5, 'Max 5 tags!'),
 })
 
-const state = reactive<z.infer<typeof schema>>({
-  name: '',
-  description: '',
-  tags: [],
+const state = reactive<z.output<typeof schema>>({
+  name: props.shelf?.name || '',
+  description: props.shelf?.description || '',
+  tags: props.shelf?.tags || [],
+})
+
+const isNewStateDifferentFromOldState = computed(() => {
+  if (!props.shelf) return true
+  return state.name !== props.shelf.name
+    || state.description !== props.shelf.description
+    || JSON.stringify(state.tags) !== JSON.stringify(props.shelf.tags)
+})
+
+const whatToSend = computed(() => {
+  if (!props.shelf) return state
+
+  const update: Record<string, unknown> = { shelfId: props.shelf.id }
+  if (state.name !== props.shelf.name) update.name = state.name
+  if (state.description !== props.shelf.description) update.description = state.description
+  if (JSON.stringify(state.tags) !== JSON.stringify(props.shelf.tags)) update.tags = state.tags
+
+  return update
 })
 
 async function onSubmit() {
-  await execute({ body: state })
+  await execute({ body: whatToSend.value })
 }
 
 watch([status, error], ([newStatus, newError]) => {
@@ -147,13 +180,13 @@ watch([status, error], ([newStatus, newError]) => {
 
     emit('close', false)
     toast.add({
-      title: `Shelf "${state.name}" created`,
+      title: props.shelf ? `Shelf "${props.shelf.name}" updated` : `Shelf "${state.name}" created`,
       color: 'success',
       icon: 'lucide:check-circle',
     })
   } else if (newError && newStatus === 'error') {
     toast.add({
-      title: newError.data?.message || 'Error creating shelf',
+      title: newError.data?.message || (props.shelf ? 'Error updating shelf' : 'Error creating shelf'),
       color: 'error',
       icon: 'lucide:alert-circle',
     })

@@ -13,7 +13,7 @@
       variant="ghost"
       color="neutral"
       class="mb-4 ml-auto"
-      @click="refresh()"
+      @click="refreshShelves()"
     />
 
     <template v-if="(shelvesFetchStatus === 'success' || isThisDataRefresh) && shelves.length > 0">
@@ -40,12 +40,71 @@
           >
 
             <header class="flex flex-col items-start">
-              <h2 class="font-semibold text-md text-default line-clamp-1">
-                {{ shelf.name }}
-              </h2>
+              <div class="flex items-center gap-2 justify-between w-full">
+
+                <h2 class="font-semibold text-md text-default line-clamp-1">
+                  {{ shelf.name }}
+                </h2>
+
+                <UDropdownMenu
+                  :key="shelf.id"
+                  :items="[
+                    {
+                      label: 'Edit',
+                      icon: 'lucide:edit',
+                      onSelect: () => {
+                        newAndEditShelfModal.open({
+                          shelf: {
+                            name: shelf.name,
+                            description: shelf.description,
+                            tags: shelf.tags,
+                            id: shelf.id,
+                            owner_id: shelf.owner_id,
+                          },
+                        })
+                      },
+                    },
+                    {
+                      label: shelf.starred ? 'Unstar' : 'Star',
+                      icon: shelf.starred ? 'lucide:star-off' : 'lucide:star',
+                      onSelect: async () => {
+                        shelfIdRef = shelf.id
+                        await starUnstarShelf({
+                          body: {
+                            action: shelf.starred ? 'unstar' : 'star',
+                            shelfId: shelf.id,
+                          },
+                        })
+                        shelfIdRef = undefined
+                      },
+                    },
+                    {
+                      label: 'Delete',
+                      icon: 'lucide:trash',
+                    },
+                  ]"
+                  :content="{
+                    align: 'end',
+                  }"
+                >
+
+                  <UButton
+                    :key="shelf.id"
+                    variant="ghost"
+                    color="neutral"
+                    icon="lucide:ellipsis-vertical"
+                    size="sm"
+                    :loading="starUnstarShelfStatus === 'pending' && shelfIdRef === shelf.id"
+                  />
+
+                </UDropdownMenu>
+              </div>
+              
+
               <p class="text-sm text-muted line-clamp-2">
                 {{ shelf.description }}
               </p>
+
 
               <div class="flex flex-wrap gap-2 items-center mt-2">
                 <span
@@ -57,8 +116,7 @@
                 </span>
               </div>
             </header>
-
-            <!-- Dropdown for edit,delete,star -->
+           
        
 
           </ULink>
@@ -132,7 +190,7 @@
           {
             label: 'Create a shelf',
             onClick: () => {
-              newShelfModal.open()
+              newAndEditShelfModal.open()
             },
             icon: 'lucide:plus',
           },
@@ -144,21 +202,36 @@
 </template>
 
 <script lang="ts" setup>
-import { LazyLibraryNewShelfModal } from '#components'
+import { LazyLibraryNewAndEditShelfModal } from '#components'
+import type { AsyncSuccess, DynamicFetchError } from '~/utils/types/app'
 
-const overlay = useOverlay()
 const { getShelves } = shelvesStore()
-const { shelves, shelvesFetchStatus, shelvesFetchError, isThisDataRefresh } = storeToRefs(shelvesStore())
+const {
+  shelves,
+  shelvesFetchStatus,
+  shelvesFetchError,
+  isThisDataRefresh,
+} = storeToRefs(shelvesStore())
 
-const newShelfModal = overlay.create(LazyLibraryNewShelfModal)
+const { refresh: refreshShelves } = await useLazyAsyncData('all-shelves', () => getShelves())
+const {
+  data: starUnstarShelfData,
+  status: starUnstarShelfStatus,
+  error: starUnstarShelfError,
+  execute: starUnstarShelf,
+} = useDollarFetch<AsyncSuccess, DynamicFetchError>('/api/shelves/star-unstar-shelf', {
+  method: 'PATCH',
+}, false)
 
-const { refresh } = await useLazyAsyncData('all-shelves', () => getShelves())
+const shelfIdRef = ref<string>()
+
+const toast = useToast()
+const overlay = useOverlay()
+const newAndEditShelfModal = overlay.create(LazyLibraryNewAndEditShelfModal)
 
 const shelvesGridContainer = useTemplateRef('shelvesGridContainer')
 const itemsPerPage = ref(1)
 const page = ref(1)
-
-
 const paginatedShelves = computed(() => {
   const start = (page.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
@@ -204,6 +277,32 @@ watch(itemsPerPage, (newPerPage) => {
   const maxPage = Math.max(1, Math.ceil(total / newPerPage))
   if (page.value > maxPage) {
     page.value = maxPage
+  }
+})
+
+watch([
+  starUnstarShelfStatus,
+  starUnstarShelfError,
+  starUnstarShelfData,
+], ([
+  newStatus,
+  newError,
+  newData,
+]) => {
+  if (newStatus === 'success' && newData) {
+    toast.add({
+      title: newData.message,
+      color: 'success',
+      icon: 'lucide:check-circle',
+    })
+  }
+
+  if (newStatus === 'error' && newError) {
+    toast.add({
+      title: newError.data?.message || 'Failed to star/unstar shelf',
+      color: 'error',
+      icon: 'lucide:alert-circle',
+    })
   }
 })
 

@@ -7,6 +7,7 @@ const shelvesStore = defineStore('all-shelves', () => {
   const realtimeChannel = ref<RealtimeChannel | null>(null)
   const shelves = useState<Shelf[]>('all-shelves', () => [])
   const user = useSupabaseUser()
+  const computedTrigger = ref(0)
   
   const {
     status: shelvesFetchStatus,
@@ -17,16 +18,20 @@ const shelvesStore = defineStore('all-shelves', () => {
     headers: useRequestHeaders(['cookie']),
     onResponse({ response }) {
       if (response.ok) {
-        const responseShelves = response._data.shelves as Shelf[]
-        shelves.value = responseShelves.sort((shelfA, shelfB) => {
-          if (shelfA.starred && !shelfB.starred) return -1
-          if (!shelfA.starred && shelfB.starred) return 1
-          return new Date(shelfB.updated_at).getTime() - new Date(shelfA.updated_at).getTime()
-        })
+        shelves.value = response._data.shelves as Shelf[]
       }
     },
   }, false)
 
+
+  const sortedShelves = computed(() => {
+    const _ = computedTrigger.value
+    return shelves.value.sort((shelfA, shelfB) => {
+      if (shelfA.starred && !shelfB.starred) return -1
+      if (!shelfA.starred && shelfB.starred) return 1
+      return new Date(shelfB.updated_at).getTime() - new Date(shelfA.updated_at).getTime()
+    })
+  })
 
   function unsubscribeFromRealtime() {
     if (realtimeChannel.value) {
@@ -36,20 +41,51 @@ const shelvesStore = defineStore('all-shelves', () => {
   }
 
   function subscribeToRealtime() {
+
     realtimeChannel.value = client.channel('public:shelves')
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
         table: 'shelves',
         filter: `owner_id=eq.${user.value?.id}`,
-      }, () => getShelves())
+      }, (payload) => {
+        switch (payload.eventType) {
+          case 'UPDATE':
+          {
+            const updatedShelf = payload.new as Shelf
+            const index = shelves.value.findIndex(shelf => shelf.id === updatedShelf.id)
+            if (index !== -1) {
+              shelves.value.splice(index, 1, updatedShelf)
+              computedTrigger.value++
+            }
+            break
+          }
+          case 'INSERT':
+          {
+            const newShelf = payload.new as Shelf
+            shelves.value.push(newShelf)
+            computedTrigger.value++
+            break
+          }
+          case 'DELETE':
+          {
+            const deletedShelf = payload.old as Shelf
+            const index = shelves.value.findIndex(shelf => shelf.id === deletedShelf.id)
+            if (index !== -1) {
+              shelves.value.splice(index, 1)
+              computedTrigger.value++
+            }
+            break
+          }
+        }
+      })
       .subscribe()
   }
 
-  const isThisDataRefresh = computed(() => !!shelves.value && shelvesFetchStatus.value === 'pending')
+  const isThisDataRefresh = computed(() => shelves.value.length > 0 && shelvesFetchStatus.value === 'pending')
 
   return {
-    shelves,
+    shelves: sortedShelves,
     shelvesFetchStatus,
     shelvesFetchError,
     getShelves,

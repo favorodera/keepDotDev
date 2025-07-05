@@ -31,6 +31,5 @@ onUnmounted(() => {
   shelvesStore().unsubscribeFromRealtime()
 })
 
-
 </script>
 

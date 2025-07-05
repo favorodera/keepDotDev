@@ -10,5 +10,10 @@ export default defineAppConfig({
         trailingIcon: 'size-5',
       },
     },
+    dropdownMenu: {
+      slots: {
+        item: 'cursor-pointer',
+      },
+    },
   },
 })

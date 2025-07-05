@@ -85,7 +85,7 @@
               },
             ]"
             exact
-            @click="newShelfModal.open()"
+            @click="newAndEditShelfModal.open()"
           />
         </UTooltip>
 
@@ -204,13 +204,13 @@
 
 
 <script lang="ts" setup>
-import { LazyLibraryNewShelfModal, LazyLibrarySignOutModal } from '#components'
+import { LazyLibraryNewAndEditShelfModal, LazyLibrarySignOutModal } from '#components'
 
 const { isVisible, isExpanded, toggleSidebar, isMobile, toggleVisibility, toggleExpansion } = useSideBar()
 const overlay = useOverlay()
 
 const signOutModal = overlay.create(LazyLibrarySignOutModal)
-const newShelfModal = overlay.create(LazyLibraryNewShelfModal)
+const newAndEditShelfModal = overlay.create(LazyLibraryNewAndEditShelfModal)
 
 watch([isVisible, isExpanded, isMobile], ([visible, expanded, mobile]) => {
   if (visible && !mobile) {
