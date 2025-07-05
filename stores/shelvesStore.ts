@@ -8,7 +8,7 @@ const shelvesStore = defineStore('all-shelves', () => {
   const shelves = useState<Shelf[]>('all-shelves', () => [])
   const user = useSupabaseUser()
   const computedTrigger = ref(0)
-  
+
   const {
     status: shelvesFetchStatus,
     error: shelvesFetchError,
@@ -82,8 +82,6 @@ const shelvesStore = defineStore('all-shelves', () => {
       .subscribe()
   }
 
-  const isThisDataRefresh = computed(() => shelves.value.length > 0 && shelvesFetchStatus.value === 'pending')
-
   return {
     shelves: sortedShelves,
     shelvesFetchStatus,
@@ -91,7 +89,6 @@ const shelvesStore = defineStore('all-shelves', () => {
     getShelves,
     subscribeToRealtime,
     unsubscribeFromRealtime,
-    isThisDataRefresh,
   }
 })
 

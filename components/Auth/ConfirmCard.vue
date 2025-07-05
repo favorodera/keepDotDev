@@ -84,7 +84,7 @@ watch(
       toast.add({
         description: error.value.description,
         color: 'error',
-        icon: 'lucide:alert-circle',
+        icon: 'lucide:circle-x',
       })
       return
     }

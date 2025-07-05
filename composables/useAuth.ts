@@ -13,7 +13,7 @@ export default function () {
         toast.add({
           title: error.message,
           color: 'error',
-          icon: 'lucide:alert-circle',
+          icon: 'lucide:circle-x',
         })
         return
       }
@@ -21,7 +21,7 @@ export default function () {
       toast.add({
         title: 'An error occurred',
         color: 'error',
-        icon: 'lucide:alert-circle',
+        icon: 'lucide:circle-x',
       })
       return
     }
@@ -44,7 +44,7 @@ export default function () {
     toast.add({
       title: 'Signed out successfully',
       color: 'success',
-      icon: 'lucide:check-circle',
+      icon: 'lucide:circle-check',
     })
 
     overlay.closeAll()

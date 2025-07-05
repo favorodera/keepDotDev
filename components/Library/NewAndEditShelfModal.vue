@@ -7,7 +7,7 @@
     :ui="{
       footer: 'flex justify-end',
     }"
-    :close="{ onClick: () => emit('close', false) }"
+    :close="{ onClick: () => emit('close', false), disabled: status === 'pending' }"
   >
 
     <template #description>
@@ -104,7 +104,7 @@
       />
       
       <UButton
-        label="Create"
+        :label="shelf ? 'Update' : 'Create'"
         type="submit"
         form="new-and-edit-shelf-form"
         :loading="status === 'pending'"
@@ -182,13 +182,13 @@ watch([status, error], ([newStatus, newError]) => {
     toast.add({
       title: props.shelf ? `Shelf "${props.shelf.name}" updated` : `Shelf "${state.name}" created`,
       color: 'success',
-      icon: 'lucide:check-circle',
+      icon: 'lucide:circle-check',
     })
   } else if (newError && newStatus === 'error') {
     toast.add({
       title: newError.data?.message || (props.shelf ? 'Error updating shelf' : 'Error creating shelf'),
       color: 'error',
-      icon: 'lucide:alert-circle',
+      icon: 'lucide:circle-x',
     })
   }
 })

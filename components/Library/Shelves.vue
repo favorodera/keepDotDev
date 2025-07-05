@@ -4,19 +4,7 @@
     class="flex flex-col flex-auto items-start p-4 w-full"
   >
 
-    <UButton
-      size="xs"
-      :label="shelvesFetchStatus === 'pending' && isThisDataRefresh ? 'Refreshing...' : 'Refresh'"
-      icon="lucide:refresh-cw"
-      :loading="shelvesFetchStatus === 'pending' && isThisDataRefresh"
-      :disabled="shelvesFetchStatus === 'pending'"
-      variant="ghost"
-      color="neutral"
-      class="mb-4 ml-auto"
-      @click="refreshShelves()"
-    />
-
-    <template v-if="(shelvesFetchStatus === 'success' || isThisDataRefresh) && shelves.length > 0">
+    <template v-if="shelvesFetchStatus === 'success' && shelves.length > 0">
       <section class="flex flex-col flex-auto gap-4 justify-between w-full">
 
         <TransitionGroup
@@ -81,6 +69,14 @@
                     {
                       label: 'Delete',
                       icon: 'lucide:trash',
+                      onSelect: () => {
+                        shelfDeleteConfirmationModal.open({
+                          shelf: {
+                            name: shelf.name,
+                            id: shelf.id,
+                          },
+                        })
+                      },
                     },
                   ]"
                   :content="{
@@ -96,7 +92,7 @@
                     size="sm"
                     :loading="starUnstarShelfStatus === 'pending' && shelfIdRef === shelf.id"
                   />
-
+                 
                 </UDropdownMenu>
               </div>
               
@@ -143,7 +139,7 @@
         :title="shelvesFetchError.data?.message || 'Failed to load library'"
         color="error"
         variant="subtle"
-        icon="lucide:alert-circle"
+        icon="lucide:circle-x"
         class="m-auto max-w-md"
         :ui="{
           actions: 'justify-end',
@@ -163,7 +159,7 @@
 
     </template>
 
-    <template v-if="shelvesFetchStatus === 'pending' && !isThisDataRefresh">
+    <template v-if="shelvesFetchStatus === 'pending'">
       <UAlert
         title="Loading shelves..."
         color="neutral"
@@ -202,7 +198,7 @@
 </template>
 
 <script lang="ts" setup>
-import { LazyLibraryNewAndEditShelfModal } from '#components'
+import { LazyLibraryNewAndEditShelfModal, LazyLibraryShelfDeleteConfirmationModal } from '#components'
 import type { AsyncSuccess, DynamicFetchError } from '~/utils/types/app'
 
 const { getShelves } = shelvesStore()
@@ -210,10 +206,10 @@ const {
   shelves,
   shelvesFetchStatus,
   shelvesFetchError,
-  isThisDataRefresh,
 } = storeToRefs(shelvesStore())
 
-const { refresh: refreshShelves } = await useLazyAsyncData('all-shelves', () => getShelves())
+await useLazyAsyncData('all-shelves', () => getShelves())
+
 const {
   data: starUnstarShelfData,
   status: starUnstarShelfStatus,
@@ -228,6 +224,7 @@ const shelfIdRef = ref<string>()
 const toast = useToast()
 const overlay = useOverlay()
 const newAndEditShelfModal = overlay.create(LazyLibraryNewAndEditShelfModal)
+const shelfDeleteConfirmationModal = overlay.create(LazyLibraryShelfDeleteConfirmationModal)
 
 const shelvesGridContainer = useTemplateRef('shelvesGridContainer')
 const itemsPerPage = ref(1)
@@ -293,7 +290,7 @@ watch([
     toast.add({
       title: newData.message,
       color: 'success',
-      icon: 'lucide:check-circle',
+      icon: 'lucide:circle-check',
     })
   }
 
@@ -301,7 +298,7 @@ watch([
     toast.add({
       title: newError.data?.message || 'Failed to star/unstar shelf',
       color: 'error',
-      icon: 'lucide:alert-circle',
+      icon: 'lucide:circle-x',
     })
   }
 })

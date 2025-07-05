@@ -20,21 +20,23 @@
       <UButton
         variant="soft"
         square
+        label="No"
+        color="neutral"
+        icon="lucide:circle-x"
         block
         @click="emit('close', false)"
-      >
-        Cancel
-      </UButton>
+      />
 
       <UButton
+        label="Yes"
+        icon="lucide:circle-check"
         square
         block
         color="error"
+        variant="soft"
         loading-auto
         @click="signOut"
-      >
-        Sign Out
-      </UButton>
+      />
     </template>
 
 
