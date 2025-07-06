@@ -21,7 +21,18 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { name, description, tags } = await readValidatedBody(event, body => bodySchema.parse(body))
+    const { data: validatedData, error: validationError } = await readValidatedBody(event, body => bodySchema.safeParse(body))
+
+
+    if (validationError) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'VALIDATION_ERROR',
+        message: validationError.errors[0].message,
+      })
+    }
+
+    const { name, description, tags } = validatedData
 
     const serverClient = await serverSupabaseClient<Database>(event)
 

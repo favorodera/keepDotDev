@@ -6,7 +6,7 @@ const bodySchema = z.object({
   action: z.enum(['star', 'unstar'], {
     errorMap: () => ({ message: 'Action is required' }),
   }),
-  shelfId: z.string().nonempty('Shelf ID is required'),
+  shelfId: z.number().int().min(1, 'Shelf ID must be a positive integer starting from 1'),
 })
 
 export default defineEventHandler(async (event) => {
@@ -23,7 +23,17 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { action, shelfId } = await readValidatedBody(event, body => bodySchema.parse(body))
+    const { data: validatedData, error: validationError } = await readValidatedBody(event, body => bodySchema.safeParse(body))
+
+    if (validationError) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'VALIDATION_ERROR',
+        message: validationError.errors[0].message,
+      })
+    }
+
+    const { action, shelfId } = validatedData
 
     const serverClient = await serverSupabaseClient<Database>(event)
 

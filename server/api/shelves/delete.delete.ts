@@ -3,7 +3,13 @@ import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 import type { Database } from '~/utils/types/database'
 
 const querySchema = z.object({
-  shelfId: z.string(),
+  shelfId: z.string().transform((value) => {
+    const number = Number.parseInt(value, 10)
+    if (Number.isNaN(number) || number <= 0) {
+      throw new Error('Shelf ID must be a positive number')
+    }
+    return number
+  }),
 })
 
 export default defineEventHandler(async (event) => {
@@ -18,7 +24,17 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { shelfId } = await getValidatedQuery(event, query => querySchema.parse(query))
+    const { data: validatedData, error: validationError } = await getValidatedQuery(event, query => querySchema.safeParse(query))
+
+    if (validationError) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'VALIDATION_ERROR',
+        message: validationError.errors[0].message,
+      })
+    }
+
+    const { shelfId } = validatedData
 
     const serverClient = await serverSupabaseClient<Database>(event)
 

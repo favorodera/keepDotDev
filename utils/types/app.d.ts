@@ -29,7 +29,7 @@ export type DatabaseUser = {
 export type Tag = string
 
 export type ShelfItem = {
-  id: string
+  id: number
   name: string
   description: string
   created_at: string
@@ -42,7 +42,7 @@ export type ShelfItem = {
 export type Shelf = {
   owner_id: string
   owner_metadata: Pick<DatabaseUser, 'metadata'>
-  id: string
+  id: number
   name: string
   description: string
   created_at: string

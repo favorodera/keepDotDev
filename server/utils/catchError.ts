@@ -1,14 +1,6 @@
 import { H3Error } from 'h3'
-import { z } from 'zod'
 
 export default function (error: unknown) {
-  if (error instanceof z.ZodError) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'VALIDATION_ERROR',
-      message: error.errors[0].message,
-    })
-  }
   
   if (error instanceof H3Error) {
     throw createError({

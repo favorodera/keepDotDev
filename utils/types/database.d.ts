@@ -13,7 +13,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string
-          id: string
+          id: number
           items: Json[]
           name: string
           owner_id: string
@@ -25,7 +25,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description: string
-          id?: string
+          id?: number
           items?: Json[]
           name: string
           owner_id: string
@@ -37,7 +37,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string
-          id?: string
+          id?: number
           items?: Json[]
           name?: string
           owner_id?: string

@@ -219,7 +219,7 @@ const {
   method: 'PATCH',
 }, false)
 
-const shelfIdRef = ref<string>()
+const shelfIdRef = ref<number>()
 
 const toast = useToast()
 const overlay = useOverlay()
@@ -302,5 +302,4 @@ watch([
     })
   }
 })
-
 </script>
