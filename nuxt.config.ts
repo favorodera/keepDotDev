@@ -27,6 +27,9 @@ export default defineNuxtConfig({
     layoutTransition: { name: 'layout', mode: 'out-in' },
   },
   css: ['~/assets/css/main.css'],
+  future: {
+    compatibilityVersion: 4,
+  },
   experimental: {
     defaults: {
       useAsyncData: {

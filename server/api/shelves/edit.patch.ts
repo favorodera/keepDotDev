@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
-import type { Database } from '~/utils/types/database'
 
 const bodySchema = z.object({
   shelfId: z.number().int().min(1, 'Shelf ID must be a positive integer starting from 1'),

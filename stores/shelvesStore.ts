@@ -1,6 +1,4 @@
 import type { RealtimeChannel } from '@supabase/supabase-js'
-import type { Shelf, AsyncSuccess, DynamicFetchError } from '~/utils/types/app'
-
 
 const shelvesStore = defineStore('all-shelves', () => {
   const client = useSupabaseClient()

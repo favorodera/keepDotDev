@@ -124,7 +124,7 @@
 
 <script lang="ts" setup>
 import z from 'zod'
-import type { AsyncError, AsyncSuccess, Shelf } from '~/utils/types/app'
+import type { AsyncError, AsyncSuccess, Shelf } from '~/shared/types/app'
 
 const props = defineProps<{
   shelf?: Pick<Shelf, 'name' | 'description' | 'tags' | 'id' | 'owner_id'>

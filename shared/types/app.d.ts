@@ -47,7 +47,6 @@ export type Shelf = {
   description: string
   created_at: string
   updated_at: string
-  items: ShelfItem[]
   tags: Tag[]
   starred: boolean
 }

@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
-import type { Database } from '~/utils/types/database'
 
 const querySchema = z.object({
   shelfId: z.string().transform((value) => {

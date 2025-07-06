@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint . --fix",
-    "supabase:generate": "npx supabase gen types typescript --project-id vbltsumaosfttexrhzzz --schema public > utils/types/database.d.ts"
+    "supabase:generate": "npx supabase gen types typescript --project-id vbltsumaosfttexrhzzz --schema public > shared/types/database.d.ts"
   },
   "dependencies": {
     "@favorodera/nuxt-helper": "^1.0.1",

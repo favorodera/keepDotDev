@@ -199,7 +199,6 @@
 
 <script lang="ts" setup>
 import { LazyLibraryNewAndEditShelfModal, LazyLibraryShelfDeleteConfirmationModal } from '#components'
-import type { AsyncSuccess, DynamicFetchError } from '~/utils/types/app'
 
 const { getShelves } = shelvesStore()
 const {

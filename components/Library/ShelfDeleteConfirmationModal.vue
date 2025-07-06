@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { Shelf, AsyncSuccess, AsyncError } from '~/utils/types/app'
+import type { Shelf, AsyncSuccess, AsyncError } from '~/shared/types/app'
 
 
 const props = defineProps<{

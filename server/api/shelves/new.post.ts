@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
-import type { Database } from '~/utils/types/database'
 
 const bodySchema = z.object({
   name: z.string().min(1, 'Name is required'),
