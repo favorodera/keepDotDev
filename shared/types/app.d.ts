@@ -34,7 +34,10 @@ export type Shelf = {
 
 export type ShelfItem = {
   id: number
+  name: string
   shelf_id: number
   owner_id: string
+  created_at: string
+  updated_at: string
   content: string
 }

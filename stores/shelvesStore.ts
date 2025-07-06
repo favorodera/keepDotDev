@@ -7,6 +7,8 @@ const shelvesStore = defineStore('all-shelves', () => {
   const user = useSupabaseUser()
   const computedTrigger = ref(0)
 
+  // TODO: Get shelf by ID
+
   const {
     status: shelvesFetchStatus,
     error: shelvesFetchError,
@@ -39,13 +41,14 @@ const shelvesStore = defineStore('all-shelves', () => {
   }
 
   function subscribeToRealtime() {
+    if (!user.value) return
 
     realtimeChannel.value = client.channel('public:shelves')
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
         table: 'shelves',
-        filter: `owner_id=eq.${user.value?.id}`,
+        filter: `owner_id=eq.${user.value.id}`,
       }, (payload) => {
         switch (payload.eventType) {
           case 'UPDATE':

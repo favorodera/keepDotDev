@@ -215,7 +215,7 @@ const {
   status: starUnstarShelfStatus,
   error: starUnstarShelfError,
   execute: starUnstarShelf,
-} = useDollarFetch<AsyncSuccess, DynamicFetchError>('/api/shelves/star-unstar-shelf', {
+} = useDollarFetch<AsyncSuccess, DynamicFetchError>('/api/shelves/star-unstar', {
   method: 'PATCH',
 }, false)
 
@@ -238,6 +238,11 @@ const paginatedShelves = computed(() => {
 function calculateItemsPerPage(entries: readonly ResizeObserverEntry[]) {
   nextTick(() => {
     const entry = entries[0]
+
+    if (!entry) {
+      itemsPerPage.value = 3
+      return
+    }
 
     const gap = 16
     const cardElement = document.querySelector('.shelf-card')

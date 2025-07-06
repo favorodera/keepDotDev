@@ -5,7 +5,7 @@ const querySchema = z.object({
   shelfId: z.string().transform((value) => {
     const number = Number.parseInt(value, 10)
     if (Number.isNaN(number) || number <= 0) {
-      throw new Error('Shelf ID must be a positive number')
+      throw new Error('Shelf ID must be a positive integer starting from 1')
     }
     return number
   }),

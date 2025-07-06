@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
-const querySchema = z.object({
+const bodySchema = z.object({
+  name: z.string().min(1, 'Name is required'),
   shelfId: z.string().transform((value) => {
     const number = Number.parseInt(value, 10)
     if (Number.isNaN(number) || number <= 0) {
@@ -12,7 +13,6 @@ const querySchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-
   try {
     const authenticatedUser = await serverSupabaseUser(event)
 
@@ -21,11 +21,10 @@ export default defineEventHandler(async (event) => {
         statusCode: 401,
         statusMessage: 'UNAUTHORIZED',
         message: 'You must be logged in to access this resource',
-
       })
     }
 
-    const { data: validatedQuery, error: validationError } = await getValidatedQuery(event, query => querySchema.safeParse(query))
+    const { data: validatedBody, error: validationError } = await readValidatedBody(event, body => bodySchema.safeParse(body))
 
     if (validationError) {
       throw createError({
@@ -35,14 +34,17 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { shelfId } = validatedQuery
+    const { name, shelfId } = validatedBody
 
     const serverClient = await serverSupabaseClient<Database>(event)
 
-    const { data, error } = await serverClient
+    const { error } = await serverClient
       .from('shelves_items')
-      .select('*')
-      .match({ shelf_id: shelfId, owner_id: authenticatedUser.id })
+      .insert({
+        name,
+        shelf_id: shelfId,
+        owner_id: authenticatedUser.id,
+      })
 
     if (error) {
       throw createError({
@@ -54,8 +56,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       statusMessage: 'OPERATION_SUCCESSFUL',
-      message: 'Shelves items fetched successfully',
-      shelvesItems: data,
+      message: 'Shelf item created successfully',
     }
   } catch (error) {
     return catchError(error)
