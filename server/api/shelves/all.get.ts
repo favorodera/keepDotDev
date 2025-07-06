@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     if (!authenticatedUser) {
       throw createError({
         statusCode: 401,
-        statusMessage: 'Unauthorized',
+        statusMessage: 'UNAUTHORIZED',
         message: 'You must be logged in to access this resource',
       })
     }
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     const { data, error } = await serverClient
       .from('shelves')
       .select('*')
-      .eq('owner_id', authenticatedUser.id)
+      .match({ owner_id: authenticatedUser.id })
 
     if (error) {
       throw createError({

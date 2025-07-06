@@ -15,38 +15,26 @@ export type DynamicFetchError = {
   message: string
 }
 
-export type DatabaseUser = {
-  id: string
-  email: string
-  metadata: {
+export type Shelf = {
+  owner_id: string
+  owner_metadata: {
     name: string
     full_name: string
     avatar_url: string
     user_name: string
   }
+  id: number
+  name: string
+  description: string
+  created_at: string
+  updated_at: string
+  tags: string[]
+  starred: boolean
 }
-
-export type Tag = string
 
 export type ShelfItem = {
   id: number
-  name: string
-  description: string
-  created_at: string
-  updated_at: string
-  shelf: Pick<Shelf, 'id' | 'owner_id' | 'owner_metadata' | 'name' | 'description'>
-  content: string
-  tags: Tag[]
-}
-
-export type Shelf = {
+  shelf_id: number
   owner_id: string
-  owner_metadata: Pick<DatabaseUser, 'metadata'>
-  id: number
-  name: string
-  description: string
-  created_at: string
-  updated_at: string
-  tags: Tag[]
-  starred: boolean
+  content: string
 }

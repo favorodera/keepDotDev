@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     if (!authenticatedUser) {
       throw createError({
         statusCode: 401,
-        statusMessage: 'Unauthorized',
+        statusMessage: 'UNAUTHORIZED',
         message: 'You must be logged in to access this resource',
       })
     }

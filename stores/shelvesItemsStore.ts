@@ -1,0 +1,2 @@
+const shelvesItemsStore = defineStore('shelvesItems', () => {})
+

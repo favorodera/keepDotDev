@@ -1,10 +1,14 @@
 import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
-const bodySchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  description: z.string().min(1, 'Description is required'),
-  tags: z.array(z.string()).min(1, 'Tags are required'),
+const querySchema = z.object({
+  shelfId: z.string().transform((value) => {
+    const number = Number.parseInt(value, 10)
+    if (Number.isNaN(number) || number <= 0) {
+      throw new Error('Shelf ID must be a positive number')
+    }
+    return number
+  }),
 })
 
 export default defineEventHandler(async (event) => {
@@ -17,11 +21,11 @@ export default defineEventHandler(async (event) => {
         statusCode: 401,
         statusMessage: 'UNAUTHORIZED',
         message: 'You must be logged in to access this resource',
+
       })
     }
 
-    const { data: validatedBody, error: validationError } = await readValidatedBody(event, body => bodySchema.safeParse(body))
-
+    const { data: validatedQuery, error: validationError } = await getValidatedQuery(event, query => querySchema.safeParse(query))
 
     if (validationError) {
       throw createError({
@@ -31,24 +35,14 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { name, description, tags } = validatedBody
+    const { shelfId } = validatedQuery
 
     const serverClient = await serverSupabaseClient<Database>(event)
 
-    const { error } = await serverClient
-      .from('shelves')
-      .insert({
-        name,
-        description,
-        tags,
-        owner_id: authenticatedUser.id,
-        owner_metadata: {
-          name: authenticatedUser.user_metadata.name,
-          full_name: authenticatedUser.user_metadata.full_name,
-          avatar_url: authenticatedUser.user_metadata.avatar_url,
-          user_name: authenticatedUser.user_metadata.user_name,
-        },
-      })
+    const { data, error } = await serverClient
+      .from('shelves_items')
+      .select('*')
+      .match({ shelf_id: shelfId, owner_id: authenticatedUser.id })
 
     if (error) {
       throw createError({
@@ -60,7 +54,8 @@ export default defineEventHandler(async (event) => {
 
     return {
       statusMessage: 'OPERATION_SUCCESSFUL',
-      message: 'Shelf created successfully',
+      message: 'Shelves items fetched successfully',
+      shelvesItems: data,
     }
   } catch (error) {
     return catchError(error)
