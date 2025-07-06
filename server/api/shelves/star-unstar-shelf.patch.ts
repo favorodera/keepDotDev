@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { data: validatedData, error: validationError } = await readValidatedBody(event, body => bodySchema.safeParse(body))
+    const { data: validatedBody, error: validationError } = await readValidatedBody(event, body => bodySchema.safeParse(body))
 
     if (validationError) {
       throw createError({
@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { action, shelfId } = validatedData
+    const { action, shelfId } = validatedBody
 
     const serverClient = await serverSupabaseClient<Database>(event)
 

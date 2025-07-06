@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { data: validatedData, error: validationError } = await getValidatedQuery(event, query => querySchema.safeParse(query))
+    const { data: validatedQuery, error: validationError } = await getValidatedQuery(event, query => querySchema.safeParse(query))
 
     if (validationError) {
       throw createError({
@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { shelfId } = validatedData
+    const { shelfId } = validatedQuery
 
     const serverClient = await serverSupabaseClient<Database>(event)
 

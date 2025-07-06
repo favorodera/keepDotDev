@@ -1,10 +1,10 @@
 <template>
 
-<main class="flex flex-col flex-auto justify-center items-center">
+  <main class="flex flex-col flex-auto justify-center items-center">
 
-  <LibraryShelf/>
+    <LibraryShelf />
 
-</main>
+  </main>
 
 </template>
 

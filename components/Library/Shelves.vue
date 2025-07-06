@@ -208,7 +208,8 @@ const {
   shelvesFetchError,
 } = storeToRefs(shelvesStore())
 
-await useLazyAsyncData('all-shelves', () => getShelves())
+
+await callOnce('all-shelves', () => getShelves())
 
 const {
   data: starUnstarShelfData,
