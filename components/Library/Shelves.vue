@@ -1,34 +1,34 @@
 <template>
 
   <main
-    class="flex flex-col flex-auto items-start p-4 w-full"
+    class="flex flex-col items-start flex-auto w-full p-4"
   >
 
     <template v-if="shelvesFetchStatus === 'success' && shelves.length > 0">
-      <section class="flex flex-col flex-auto gap-4 justify-between w-full">
+      <section class="flex flex-col justify-between flex-auto w-full gap-4">
 
         <TransitionGroup
           ref="shelvesGridContainer"
           :key="page"
           enter-active-class="transition-all duration-300"
           move-class="transition-all duration-300"
-          enter-from-class="opacity-0 translate-y-4"
-          enter-to-class="opacity-100 translate-y-0"
+          enter-from-class="translate-y-4 opacity-0"
+          enter-to-class="translate-y-0 opacity-100"
           leave-active-class="absolute transition-all duration-300"
-          leave-from-class="opacity-100 translate-y-0"
-          leave-to-class="opacity-0 translate-y-4"
+          leave-from-class="translate-y-0 opacity-100"
+          leave-to-class="translate-y-4 opacity-0"
           tag="section"
           class="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr))] overflow-hidden flex-auto w-full gap-4 auto-rows-min"
         >
           <ULink
             v-for="shelf in paginatedShelves"
             :key="shelf.id"
-            class="flex flex-col gap-2 p-4 relative rounded-md border transition-all duration-300 shelf-card hover:shadow border-default hover:shadow-neutral-700"
-            :to="`/library/shelf-${shelf.id}`"
+            class="relative flex flex-col gap-2 p-4 transition-all duration-300 border rounded-md shelf-card hover:shadow border-default hover:shadow-neutral-700"
+            :to="{ name: 'library-shelf', params: { shelf: shelf.id } }"
           >
 
             <header class="flex flex-col items-start">
-              <div class="flex items-center gap-2 justify-between w-full">
+              <div class="flex items-center justify-between w-full gap-2">
 
                 <h2 class="font-semibold text-md text-default line-clamp-1">
                   {{ shelf.name }}
@@ -85,7 +85,6 @@
                 >
 
                   <UButton
-                    :key="shelf.id"
                     variant="ghost"
                     color="neutral"
                     icon="lucide:ellipsis-vertical"
@@ -102,7 +101,7 @@
               </p>
 
 
-              <div class="flex flex-wrap gap-2 items-center mt-2">
+              <div class="flex flex-wrap items-center gap-2 mt-2">
                 <span
                   v-for="tag in shelf.tags"
                   :key="tag"
@@ -140,7 +139,7 @@
         color="error"
         variant="subtle"
         icon="lucide:circle-x"
-        class="m-auto max-w-md"
+        class="max-w-md m-auto"
         :ui="{
           actions: 'justify-end',
         }"
@@ -165,7 +164,7 @@
         color="neutral"
         variant="soft"
         icon="lucide:loader-circle"
-        class="m-auto max-w-md"
+        class="max-w-md m-auto"
         :ui="{
           icon: 'animate-spin',
         }"
@@ -181,7 +180,7 @@
         :ui="{
           actions: 'justify-end',
         }"
-        class="m-auto max-w-md"
+        class="max-w-md m-auto"
         :actions="[
           {
             label: 'Create a shelf',
@@ -207,8 +206,6 @@ const {
   shelvesFetchError,
 } = storeToRefs(shelvesStore())
 
-
-await callOnce('all-shelves', () => getShelves())
 
 const {
   data: starUnstarShelfData,
@@ -280,7 +277,7 @@ watch(itemsPerPage, (newPerPage) => {
   if (page.value > maxPage) {
     page.value = maxPage
   }
-})
+}, { immediate: true, deep: true })
 
 watch([
   starUnstarShelfStatus,
@@ -306,5 +303,5 @@ watch([
       icon: 'lucide:circle-x',
     })
   }
-})
+}, { immediate: true, deep: true })
 </script>

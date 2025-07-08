@@ -1,27 +1,30 @@
 <template>
 
-  <main class="flex flex-col flex-auto justify-center items-center">
-
-    <LibraryShelf />
-
+  <main class="flex flex-col items-center justify-center flex-auto">
+  
+    <LibraryShelfItem />
+  
   </main>
-
+  
 </template>
-
+  
 <script lang="ts" setup>
 const user = useSupabaseUser()
-
+  
 definePageMeta({
   layout: 'authenticated',
   colorMode: 'dark',
 })
-
+  
 useSeoMeta({
   title: () => {
     if (user.value) {
-      return `| ${user.value.user_metadata.full_name} | Shelf`
+      return `| ${user.value.user_metadata.full_name} | Shelf Item`
     }
-    return '| Shelf'
+    return '| Shelf Item'
   },
 })
+
+
 </script>
+  

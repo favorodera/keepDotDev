@@ -26,7 +26,7 @@ const shelvesStore = defineStore('all-shelves', () => {
 
   const sortedShelves = computed(() => {
     const _ = computedTrigger.value
-    return shelves.value.sort((shelfA, shelfB) => {
+    return [...shelves.value].sort((shelfA, shelfB) => {
       if (shelfA.starred && !shelfB.starred) return -1
       if (!shelfA.starred && shelfB.starred) return 1
       return new Date(shelfB.updated_at).getTime() - new Date(shelfA.updated_at).getTime()

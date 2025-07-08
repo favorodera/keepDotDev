@@ -2,7 +2,7 @@ import type { RealtimeChannel } from '@supabase/supabase-js'
 
 const shelvesItemsStore = defineStore('shelvesItems', () => {
 
-  const shelfItems = useState<ShelfItem[]>('shelfItems', () => [])
+  const shelvesItems = useState<ShelfItem[]>('all-shelves-items', () => [])
   const user = useSupabaseUser()
   const computedTrigger = ref(0)
   const realtimeChannel = ref<RealtimeChannel | null>(null)
@@ -17,14 +17,14 @@ const shelvesItemsStore = defineStore('shelvesItems', () => {
     headers: useRequestHeaders(['cookie']),
     onResponse({ response }) {
       if (response.ok) {
-        shelfItems.value = response._data.shelvesItems as ShelfItem[]
+        shelvesItems.value = response._data.shelvesItems as ShelfItem[]
       }
     },
   }, false)
 
-  const sortedShelfItems = computed(() => {
+  const sortedShelvesItems = computed(() => {
     const _ = computedTrigger.value
-    return shelfItems.value.sort((itemA, itemB) => {
+    return [...shelvesItems.value].sort((itemA, itemB) => {
       return new Date(itemB.updated_at).getTime() - new Date(itemA.updated_at).getTime()
     })
   })
@@ -39,7 +39,7 @@ const shelvesItemsStore = defineStore('shelvesItems', () => {
   function subscribeToRealtime() {
     if (!user.value) return
 
-    realtimeChannel.value = client.channel('public:shelves-items')
+    realtimeChannel.value = client.channel('public:shelves_items')
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
@@ -50,9 +50,9 @@ const shelvesItemsStore = defineStore('shelvesItems', () => {
           case 'UPDATE':
           {
             const updatedShelfItem = payload.new as ShelfItem
-            const index = shelfItems.value.findIndex(item => item.id === updatedShelfItem.id)
+            const index = shelvesItems.value.findIndex(item => item.id === updatedShelfItem.id)
             if (index !== -1) {
-              shelfItems.value.splice(index, 1, updatedShelfItem)
+              shelvesItems.value.splice(index, 1, updatedShelfItem)
               computedTrigger.value++
             }
             break
@@ -60,31 +60,42 @@ const shelvesItemsStore = defineStore('shelvesItems', () => {
           case 'INSERT':
           {
             const newShelfItem = payload.new as ShelfItem
-            shelfItems.value.push(newShelfItem)
+            shelvesItems.value.push(newShelfItem)
             computedTrigger.value++
             break
           }
           case 'DELETE':
           {
             const deletedShelfItem = payload.old as ShelfItem
-            const index = shelfItems.value.findIndex(item => item.id === deletedShelfItem.id)
+            const index = shelvesItems.value.findIndex(item => item.id === deletedShelfItem.id)
             if (index !== -1) {
-              shelfItems.value.splice(index, 1)
+              shelvesItems.value.splice(index, 1)
               computedTrigger.value++
             }
             break
           }
         }
       })
+      .subscribe()
+  }
+
+  function getShelfItemsByShelfId(shelfId: number) {
+    return [...shelvesItems.value].filter(item => item.shelf_id === shelfId)
+  }
+
+  function getShelfItemById(shelfItemId: number) {
+    return [...shelvesItems.value].find(item => item.id === shelfItemId)
   }
 
   return {
-    sortedShelfItems,
+    shelvesItems: sortedShelvesItems,
     shelvesItemsFetchStatus,
     shelvesItemsFetchError,
     getShelvesItems,
     subscribeToRealtime,
     unsubscribeFromRealtime,
+    getShelfItemsByShelfId,
+    getShelfItemById,
   }
 })
 

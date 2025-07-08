@@ -1,15 +1,4 @@
-import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
-
-const querySchema = z.object({
-  shelfId: z.string().transform((value) => {
-    const number = Number.parseInt(value, 10)
-    if (Number.isNaN(number) || number <= 0) {
-      throw new Error('Shelf ID must be a positive integer starting from 1')
-    }
-    return number
-  }),
-})
 
 export default defineEventHandler(async (event) => {
 
@@ -25,24 +14,12 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { data: validatedQuery, error: validationError } = await getValidatedQuery(event, query => querySchema.safeParse(query))
-
-    if (validationError) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'VALIDATION_ERROR',
-        message: validationError.errors[0].message,
-      })
-    }
-
-    const { shelfId } = validatedQuery
-
     const serverClient = await serverSupabaseClient<Database>(event)
 
     const { data, error } = await serverClient
       .from('shelves_items')
       .select('*')
-      .match({ shelf_id: shelfId, owner_id: authenticatedUser.id })
+      .match({ owner_id: authenticatedUser.id })
 
     if (error) {
       throw createError({
