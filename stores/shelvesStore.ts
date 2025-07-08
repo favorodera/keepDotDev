@@ -7,8 +7,6 @@ const shelvesStore = defineStore('all-shelves', () => {
   const user = useSupabaseUser()
   const computedTrigger = ref(0)
 
-  // TODO: Get shelf by ID
-
   const {
     status: shelvesFetchStatus,
     error: shelvesFetchError,

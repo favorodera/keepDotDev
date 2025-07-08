@@ -5,18 +5,18 @@
     class="flex flex-col min-h-screen touch-none"
   >
 
-    <section class="flex overflow-hidden relative flex-auto mx-auto w-full max-w-8xl">
+    <section class="flex relative flex-auto mx-auto w-full max-w-8xl">
 
       <ClientOnly fallback-tag="aside">
         <LibrarySideBar />
 
         <template #fallback>
-          <aside class="hidden overflow-hidden flex-col flex-auto w-full transition-all max-w-16 border-x border-default bg-default md:relative h-dvh md:flex" />
+          <aside class="hidden flex-col flex-auto w-full transition-all max-w-16 border-x border-default bg-default md:relative h-dvh md:flex" />
         </template>
         
       </ClientOnly>
 
-      <section class="flex overflow-hidden flex-col flex-auto">
+      <section class="flex flex-col flex-auto">
         <LibraryNav />
 
         <slot />

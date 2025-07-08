@@ -18,102 +18,75 @@
           leave-from-class="translate-y-0 opacity-100"
           leave-to-class="translate-y-4 opacity-0"
           tag="section"
-          class="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr))] overflow-hidden flex-auto w-full gap-4 auto-rows-min"
+          class="grid grid-cols-[repeat(auto-fill,minmax(min(15rem,100%),1fr))] flex-auto w-full gap-4 auto-rows-min"
         >
           <ULink
             v-for="shelf in paginatedShelves"
             :key="shelf.id"
-            class="relative flex flex-col gap-2 p-4 transition-all duration-300 border rounded-md shelf-card hover:shadow border-default hover:shadow-neutral-700"
+            class="relative flex flex-col gap-2 p-4 transition-all duration-300 border rounded-md bg-elevated shelf-card hover:shadow border-default hover:shadow-neutral-700"
             :to="{ name: 'library-shelf', params: { shelf: shelf.id } }"
           >
 
-            <header class="flex flex-col items-start">
-              <div class="flex items-center justify-between w-full gap-2">
-
-                <h2 class="font-semibold text-md text-default line-clamp-1">
-                  {{ shelf.name }}
-                </h2>
-
-                <UDropdownMenu
-                  :key="shelf.id"
-                  :items="[
-                    {
-                      label: 'Edit',
-                      icon: 'lucide:edit',
-                      onSelect: () => {
-                        newAndEditShelfModal.open({
-                          shelf: {
-                            name: shelf.name,
-                            description: shelf.description,
-                            tags: shelf.tags,
-                            id: shelf.id,
-                            owner_id: shelf.owner_id,
-                          },
-                        })
+            <UDropdownMenu
+              :key="shelf.id"
+              :items="[
+                {
+                  label: 'Edit',
+                  icon: 'lucide:edit',
+                  onSelect: () => {
+                    newAndEditShelfModal.open({
+                      shelf: {
+                        name: shelf.name,
+                        description: shelf.description,
+                        tags: shelf.tags,
+                        id: shelf.id,
+                        owner_id: shelf.owner_id,
                       },
-                    },
-                    {
-                      label: shelf.starred ? 'Unstar' : 'Star',
-                      icon: shelf.starred ? 'lucide:star-off' : 'lucide:star',
-                      onSelect: async () => {
-                        shelfIdRef = shelf.id
-                        await starUnstarShelf({
-                          body: {
-                            action: shelf.starred ? 'unstar' : 'star',
-                            shelfId: shelf.id,
-                          },
-                        })
-                        shelfIdRef = undefined
+                    })
+                  },
+                },
+                {
+                  label: shelf.starred ? 'Unstar' : 'Star',
+                  icon: shelf.starred ? 'lucide:star-off' : 'lucide:star',
+                  onSelect: async () => {
+                    shelfIdRef = shelf.id
+                    await starUnstarShelf({
+                      body: {
+                        action: shelf.starred ? 'unstar' : 'star',
+                        shelfId: shelf.id,
                       },
-                    },
-                    {
-                      label: 'Delete',
-                      icon: 'lucide:trash',
-                      onSelect: () => {
-                        shelfDeleteConfirmationModal.open({
-                          shelf: {
-                            name: shelf.name,
-                            id: shelf.id,
-                          },
-                        })
+                    })
+                    shelfIdRef = undefined
+                  },
+                },
+                {
+                  label: 'Delete',
+                  icon: 'lucide:trash',
+                  onSelect: () => {
+                    shelfDeleteConfirmationModal.open({
+                      shelf: {
+                        name: shelf.name,
+                        id: shelf.id,
                       },
-                    },
-                  ]"
-                  :content="{
-                    align: 'end',
-                  }"
-                >
+                    })
+                  },
+                },
+              ]"
+              :content="{
+                align: 'end',
+              }"
+            >
 
-                  <UButton
-                    variant="ghost"
-                    color="neutral"
-                    icon="lucide:ellipsis-vertical"
-                    size="sm"
-                    :loading="starUnstarShelfStatus === 'pending' && shelfIdRef === shelf.id"
-                  />
+              <UButton
+                variant="ghost"
+                color="neutral"
+                icon="lucide:ellipsis-vertical"
+                size="sm"
+                :loading="starUnstarShelfStatus === 'pending' && shelfIdRef === shelf.id"
+              />
                  
-                </UDropdownMenu>
-              </div>
+            </UDropdownMenu>
               
-
-              <p class="text-sm text-muted line-clamp-2">
-                {{ shelf.description }}
-              </p>
-
-
-              <div class="flex flex-wrap items-center gap-2 mt-2">
-                <span
-                  v-for="tag in shelf.tags"
-                  :key="tag"
-                  class="p-1 text-xs rounded-md text-muted bg-elevated/75"
-                >
-                  #{{ tag }}
-                </span>
-              </div>
-            </header>
-           
-       
-
           </ULink>
         </TransitionGroup>
 

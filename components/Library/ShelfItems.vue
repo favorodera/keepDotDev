@@ -94,7 +94,7 @@
           leave-from-class="translate-y-0 opacity-100"
           leave-to-class="translate-y-4 opacity-0"
           tag="section"
-          class="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr))] overflow-hidden flex-auto w-full gap-4 auto-rows-min"
+          class="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr))]  flex-auto w-full gap-4 auto-rows-min"
         >
       
           <ULink

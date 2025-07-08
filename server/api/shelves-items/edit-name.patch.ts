@@ -1,17 +1,19 @@
-import { z } from 'zod'
+import z from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
+
 const bodySchema = z.object({
+  newName: z.string().min(1, 'New name is required'),
   shelfId: z.number().int().min(1, 'Shelf ID must be a positive integer starting from 1'),
-  name: z.string().min(1, 'Name is required').optional(),
-  description: z.string().min(1, 'Description is required').optional(),
-  tags: z.array(z.string()).min(1, 'Tags are required').optional(),
+  itemId: z.number().int().min(1, 'Item ID must be a positive integer starting from 1'),
 })
+
 
 export default defineEventHandler(async (event) => {
 
   try {
     const authenticatedUser = await serverSupabaseUser(event)
+
 
     if (!authenticatedUser) {
       throw createError({
@@ -31,22 +33,14 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { shelfId, name, description, tags } = validatedBody
+    const { newName, shelfId, itemId } = validatedBody
 
     const serverClient = await serverSupabaseClient<Database>(event)
 
-    function whatToUpdate() {
-      const update: Record<string, unknown> = {}
-      if (name) update.name = name
-      if (description) update.description = description
-      if (tags) update.tags = tags
-      return update
-    }
-
     const { error, data } = await serverClient
-      .from('shelves')
-      .update(whatToUpdate())
-      .match({ id: shelfId, owner_id: authenticatedUser.id })
+      .from('shelves_items')
+      .update({ name: newName })
+      .match({ id: itemId, owner_id: authenticatedUser.id, shelf_id: shelfId })
       .select('name')
       .single()
 
@@ -60,9 +54,11 @@ export default defineEventHandler(async (event) => {
 
     return {
       statusMessage: 'OPERATION_SUCCESSFUL',
-      message: `Shelf "${data.name}" updated successfully`,
+      message: `Item "${data.name}" name updated successfully`,
     }
+
   } catch (error) {
     return catchError(error)
   }
+
 })
