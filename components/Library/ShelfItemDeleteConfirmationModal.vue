@@ -1,7 +1,7 @@
 <template>
 
   <UModal
-    :title="`Delete Shelf`"
+    :title="`Delete Shelf Item`"
     :dismissible="false"
     modal
     :ui="{
@@ -12,11 +12,11 @@
   >
 
     <template #description>
-      Delete <span class="font-bold">{{ shelf.name }}</span> shelf
+      Delete <span class="font-bold">{{ shelfItem.name }}</span> shelf item
     </template>
 
     <template #body>
-      <p>Are you sure you want to delete this shelf?</p>
+      <p>Are you sure you want to delete this item?</p>
       <p>This action cannot be undone.</p>
     </template>
 
@@ -51,16 +51,17 @@
 
 <script lang="ts" setup>
 const props = defineProps<{
-  shelf: Pick<Shelf, 'name' | 'id'>
+  shelfItem: Pick<ShelfItem, 'name' | 'id' | 'shelf_id'>
 }>()
 
 const toast = useToast()
 const emit = defineEmits<{ close: [boolean] }>()
 
-const { execute, data, status, error } = useDollarFetch<AsyncSuccess, AsyncError>('/api/shelves/delete', {
+const { execute, data, status, error } = useDollarFetch<AsyncSuccess, AsyncError>('/api/shelves-items/delete', {
   method: 'DELETE',
   query: {
-    shelfId: props.shelf.id,
+    itemId: props.shelfItem.id,
+    shelfId: props.shelfItem.shelf_id,
   },
 }, false)
 
@@ -75,7 +76,7 @@ watch([data, status, error], ([newData, newStatus, newError]) => {
   }
   else if (newError && newStatus === 'error') {
     toast.add({
-      title: newError.data?.message || 'Error deleting shelf',
+      title: newError.data?.message || 'Error deleting item',
       color: 'error',
       icon: 'lucide:circle-x',
     })

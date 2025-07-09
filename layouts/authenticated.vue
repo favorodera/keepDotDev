@@ -2,7 +2,7 @@
 
   <main
     ref="pageRef"
-    class="flex flex-col min-h-screen touch-none"
+    class="flex flex-col min-h-dvh"
   >
 
     <section class="flex relative flex-auto mx-auto w-full max-w-8xl">

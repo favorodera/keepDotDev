@@ -20,13 +20,13 @@
       class="flex flex-col flex-auto w-full gap-2"
     >
 
-      <div class="sticky top-0 flex items-center gap-1 px-2 py-1 rounded-sm bg-elevated w-fit max-w-3xs">
+      <div class="sticky top-0 flex items-center gap-1 px-2 py-1 rounded-sm bg-elevated w-fit max-w-3xs text-xs">
         <UIcon
           name="codicon:markdown"
-          class="size-5 shrink-0 text-warning"
+          class="shrink-0 text-warning"
         />
-        <h2 class="text-xs">
-          {{ shelfItem.name }}.md
+        <h2 class="lowercase">
+          {{ shelfItem.name.split(' ').join('-') }}.md
         </h2>
       </div>
 

@@ -42,18 +42,17 @@
             >
               <UFormField
                 required
-                name="fileName"
-                label="File name"
-                help="File extension not required"
+                name="name"
+                label="Name"
               >
 
                 <UInput
-                  v-model="state.fileName"
+                  v-model="state.name"
                   :disabled=" newShelfItemStatus=== 'pending'"
                   :ui="{
                     root: 'w-full',
                   }"
-                  placeholder="Enter file name"
+                  placeholder="Enter item name"
                 />
               </UFormField>
 
@@ -94,53 +93,56 @@
           leave-from-class="translate-y-0 opacity-100"
           leave-to-class="translate-y-4 opacity-0"
           tag="section"
-          class="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr))]  flex-auto w-full gap-4 auto-rows-min"
+          class="grid grid-cols-[repeat(auto-fill,minmax(min(12rem,100%),1fr))] flex-auto w-full gap-4 auto-rows-min"
         >
       
           <ULink
             v-for="shelfItem in paginatedShelvesItems"
             :key="shelfItem.id"
-            class="relative flex flex-col gap-2 p-4 transition-all duration-300 border rounded-md shelf-card hover:shadow border-default hover:shadow-neutral-700"
+            class=" flex flex-col gap-2 p-3 transition-all duration-300 border border-default hover:-translate-y-0.5 rounded-md"
             :to="{ name: 'library-shelf-item', params: { shelf: routeParams.shelf, item: shelfItem.id } }"
           >
         
-            <header class="flex flex-col items-start">
-              <div class="flex items-center justify-between w-full gap-2">
+            <header class="flex items-center w-full gap-1 text-sm capitalize text-default">
 
-                <h2 class="font-semibold text-md text-default line-clamp-1">
-                  {{ shelfItem.name }}
-                </h2>
+              <UIcon
+                name="lucide:file-code"
+                class="shrink-0"
+              />
 
-                <UDropdownMenu
-                  :key="shelfItem.id"
-                  :items="[
-                    {
-                      label: 'Edit',
-                      icon: 'lucide:edit',
-                    
-                    },
-       
-                    {
-                      label: 'Delete',
-                      icon: 'lucide:trash',
-                    },
-                  ]"
-                  :content="{
-                    align: 'end',
-                  }"
-                >
+              <h3 class="break-all line-clamp-1">{{ shelfItem.name }}</h3>
 
-                  <UButton
-                    variant="ghost"
-                    color="neutral"
-                    icon="lucide:ellipsis-vertical"
-                    size="sm"
-                  />
-                 
-                </UDropdownMenu>
-              </div>
-            
             </header>
+
+            <div class="flex items-center justify-between w-full gap-2 pt-2 mt-auto">
+
+              <div class="flex items-center gap-1 text-muted text-xs">
+                <UIcon
+                  name="lucide:calendar"
+                />
+
+                <NuxtTime
+                  :datetime="shelfItem.updated_at"
+                  relative
+                />
+
+              </div>
+
+              <UButton
+                variant="ghost"
+                color="error"
+                icon="lucide:trash"
+                size="sm"
+                @click.prevent.stop="shelfItemDeleteConfirmationModal.open({
+                  shelfItem: {
+                    id: shelfItem.id,
+                    name: shelfItem.name,
+                    shelf_id: shelfItem.shelf_id,
+                  },
+                })"
+              />
+
+            </div>
         
           </ULink>
       
@@ -221,14 +223,16 @@
 
 <script lang="ts" setup>
 import { z } from 'zod'
+import { LazyLibraryShelfItemDeleteConfirmationModal } from '#components'
 
-// const shelfItemIdRef = ref<number>()
 const isPopoverOpen = ref(false)
 const toast = useToast()
 const routeParams = useRoute().params
 const shelvesItemsGridContainer = useTemplateRef('shelvesItemsGridContainer')
 const itemsPerPage = ref(1)
 const page = ref(1)
+const overlay = useOverlay()
+const shelfItemDeleteConfirmationModal = overlay.create(LazyLibraryShelfItemDeleteConfirmationModal)
 
 function calculateItemsPerPage(entries: readonly ResizeObserverEntry[]) {
   nextTick(() => {
@@ -284,10 +288,10 @@ const paginatedShelvesItems = computed(() => {
 })
 
 const schema = z.object({
-  fileName: z.string().min(1, 'File name is required!'),
+  name: z.string().min(1, 'File name is required!'),
 })
 const state = reactive<z.output<typeof schema>>({
-  fileName: '',
+  name: '',
 })
 
 const {
@@ -300,11 +304,10 @@ const {
 }, false)
 
 
-
 function onSubmit() {
   createNewShelfItem({
     body: {
-      name: state.fileName,
+      name: state.name,
       shelfId: routeParams.shelf,
     },
   })
@@ -315,7 +318,7 @@ watch([newShelfItemData, newShelfItemStatus, newShelfItemError], ([newData, newS
 
     isPopoverOpen.value = false
 
-    state.fileName = ''
+    state.name = ''
 
     toast.add({
       title: newData.message,
@@ -329,7 +332,7 @@ watch([newShelfItemData, newShelfItemStatus, newShelfItemError], ([newData, newS
       icon: 'lucide:circle-x',
     })
   }
-})
+}, { immediate: true })
 
 watch(itemsPerPage, (newPerPage) => {
   const total = paginatedShelvesItems.value.length
@@ -337,5 +340,5 @@ watch(itemsPerPage, (newPerPage) => {
   if (page.value > maxPage) {
     page.value = maxPage
   }
-})
+}, { immediate: true, deep: true })
 </script>

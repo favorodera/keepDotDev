@@ -24,16 +24,16 @@
           <ULink
             v-for="shelf in paginatedShelves"
             :key="shelf.id"
-            class="relative flex flex-col gap-2 p-4 transition-all duration-300 border rounded-md border-default hover:-translate-y-0.5 shelf"
+            class="relative flex flex-col gap-2 p-3 transition-all duration-300 border border-default hover:-translate-y-0.5 shelf"
             :to="{ name: 'library-shelf', params: { shelf: shelf.id } }"
           >
 
             <header class="flex items-center justify-between w-full gap-2">
               
-              <div class="flex items-center gap-2 text-default capitalize w-full">
+              <div class="flex items-center w-full gap-2 text-sm capitalize text-default">
                 <UIcon
                   name="lucide:folder"
-                  class="size-5 shrink-0"
+                  class="shrink-0"
                 />
 
                 <h3 class="break-all line-clamp-1">{{ shelf.name }}</h3>
@@ -87,7 +87,7 @@
               </UDropdownMenu>
             </header>
 
-            <p class="line-clamp-2 text-muted capitalize">{{ shelf.description }}</p>
+            <p class="capitalize line-clamp-2 text-muted text-xs">{{ shelf.description }}</p>
             
             <div class="flex items-center justify-between pt-2 mt-auto">
               <span class="text-xs text-muted">{{ getShelfItemsByShelfId(shelf.id).length }} item{{ getShelfItemsByShelfId(shelf.id).length > 1 ? 's' : '' }}</span>
@@ -305,8 +305,6 @@ watch([
 
 <style scoped lang="css">
 :deep(.shelf) {
-  position: relative;
-  margin-top: 1rem;
   border-radius: 0 0.5rem 0.5rem 0.5rem;
 
   & ::before {
