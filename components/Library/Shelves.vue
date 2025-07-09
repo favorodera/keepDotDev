@@ -21,128 +21,97 @@
           class="grid grid-cols-[repeat(auto-fill,minmax(min(12rem,100%),1fr))] flex-auto w-full gap-4 auto-rows-min"
         >
 
-          <UTooltip
+          <ULink
             v-for="shelf in paginatedShelves"
             :key="shelf.id"
-            :text="shelf.name"
-            arrow
-            :ui="{
-              content: 'flex-col flex gap-2 h-auto justify-start items-start max-w-2xs',
-            }"
-            :content="{
-              align: 'start',
-            }"
+            class="relative flex flex-col gap-2 p-4 transition-all duration-300 border rounded-md border-default hover:-translate-y-0.5 shelf"
+            :to="{ name: 'library-shelf', params: { shelf: shelf.id } }"
           >
 
-            <template #content>
-              <div class="flex items-center gap-1 capitalize">
+            <header class="flex items-center justify-between w-full gap-2">
+              
+              <div class="flex items-center gap-2 text-default capitalize w-full">
                 <UIcon
                   name="lucide:folder"
-                  class="size-4 shrink-0"
+                  class="size-5 shrink-0"
                 />
-                <span>{{ shelf.name }}</span>
+
+                <h3 class="break-all line-clamp-1">{{ shelf.name }}</h3>
               </div>
 
-              <div class="flex items-center gap-1 capitalize">
-                <UIcon
-                  name="lucide:book-text"
-                  class="size-4 shrink-0"
-                />
-                <span>{{ shelf.description }}</span>
-              </div>
-
-            </template>
-
-            <ULink
-              class="relative flex flex-col gap-2 p-4 transition-all duration-300 border rounded-md border-default hover:-translate-y-0.5 shelf"
-              :to="{ name: 'library-shelf', params: { shelf: shelf.id } }"
-            >
-
-              <header class="flex items-center justify-between w-full gap-2">
-              
-                <div class="flex items-center flex-auto gap-2 text-default capitalize">
-                  <UIcon
-                    name="lucide:folder"
-                    class="size-5 shrink-0"
-                  />
-
-                  <h3 class="line-clamp-1 ">{{ shelf.name }}</h3>
-                </div>
-
-                <UDropdownMenu
-                  :key="shelf.id"
-                  :items="[
-                    {
-                      label: 'Edit',
-                      icon: 'lucide:edit',
-                      onSelect: () => {
-                        newAndEditShelfModal.open({
-                          shelf: {
-                            name: shelf.name,
-                            description: shelf.description,
-                            tags: shelf.tags,
-                            id: shelf.id,
-                            owner_id: shelf.owner_id,
-                          },
-                        })
-                      },
+              <UDropdownMenu
+                :key="shelf.id"
+                :items="[
+                  {
+                    label: 'Edit',
+                    icon: 'lucide:edit',
+                    onSelect: () => {
+                      newAndEditShelfModal.open({
+                        shelf: {
+                          name: shelf.name,
+                          description: shelf.description,
+                          tags: shelf.tags,
+                          id: shelf.id,
+                          owner_id: shelf.owner_id,
+                        },
+                      })
                     },
-                    {
-                      label: 'Delete',
-                      icon: 'lucide:trash',
-                      onSelect: () => {
-                        shelfDeleteConfirmationModal.open({
-                          shelf: {
-                            name: shelf.name,
-                            id: shelf.id,
-                          },
-                        })
-                      },
-                      color: 'error',
+                  },
+                  {
+                    label: 'Delete',
+                    icon: 'lucide:trash',
+                    onSelect: () => {
+                      shelfDeleteConfirmationModal.open({
+                        shelf: {
+                          name: shelf.name,
+                          id: shelf.id,
+                        },
+                      })
                     },
-                  ]"
-                  :content="{
-                    align: 'start',
-                    side: 'right',
-                  }"
-                >
-
-                  <UButton
-                    variant="ghost"
-                    color="neutral"
-                    icon="lucide:ellipsis-vertical"
-                    size="sm"
-                  />
-                 
-                </UDropdownMenu>
-              </header>
-
-              <p class="line-clamp-2 text-muted capitalize">{{ shelf.description }}</p>
-            
-              <div class="flex items-center justify-between pt-2 mt-auto">
-                <span class="text-xs text-muted">{{ getShelfItemsByShelfId(shelf.id).length }} item{{ getShelfItemsByShelfId(shelf.id).length > 1 ? 's' : '' }}</span>
+                    color: 'error',
+                  },
+                ]"
+                :content="{
+                  align: 'start',
+                  side: 'right',
+                }"
+              >
 
                 <UButton
-                  :icon="shelf.starred ? 'custom:star-filled': 'lucide:star' "
-                  :loading="starUnstarShelfStatus === 'pending' && shelfIdRef === shelf.id"
                   variant="ghost"
                   color="neutral"
+                  icon="lucide:ellipsis-vertical"
                   size="sm"
-                  @click.prevent="async () => {
-                    shelfIdRef = shelf.id
-                    await starUnstarShelf({
-                      body: {
-                        action: shelf.starred ? 'unstar' : 'star',
-                        shelfId: shelf.id,
-                      },
-                    })
-                    shelfIdRef = undefined
-                  }"
                 />
-              </div>
+                 
+              </UDropdownMenu>
+            </header>
+
+            <p class="line-clamp-2 text-muted capitalize">{{ shelf.description }}</p>
+            
+            <div class="flex items-center justify-between pt-2 mt-auto">
+              <span class="text-xs text-muted">{{ getShelfItemsByShelfId(shelf.id).length }} item{{ getShelfItemsByShelfId(shelf.id).length > 1 ? 's' : '' }}</span>
+
+              <UButton
+                :icon="shelf.starred ? 'custom:star-filled': 'lucide:star' "
+                :loading="starUnstarShelfStatus === 'pending' && shelfIdRef === shelf.id"
+                variant="ghost"
+                color="neutral"
+                size="sm"
+                @click.prevent.stop="async () => {
+                  shelfIdRef = shelf.id
+                  await starUnstarShelf({
+                    body: {
+                      action: shelf.starred ? 'unstar' : 'star',
+                      shelfId: shelf.id,
+                    },
+                  })
+                  shelfIdRef = undefined
+                }"
+              />
+            </div>
               
-            </ULink>
-          </UTooltip>
+          </ULink>
         </TransitionGroup>
 
         <UPagination

@@ -11,7 +11,9 @@
   >
 
     <template #description>
-      <span v-if="shelf">
+      <span
+        v-if="shelf"
+      >
         Edit <span class="font-bold">{{ shelf.name }}</span> shelf
       </span>
       <span v-else>

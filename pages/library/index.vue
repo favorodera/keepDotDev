@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col items-center justify-center flex-auto overflow-hidden">
+  <main class="flex flex-col items-center justify-center flex-auto">
 
     <LibraryShelves />
 
