@@ -9,7 +9,7 @@
   >
     <div
       v-if="isVisible && isMobile"
-      class="fixed top-0 left-0 z-20 w-full transition-all duration-300 h-dvh bg-elevated/75"
+      class="fixed top-0 left-0 z-20 w-full transition-all duration-300 min-h-dvh bg-elevated/75"
       @click="toggleSidebar"
     />
   </Transition>
@@ -28,8 +28,7 @@
         'overflow-hidden transition-all w-full flex flex-col border-x border-default bg-default': true,
         'max-w-16': !isExpanded && !isMobile,
         'max-w-2xs': isExpanded && !isMobile,
-        'absolute top-0 left-0 z-20  max-w-2xs h-dvh': isVisible && isMobile,
-        'hidden': !isVisible && isMobile,
+        'absolute top-0 left-0 z-20  max-w-2xs min-h-dvh': isVisible && isMobile,
       }"
       class="transition-all duration-300"
     >

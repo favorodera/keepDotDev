@@ -24,7 +24,7 @@
           <ULink
             v-for="shelf in paginatedShelves"
             :key="shelf.id"
-            class="relative flex flex-col gap-2 p-3 transition-all duration-300 border border-default hover:-translate-y-0.5 shelf"
+            class="relative flex flex-col gap-2 p-3 transition-all duration-300 border border-default hover:-translate-y-0.5 shelf-card"
             :to="{ name: 'library-shelf', params: { shelf: shelf.id } }"
           >
 
@@ -231,6 +231,7 @@ const paginatedShelves = computed(() => {
 
 function calculateItemsPerPage(entries: readonly ResizeObserverEntry[]) {
   nextTick(() => {
+    
     const entry = entries[0]
 
     if (!entry) {
@@ -304,7 +305,7 @@ watch([
 </script>
 
 <style scoped lang="css">
-:deep(.shelf) {
+:deep(.shelf-card) {
   border-radius: 0 0.5rem 0.5rem 0.5rem;
 
   & ::before {

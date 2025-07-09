@@ -2,7 +2,7 @@ const isVisible = ref(false)
 const isExpanded = ref(false)
 
 
-const isMobile = useMediaQuery('(max-width: 767px)')
+const isMobile = useMediaQuery('(width <= 768px)', { ssrWidth: 768 })
 
 export default function () {
 
@@ -31,5 +31,3 @@ export default function () {
     isMobile,
   }
 }
-
-
