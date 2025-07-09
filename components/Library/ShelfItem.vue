@@ -30,8 +30,7 @@
         </h2>
       </div>
 
-      <MonacoEditor
-        v-if="monaco"
+      <LazyMonacoEditor
         lang="markdown"
         :model-value="editorValue"
         :options="{
@@ -64,7 +63,7 @@
           lineNumbersMinChars: 4,
           fontSize: 14,
         }"
-        class="w-full grow-1"
+        class="w-full grow-1 flex flex-col items-center"
       />
 
     </div>
@@ -74,12 +73,13 @@
 </template>
 
 <script lang="ts" setup>
+
 const monaco = useMonaco()
 const hasEditorErrors = ref(false)
 const routeParams = useRoute().params
 const { getShelfItemById } = shelvesItemsStore()
 
-const shelfItem = computed(() => getShelfItemById(Number(routeParams.item)))
+const shelfItem = ref(getShelfItemById(Number(routeParams.item)))
 
 const editorValue = ref(`## ${shelfItem.value?.name}
 
