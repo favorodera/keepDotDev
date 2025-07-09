@@ -20,35 +20,115 @@
           tag="section"
           class="grid grid-cols-[repeat(auto-fill,minmax(min(15rem,100%),1fr))] flex-auto w-full gap-4 auto-rows-min"
         >
-          <ULink
+
+          <UTooltip
             v-for="shelf in paginatedShelves"
             :key="shelf.id"
-            class="relative flex flex-col gap-2 p-4 transition-all duration-300 border rounded-md bg-elevated shelf-card hover:shadow border-default hover:shadow-neutral-700"
-            :to="{ name: 'library-shelf', params: { shelf: shelf.id } }"
+            :text="shelf.name"
+            arrow
+            :ui="{
+              content: 'flex-col flex gap-2 h-auto justify-start items-start',
+            }"
+            :content="{
+              align: 'start',
+            }"
           >
 
-            <UDropdownMenu
-              :key="shelf.id"
-              :items="[
-                {
-                  label: 'Edit',
-                  icon: 'lucide:edit',
-                  onSelect: () => {
-                    newAndEditShelfModal.open({
-                      shelf: {
-                        name: shelf.name,
-                        description: shelf.description,
-                        tags: shelf.tags,
-                        id: shelf.id,
-                        owner_id: shelf.owner_id,
+            <template #content>
+              <div class="flex items-center gap-1 capitalize">
+                <UIcon
+                  name="lucide:folder"
+                  class="size-4"
+                />
+                <span>{{ shelf.name }}</span>
+              </div>
+
+              <div class="flex items-center gap-1 capitalize">
+                <UIcon
+                  name="lucide:book-text"
+                  class="size-4"
+                />
+                <span>{{ shelf.description }}</span>
+              </div>
+
+            </template>
+
+            <ULink
+              class="relative flex flex-col gap-2 p-4 transition-all duration-300 border rounded-md border-default hover:-translate-y-0.5 shelf"
+              :to="{ name: 'library-shelf', params: { shelf: shelf.id } }"
+            >
+
+              <header class="flex items-center justify-between w-full gap-2">
+              
+                <div class="flex items-center flex-auto gap-2 text-default capitalize">
+                  <UIcon
+                    name="lucide:folder"
+                    class="size-5 shrink-0"
+                  />
+
+                  <h3 class="line-clamp-1 ">{{ shelf.name }}</h3>
+                </div>
+
+                <UDropdownMenu
+                  :key="shelf.id"
+                  :items="[
+                    {
+                      label: 'Edit',
+                      icon: 'lucide:edit',
+                      onSelect: () => {
+                        newAndEditShelfModal.open({
+                          shelf: {
+                            name: shelf.name,
+                            description: shelf.description,
+                            tags: shelf.tags,
+                            id: shelf.id,
+                            owner_id: shelf.owner_id,
+                          },
+                        })
                       },
-                    })
-                  },
-                },
-                {
-                  label: shelf.starred ? 'Unstar' : 'Star',
-                  icon: shelf.starred ? 'lucide:star-off' : 'lucide:star',
-                  onSelect: async () => {
+                    },
+                    {
+                      label: 'Delete',
+                      icon: 'lucide:trash',
+                      onSelect: () => {
+                        shelfDeleteConfirmationModal.open({
+                          shelf: {
+                            name: shelf.name,
+                            id: shelf.id,
+                          },
+                        })
+                      },
+                      color: 'error',
+                    },
+                  ]"
+                  :content="{
+                    align: 'start',
+                    side: 'right',
+                  }"
+                >
+
+                  <UButton
+                    variant="ghost"
+                    color="neutral"
+                    icon="lucide:ellipsis-vertical"
+                    size="sm"
+                  />
+                 
+                </UDropdownMenu>
+              </header>
+
+              <p class="line-clamp-2 text-muted capitalize">{{ shelf.description }}</p>
+            
+              <div class="flex items-center justify-between pt-2 mt-auto">
+                <span class="text-xs text-muted">{{ getShelfItemsByShelfId(shelf.id).length }} item{{ getShelfItemsByShelfId(shelf.id).length > 1 ? 's' : '' }}</span>
+
+                <UButton
+                  :icon="shelf.starred ? 'custom:star-filled': 'lucide:star' "
+                  :loading="starUnstarShelfStatus === 'pending' && shelfIdRef === shelf.id"
+                  variant="ghost"
+                  color="neutral"
+                  size="sm"
+                  @click.prevent="async () => {
                     shelfIdRef = shelf.id
                     await starUnstarShelf({
                       body: {
@@ -57,37 +137,12 @@
                       },
                     })
                     shelfIdRef = undefined
-                  },
-                },
-                {
-                  label: 'Delete',
-                  icon: 'lucide:trash',
-                  onSelect: () => {
-                    shelfDeleteConfirmationModal.open({
-                      shelf: {
-                        name: shelf.name,
-                        id: shelf.id,
-                      },
-                    })
-                  },
-                },
-              ]"
-              :content="{
-                align: 'end',
-              }"
-            >
-
-              <UButton
-                variant="ghost"
-                color="neutral"
-                icon="lucide:ellipsis-vertical"
-                size="sm"
-                :loading="starUnstarShelfStatus === 'pending' && shelfIdRef === shelf.id"
-              />
-                 
-            </UDropdownMenu>
+                  }"
+                />
+              </div>
               
-          </ULink>
+            </ULink>
+          </UTooltip>
         </TransitionGroup>
 
         <UPagination
@@ -173,12 +228,12 @@
 import { LazyLibraryNewAndEditShelfModal, LazyLibraryShelfDeleteConfirmationModal } from '#components'
 
 const { getShelves } = shelvesStore()
+const { getShelfItemsByShelfId } = shelvesItemsStore()
 const {
   shelves,
   shelvesFetchStatus,
   shelvesFetchError,
 } = storeToRefs(shelvesStore())
-
 
 const {
   data: starUnstarShelfData,
@@ -278,3 +333,23 @@ watch([
   }
 }, { immediate: true, deep: true })
 </script>
+
+<style scoped lang="css">
+:deep(.shelf) {
+  position: relative;
+  margin-top: 1rem;
+  border-radius: 0 0.5rem 0.5rem 0.5rem;
+
+  & ::before {
+    content: '';
+    position: absolute;
+    top: -1rem;
+    left: -1px;
+    width: 50%;
+    height: 1rem;
+    background-color: var(--ui-bg);
+    border: 1px solid var(--ui-border);
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+}
+</style>
