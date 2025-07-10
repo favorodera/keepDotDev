@@ -3,12 +3,13 @@ import markdownItAnchor from 'markdown-it-anchor'
 import markdownIt from 'markdown-it'
 
 
+
+export default async function () {
+
 const shikiHighlighter = await createHighlighter({
   langs: Object.keys(bundledLanguages),
   themes: ['ayu-dark'],
 })
-
-export default function () {
 
   function copyCodeBlock(event: MouseEvent) {
     const target = event.target as HTMLElement
