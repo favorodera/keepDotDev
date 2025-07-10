@@ -117,7 +117,9 @@ import { ref } from 'vue'
 const routeParams = useRoute().params
 const { getShelfItemById } = shelvesItemsStore()
 const shelfItem = ref(getShelfItemById(Number(routeParams.item)))
-const editorValue = ref('')
+const editorValue = ref(`## ${shelfItem.value?.name}
+
+> Continue your documentation in markdown`)
 const safeHtml = computed(() => DOMPurify.sanitize(editorValue.value || ''))
 
 
@@ -156,15 +158,25 @@ const markdown = markdownIt({
       </div>
     `
   },
-}).use(markdownItAnchor, {
-  permalink: markdownItAnchor.permalink.ariaHidden({
-    symbol: '#',
-    placement: 'before',
-    class: 'heading-anchor',
-    space: false,
-  }),
-  slugify: string => string.trim().toLowerCase().replace(/[^\w]+/g, '-'),
 })
+  .use(markdownItAnchor, {
+    permalink: markdownItAnchor.permalink.ariaHidden({
+      symbol: '#',
+      placement: 'before',
+      class: 'heading-anchor',
+      space: false,
+    }),
+    slugify: string => string.trim().toLowerCase().replace(/[^\w]+/g, '-'),
+  })
+
+// Add this to override the default fence renderer and prevent double wrapping
+markdown.renderer.rules.fence = (tokens, index, options) => {
+  const token = tokens[index]
+  if (!token) return ''
+  const code = token.content
+  const language = (token.info ? token.info.trim().split(/\s+/g)[0] : '') || 'plaintext'
+  return options.highlight ? options.highlight(code, language, '') : ''
+}
 
 onUnmounted(() => {
   shikiHighlighter.dispose()
@@ -203,7 +215,7 @@ function handleCodeCopy(event: MouseEvent) {
   line-height: 1.7;
   max-width: 100%;
   word-break: break-word;
-  padding: 0;
+  padding: 1rem;
   flex: auto;
   border: 1px solid var(--ui-border);
   border-radius: 1rem;
@@ -374,7 +386,7 @@ function handleCodeCopy(event: MouseEvent) {
 }
 
 :deep(.code-block-container) {
-  margin: 1em;
+  margin: 1em 0;
   border-radius: 0.4em;
   background: #18181b;
   border: 1px solid #232324;
