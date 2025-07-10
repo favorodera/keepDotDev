@@ -169,7 +169,6 @@ const markdown = markdownIt({
     slugify: string => string.trim().toLowerCase().replace(/[^\w]+/g, '-'),
   })
 
-// Add this to override the default fence renderer and prevent double wrapping
 markdown.renderer.rules.fence = (tokens, index, options) => {
   const token = tokens[index]
   if (!token) return ''
