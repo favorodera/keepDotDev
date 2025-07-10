@@ -28,10 +28,6 @@ useHead({
       rel: 'canonical',
       href: 'https://keepdotdev.vercel.app',
     },
-    {
-      rel: 'stylesheet',
-      href: 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/a11y-dark.css',
-    },
   ],
 })
 

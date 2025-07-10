@@ -1,6 +1,6 @@
 <template>
 
-  <main class="flex flex-col items-center justify-center flex-auto">
+  <main class="flex flex-col items-center justify-center flex-auto max-h-dvh">
   
     <LibraryShelfItem />
   

@@ -20,10 +20,12 @@
 html, body {
     overscroll-behavior: contain;
     font-family: var(--font-public-sans);
+    color: var(--ui-text);
 }
 
 #app {
     font-family: inherit;
+    color: inherit;
 }
 
 .page-enter-active,

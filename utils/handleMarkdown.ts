@@ -91,7 +91,6 @@ export default function () {
 
   return {
     markdown,
-    shikiHighlighter,
     copyCodeBlock,
   }
 
