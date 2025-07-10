@@ -10,7 +10,9 @@
 
 <script lang="ts" setup>
 const user = useSupabaseUser()
-const { getShelvesItems, subscribeToRealtime, unsubscribeFromRealtime } = shelvesItemsStore()
+const { getShelvesItems } = shelvesItemsStore()
+
+await callOnce('all-shelves-items', () => getShelvesItems())
 
 definePageMeta({
   layout: 'authenticated',
@@ -24,15 +26,5 @@ useSeoMeta({
     }
     return '| Shelf'
   },
-})
-
-await callOnce('all-shelves-items', () => getShelvesItems())
-
-onMounted(() => {
-  subscribeToRealtime()
-})
-
-onUnmounted(() => {
-  unsubscribeFromRealtime()
 })
 </script>

@@ -4,7 +4,6 @@ const shelvesItemsStore = defineStore('shelvesItems', () => {
 
   const shelvesItems = useState<ShelfItem[]>('all-shelves-items', () => [])
   const user = useSupabaseUser()
-  const computedTrigger = ref(0)
   const realtimeChannel = ref<RealtimeChannel | null>(null)
   const client = useSupabaseClient()
 
@@ -22,8 +21,8 @@ const shelvesItemsStore = defineStore('shelvesItems', () => {
     },
   }, false)
 
+
   const sortedShelvesItems = computed(() => {
-    const _ = computedTrigger.value
     return [...shelvesItems.value].sort((itemA, itemB) => {
       return new Date(itemB.updated_at).getTime() - new Date(itemA.updated_at).getTime()
     })
@@ -47,31 +46,21 @@ const shelvesItemsStore = defineStore('shelvesItems', () => {
         filter: `owner_id=eq.${user.value.id}`,
       }, (payload) => {
         switch (payload.eventType) {
-          case 'UPDATE':
-          {
+          case 'UPDATE': {
             const updatedShelfItem = payload.new as ShelfItem
-            const index = shelvesItems.value.findIndex(item => item.id === updatedShelfItem.id)
-            if (index !== -1) {
-              shelvesItems.value.splice(index, 1, updatedShelfItem)
-              computedTrigger.value++
-            }
+            shelvesItems.value = shelvesItems.value.map(item =>
+              item.id === updatedShelfItem.id ? updatedShelfItem : item,
+            )
             break
           }
-          case 'INSERT':
-          {
+          case 'INSERT': {
             const newShelfItem = payload.new as ShelfItem
-            shelvesItems.value.push(newShelfItem)
-            computedTrigger.value++
+            shelvesItems.value = [...shelvesItems.value, newShelfItem]
             break
           }
-          case 'DELETE':
-          {
+          case 'DELETE': {
             const deletedShelfItem = payload.old as ShelfItem
-            const index = shelvesItems.value.findIndex(item => item.id === deletedShelfItem.id)
-            if (index !== -1) {
-              shelvesItems.value.splice(index, 1)
-              computedTrigger.value++
-            }
+            shelvesItems.value = shelvesItems.value.filter(item => item.id !== deletedShelfItem.id)
             break
           }
         }
@@ -80,11 +69,11 @@ const shelvesItemsStore = defineStore('shelvesItems', () => {
   }
 
   function getShelfItemsByShelfId(shelfId: number) {
-    return [...shelvesItems.value].filter(item => item.shelf_id === shelfId)
+    return sortedShelvesItems.value.filter(item => item.shelf_id === shelfId)
   }
 
   function getShelfItemById(shelfItemId: number) {
-    return [...shelvesItems.value].find(item => item.id === shelfItemId)
+    return sortedShelvesItems.value.find(item => item.id === shelfItemId)
   }
 
   return {

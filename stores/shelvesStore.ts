@@ -5,7 +5,6 @@ const shelvesStore = defineStore('all-shelves', () => {
   const realtimeChannel = ref<RealtimeChannel | null>(null)
   const shelves = useState<Shelf[]>('all-shelves', () => [])
   const user = useSupabaseUser()
-  const computedTrigger = ref(0)
 
   const {
     status: shelvesFetchStatus,
@@ -23,7 +22,6 @@ const shelvesStore = defineStore('all-shelves', () => {
 
 
   const sortedShelves = computed(() => {
-    const _ = computedTrigger.value
     return [...shelves.value].sort((shelfA, shelfB) => {
       if (shelfA.starred && !shelfB.starred) return -1
       if (!shelfA.starred && shelfB.starred) return 1
@@ -49,31 +47,21 @@ const shelvesStore = defineStore('all-shelves', () => {
         filter: `owner_id=eq.${user.value.id}`,
       }, (payload) => {
         switch (payload.eventType) {
-          case 'UPDATE':
-          {
+          case 'UPDATE': {
             const updatedShelf = payload.new as Shelf
-            const index = shelves.value.findIndex(shelf => shelf.id === updatedShelf.id)
-            if (index !== -1) {
-              shelves.value.splice(index, 1, updatedShelf)
-              computedTrigger.value++
-            }
+            shelves.value = shelves.value.map(shelf =>
+              shelf.id === updatedShelf.id ? updatedShelf : shelf,
+            )
             break
           }
-          case 'INSERT':
-          {
+          case 'INSERT': {
             const newShelf = payload.new as Shelf
-            shelves.value.push(newShelf)
-            computedTrigger.value++
+            shelves.value = [...shelves.value, newShelf]
             break
           }
-          case 'DELETE':
-          {
+          case 'DELETE': {
             const deletedShelf = payload.old as Shelf
-            const index = shelves.value.findIndex(shelf => shelf.id === deletedShelf.id)
-            if (index !== -1) {
-              shelves.value.splice(index, 1)
-              computedTrigger.value++
-            }
+            shelves.value = shelves.value.filter(shelf => shelf.id !== deletedShelf.id)
             break
           }
         }

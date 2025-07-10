@@ -10,7 +10,9 @@
   
 <script lang="ts" setup>
 const user = useSupabaseUser()
+const { getShelvesItems } = shelvesItemsStore()
   
+
 definePageMeta({
   layout: 'authenticated',
   colorMode: 'dark',
@@ -26,5 +28,6 @@ useSeoMeta({
 })
 
 
+await callOnce('all-shelves-items', () => getShelvesItems())
 </script>
   

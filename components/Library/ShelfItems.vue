@@ -99,7 +99,7 @@
           <ULink
             v-for="shelfItem in paginatedShelvesItems"
             :key="shelfItem.id"
-            class=" flex flex-col gap-2 p-3 transition-all duration-300 border border-default hover:-translate-y-0.5 rounded-md"
+            class=" flex flex-col gap-2 p-3 transition-all duration-300 border border-default hover:-translate-y-0.5 rounded-md shelf-item-card"
             :to="{ name: 'library-shelf-item', params: { shelf: routeParams.shelf, item: shelfItem.id } }"
           >
         
@@ -116,7 +116,7 @@
 
             <div class="flex items-center justify-between w-full gap-2 pt-2 mt-auto">
 
-              <div class="flex items-center gap-1 text-muted text-xs">
+              <div class="flex items-center gap-1 text-xs text-muted">
                 <UIcon
                   name="lucide:calendar"
                 />
@@ -244,7 +244,7 @@ function calculateItemsPerPage(entries: readonly ResizeObserverEntry[]) {
     }
 
     const gap = 16
-    const cardElement = document.querySelector('.shelf-card')
+    const cardElement = document.querySelector('.shelf-item-card')
 
     if (!cardElement) {
       itemsPerPage.value = 3
