@@ -93,6 +93,7 @@
 
           <span
             class="prose"
+            @click="handleCodeCopy"
             v-html="markdown.render(editorValue)"
           />
         </template>
@@ -111,12 +112,14 @@ import DOMPurify from 'dompurify'
 import markdownIt from 'markdown-it'
 import { bundledLanguages, createHighlighter } from 'shiki'
 import markdownItAnchor from 'markdown-it-anchor'
+import { ref } from 'vue'
 
 const routeParams = useRoute().params
 const { getShelfItemById } = shelvesItemsStore()
 const shelfItem = ref(getShelfItemById(Number(routeParams.item)))
-const editorValue = ref('# Title\n```ts\nconsole.log("Hello, World!")\n```')
+const editorValue = ref('')
 const safeHtml = computed(() => DOMPurify.sanitize(editorValue.value || ''))
+
 
 const shikiHighlighter = await createHighlighter({
   langs: Object.keys(bundledLanguages),
@@ -128,27 +131,30 @@ const markdown = markdownIt({
   linkify: true,
   typographer: true,
   highlight: (code, language?: string): string => {
-    if (language) {
+    const codeId = `codeblock-${Math.random().toString(36).substring(2, 11)}`
+    let langLabel = language || 'plaintext'
+    let codeHtml = ''
 
-      try {
-        const grammar = shikiHighlighter.getLanguage(language)
-
-        if (grammar) {
-          return '<div class="prose">'
-            + `<span>${grammar.name}</span>`
-            + shikiHighlighter.codeToHtml(code, { lang: language, theme: 'ayu-dark' })
-            + '</div>'
-        }
-      } catch {
-        return '<div class="prose">'
-          + `<span>${language}</span>`
-          + shikiHighlighter.codeToHtml(code, { lang: 'plaintext', theme: 'ayu-dark' })
-          + '</div>'
-      }
-
+    try {
+      const grammar = language ? shikiHighlighter.getLanguage(language) : null
+      codeHtml = shikiHighlighter.codeToHtml(code, { lang: language || 'plaintext', theme: 'ayu-dark' })
+      langLabel = grammar ? grammar.name : langLabel
+    } catch {
+      codeHtml = shikiHighlighter.codeToHtml(code, { lang: 'plaintext', theme: 'ayu-dark' })
     }
 
-    return '<pre><code>' + markdown.utils.escapeHtml(code) + '</code></pre>'
+    const codeMatch = codeHtml.match(/<code[^>]*>([\s\S]*?)<\/code>/)
+    const codeContent = codeMatch ? codeMatch[1] : code
+
+    return `
+      <div class="code-block-container" data-lang="${langLabel}">
+        <div class="code-block-header">
+          <span class="code-block-lang">${langLabel}</span>
+          <button class="code-block-copy" data-code-id="${codeId}" aria-label="Copy code" title="Copy code">Copy</button>
+        </div>
+        <pre id="${codeId}"><code class="shiki">${codeContent}</code></pre>
+      </div>
+    `
   },
 }).use(markdownItAnchor, {
   permalink: markdownItAnchor.permalink.ariaHidden({
@@ -163,6 +169,27 @@ const markdown = markdownIt({
 onUnmounted(() => {
   shikiHighlighter.dispose()
 })
+
+function handleCodeCopy(event: MouseEvent) {
+  const target = event.target as HTMLElement
+  if (target.classList.contains('code-block-copy')) {
+    const codeId = target.getAttribute('data-code-id')
+    if (codeId) {
+      const codeEl = document.getElementById(codeId)
+      if (codeEl) {
+        const text = codeEl.innerText
+        navigator.clipboard.writeText(text).then(() => {
+          target.innerText = 'Copied!'
+          target.setAttribute('disabled', 'true')
+          setTimeout(() => {
+            target.innerText = 'Copy'
+            target.removeAttribute('disabled')
+          }, 1500)
+        })
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -177,6 +204,9 @@ onUnmounted(() => {
   max-width: 100%;
   word-break: break-word;
   padding: 0;
+  flex: auto;
+  border: 1px solid var(--ui-border);
+  border-radius: 1rem;
 }
 
 :deep(.prose h1),
@@ -341,5 +371,67 @@ onUnmounted(() => {
 :deep(.prose del) {
   text-decoration: line-through;
   color: #888;
+}
+
+:deep(.code-block-container) {
+  margin: 1em;
+  border-radius: 0.4em;
+  background: #18181b;
+  border: 1px solid #232324;
+  overflow: hidden;
+}
+:deep(.code-block-header) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #18181b;
+  color: #b0b0b0;
+  font-size: 0.8em;
+  padding: 0.25em 0.9em 0.18em 0.9em;
+  border-bottom: 1px solid #232324;
+}
+:deep(.code-block-lang) {
+  font-family: 'Fira Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
+  font-weight: 500;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  color: #b0b0b0;
+}
+:deep(.code-block-copy) {
+  background: none;
+  border: none;
+  color: #b0b0b0;
+  cursor: pointer;
+  font-size: 0.8em;
+  padding: 0.1em 0.7em;
+  border-radius: 0.25em;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+}
+:deep(.code-block-copy:hover),
+:deep(.code-block-copy:focus) {
+  background: #232324;
+  color: #fff;
+}
+:deep(.code-block-copy[disabled]) {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+:deep(.code-block-container pre) {
+  margin: 0;
+  padding: 0.7em 1em;
+  background: transparent;
+  border: none;
+  font-size: 0.93em;
+  overflow-x: auto;
+  border-radius: 0;
+}
+:deep(.code-block-container code.shiki) {
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
+  border-radius: 0;
 }
 </style>

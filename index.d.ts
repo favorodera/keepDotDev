@@ -7,4 +7,10 @@ declare module '@supabase/supabase-js' {
   }
 }
 
+declare global {
+  interface Window {
+    __copyCode?: (id: string) => void
+  }
+}
+
 export {}
