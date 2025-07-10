@@ -133,7 +133,7 @@ const props = defineProps<{
 
 const toast = useToast()
 const emit = defineEmits<{ close: [boolean] }>()
-const { isVisible } = useSideBar()
+const { isOpen } = useSideBar()
 
 const formRef = useTemplateRef('formRef')
 
@@ -177,7 +177,7 @@ async function onSubmit() {
 
 watch([status, error], ([newStatus, newError]) => {
   if (newStatus === 'success') {
-    isVisible.value = false
+    isOpen.value = false
 
     emit('close', false)
     toast.add({

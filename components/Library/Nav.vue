@@ -4,21 +4,13 @@
     <ul class="flex justify-between items-center mx-auto w-full md:justify-end max-w-8xl">
 
       <li>
-        <ClientOnly>
-          <UTooltip
-            :content="{
-              side: 'right',
-            }"
-            text="Open Sidebar"
-          >
-            <UButton
-              class="md:hidden"
-              icon="lucide:panel-left-open"
-              variant="ghost"
-              @click="toggleSidebar()"
-            />
-          </UTooltip>
-        </ClientOnly>
+
+        <UButton
+          class="md:hidden"
+          icon="lucide:panel-left-open"
+          variant="ghost"
+          @click="toggle()"
+        />
       </li>
 
       
@@ -46,6 +38,6 @@
 <script lang="ts" setup>
 const user = useSupabaseUser()
 
-const { toggleSidebar } = useSideBar()
+const { toggle } = useSideBar()
 </script>
  

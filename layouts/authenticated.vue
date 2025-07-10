@@ -1,22 +1,17 @@
 <template>
 
-  <main
-    ref="pageRef"
-    class="flex flex-col min-h-dvh"
-  >
+  <main class="flex flex-col min-h-dvh">
 
-    <section class="flex relative flex-auto mx-auto w-full max-w-8xl">
+    <section
+      class="grid relative mx-auto w-full min-h-dvh max-w-8xl transition-all duration-300"
+      :class="isOpen
+        ? 'md:grid-cols-[16rem_1fr]'
+        : 'md:grid-cols-[4rem_1fr]'"
+    >
 
-      <ClientOnly fallback-tag="aside">
-        <LibrarySideBar />
+      <LibrarySideBar />
 
-        <template #fallback>
-          <aside class="hidden flex-col flex-auto w-full transition-all max-w-16 border-x border-default bg-default md:relative h-dvh md:flex" />
-        </template>
-        
-      </ClientOnly>
-
-      <section class="flex flex-col flex-auto">
+      <section class="flex flex-col">
         <LibraryNav />
 
         <slot />
@@ -30,26 +25,5 @@
 </template>
 
 <script lang="ts" setup>
-const pageRef = useTemplateRef('pageRef')
-
-const { toggleSidebar, isVisible } = useSideBar()
-
-const { lengthX } = useSwipe(pageRef, {
-  passive: false,
-  onSwipeEnd(event, direction) {
-    if (!pageRef.value) return
-    
-    const threshold = pageRef.value.offsetWidth * 0.3
-    const absLengthX = Math.abs(lengthX.value)
-    
-    if (absLengthX >= threshold) {
-      if (direction === 'right' && !isVisible.value) {
-        toggleSidebar()
-      } else if (direction === 'left' && isVisible.value) {
-        toggleSidebar()
-      }
-    }
-  },
-  threshold: 25,
-})
+const { isOpen } = useSideBar()
 </script>
