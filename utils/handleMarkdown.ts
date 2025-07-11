@@ -4,6 +4,8 @@ import markdownIt from 'markdown-it'
 
 export default function () {
   const { $shikiHighlighter } = useNuxtApp()
+  const { copy } = useClipboard({ legacy: true })
+
  
   const markdown = markdownIt({
     html: true,
@@ -65,22 +67,26 @@ export default function () {
     const codeElement = document.getElementById(codeId)
     if (!codeElement) return
       
-    const text = codeElement.innerText
-    navigator.clipboard.writeText(text)
-      .then(() => {
-        target.innerText = 'Copied!'
-        target.setAttribute('disabled', 'true')
-        setTimeout(() => {
-          target.innerText = 'Copy'
-          target.removeAttribute('disabled')
-        }, 1500)
-      })
-      .catch(() => {
-        target.innerText = 'Failed!'
-        setTimeout(() => {
-          target.innerText = 'Copy'
-        }, 1500)
-      })
+    const codeText = codeElement.innerText
+
+    try {
+
+      copy(codeText)
+
+      target.innerText = 'Copied!'
+      target.setAttribute('disabled', 'true')
+
+      setTimeout(() => {
+        target.innerText = 'Copy'
+        target.removeAttribute('disabled')
+      }, 1500)
+
+    } catch {
+
+      target.innerText = 'Failed!'
+
+      setTimeout(() => target.innerText = 'Copy', 1500)
+    }
   }
 
   return {

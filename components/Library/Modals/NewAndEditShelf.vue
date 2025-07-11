@@ -25,7 +25,6 @@
 
       <UForm
         id="new-and-edit-shelf-form"
-        ref="formRef"
         :state
         :schema
         class="space-y-4"
@@ -134,8 +133,6 @@ const props = defineProps<{
 const toast = useToast()
 const emit = defineEmits<{ close: [boolean] }>()
 const { isOpen } = useSideBar()
-
-const formRef = useTemplateRef('formRef')
 
 const { execute, status, error } = useDollarFetch<AsyncSuccess, AsyncError>(props.shelf ? '/api/shelves/edit' : '/api/shelves/new', {
   method: props.shelf ? 'PATCH' : 'POST',

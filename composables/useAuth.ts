@@ -51,9 +51,22 @@ export default function () {
     await navigateTo('/auth')
   }
 
+  async function updateUser(value: Record<string, unknown>) {
+    await callAction(() => client.auth.updateUser(({
+      data: value,
+    })))
+
+    toast.add({
+      title: 'Value Set',
+      color: 'success',
+      icon: 'lucide:circle-check',
+    })
+  }
+
   return {
     signInWithOAuth,
     signOut,
+    updateUser,
   }
 }
 

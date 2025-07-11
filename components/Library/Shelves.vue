@@ -1,8 +1,70 @@
 <template>
 
   <main
-    class="flex flex-col items-start flex-auto w-full p-4"
+    class="flex flex-col items-start flex-auto w-full gap-8 p-4"
   >
+
+    <template v-if="shelvesFetchStatus === 'success' ">
+
+      <div class="flex items-center justify-end w-full gap-2">
+
+        <UPopover
+          v-mode:open="isPopoverOpen"
+          arrow
+          :content="{
+            align: 'end',
+          }"
+          :ui="{
+            content: 'bg-default p-4 max-w-35',
+          }"
+        >
+          <UButton
+            icon="lucide:settings"
+            :label="`${state.shelvesPerPage} Shelves per page`"
+            size="sm"
+            variant="soft"
+            color="neutral"
+          />
+
+          <template #content>
+
+            <UForm
+              :state
+              :schema
+              class="space-y-2"
+              @submit="onSubmit"
+            >
+
+              <UFormField name="shelvesPerPage">
+                <UInputNumber
+                  v-model="state.shelvesPerPage"
+                  variant="subtle"
+                  color="neutral"
+                  :min="3"
+                  :ui="{
+                    increment: 'hidden',
+                    decrement: 'hidden',
+                  }"
+                />
+              </UFormField>
+
+              <UButton
+                type="submit"
+                label="Set"
+                color="neutral"
+                variant="subtle"
+                block
+              />
+
+            </UForm>
+            
+          </template>
+
+        </UPopover>
+
+      </div>
+
+    </template>
 
     <template v-if="shelvesFetchStatus === 'success' && shelves.length > 0">
       <section class="flex flex-col justify-between flex-auto w-full gap-4">
@@ -116,7 +178,7 @@
         <UPagination
           v-model:page="page"
           :total="shelves.length"
-          :items-per-page="itemsPerPage"
+          :items-per-page="shelvesPerPage"
           :sibling-count="1"
           show-edges
           size="sm"
@@ -193,8 +255,14 @@
 </template>
 
 <script lang="ts" setup>
+import { z } from 'zod'
 import { LazyLibraryModalsNewAndEditShelf, LazyLibraryModalsShelfDeleteConfirmation } from '#components'
 
+const user = useSupabaseUser()
+const client = useSupabaseClient<Database>()
+
+const { updateUser } = useAuth()
+const isPopoverOpen = ref(false)
 const { getShelves } = shelvesStore()
 const { getShelfItemsByShelfId } = shelvesItemsStore()
 const {
@@ -212,6 +280,14 @@ const {
   method: 'PATCH',
 }, false)
 
+const schema = z.object({
+  shelvesPerPage: z.number().int().min(3, 'Shelves per page must be at least 3'),
+})
+
+const state = reactive<z.output<typeof schema>>({
+  shelvesPerPage: user.value?.user_metadata.shelvesPerPage || 10,
+})
+
 const shelfIdRef = ref<number>()
 
 const toast = useToast()
@@ -219,62 +295,42 @@ const overlay = useOverlay()
 const newAndEditShelfModal = overlay.create(LazyLibraryModalsNewAndEditShelf)
 const shelfDeleteConfirmationModal = overlay.create(LazyLibraryModalsShelfDeleteConfirmation)
 
-const shelvesGridContainer = useTemplateRef('shelvesGridContainer')
-const itemsPerPage = ref(1)
 const page = ref(1)
+
+const shelvesPerPage = computed(() => state.shelvesPerPage)
 const paginatedShelves = computed(() => {
-  const start = (page.value - 1) * itemsPerPage.value
-  const end = start + itemsPerPage.value
+  const start = (page.value - 1) * shelvesPerPage.value
+  const end = start + shelvesPerPage.value
   return shelves.value.slice(start, end)
 })
 
-function calculateItemsPerPage(entries: readonly ResizeObserverEntry[]) {
-  nextTick(() => {
-    
-    const entry = entries[0]
+async function onSubmit() {
+  await updateUser({ shelvesPerPage: state.shelvesPerPage })
 
-    if (!entry) {
-      itemsPerPage.value = 3
-      return
-    }
-
-    const gap = 16
-    const cardElement = document.querySelector('.shelf-card')
-
-    if (!cardElement) {
-      itemsPerPage.value = 3
-      return
-    }
-
-    const cardWidth = cardElement.clientWidth
-    const cardHeight = cardElement.clientHeight
-
-    const containerWidth = entry.contentRect.width
-    const containerHeight = entry.contentRect.height
-
-    const cardsPerRow = Math.floor((containerWidth + gap) / (cardWidth + gap))
-    const rowsPerPage = Math.floor((containerHeight + gap) / (cardHeight + gap))
-
-    itemsPerPage.value = Math.max(1, cardsPerRow * rowsPerPage)
+  toast.add({
+    title: `Shelves per page set to ${state.shelvesPerPage}`,
+    color: 'success',
+    icon: 'lucide:circle-check',
   })
 }
 
-const debounceCalculateItemsPerPage = useDebounceFn(calculateItemsPerPage, 100)
-
-useResizeObserver(shelvesGridContainer, (entries) => {
-  return debounceCalculateItemsPerPage(entries)
-}, {
-  box: 'border-box',
+client.auth.onAuthStateChange((event, session) => {
+  switch (event) {
+    case 'USER_UPDATED':
+      if (session) state.shelvesPerPage = session.user.user_metadata.shelvesPerPage || 10
+      break
+  }
 })
 
 
-watch(itemsPerPage, (newPerPage) => {
+
+watch(shelvesPerPage, (newPerPage) => {
   const total = shelves.value.length
   const maxPage = Math.max(1, Math.ceil(total / newPerPage))
   if (page.value > maxPage) {
     page.value = maxPage
   }
-}, { immediate: true, deep: true })
+})
 
 watch([
   starUnstarShelfStatus,
@@ -292,7 +348,6 @@ watch([
       icon: 'lucide:circle-check',
     })
   }
-
   if (newStatus === 'error' && newError) {
     toast.add({
       title: newError.data?.message || 'Failed to star/unstar shelf',

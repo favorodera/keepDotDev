@@ -4,6 +4,8 @@ declare module '@supabase/supabase-js' {
     full_name: string
     avatar_url: string
     user_name: string
+    itemsPerPage?: number
+    shelvesPerPage?: number
   }
 }
 
