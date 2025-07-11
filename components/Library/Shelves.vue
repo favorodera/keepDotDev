@@ -9,18 +9,18 @@
       <div class="flex items-center justify-end w-full gap-2">
 
         <UPopover
-          v-mode:open="isPopoverOpen"
+          v-model:open="isPopoverOpen"
           arrow
           :content="{
             align: 'end',
           }"
           :ui="{
-            content: 'bg-default p-4 max-w-35',
+            content: 'bg-default p-2 max-w-35',
           }"
         >
           <UButton
             icon="lucide:settings"
-            :label="`${state.shelvesPerPage} Shelves per page`"
+            :label="`${shelvesPerPage} Shelves per page`"
             size="sm"
             variant="soft"
             color="neutral"
@@ -28,35 +28,27 @@
 
           <template #content>
 
-            <UForm
-              :state
-              :schema
+            <form
               class="space-y-2"
-              @submit="onSubmit"
             >
-
-              <UFormField name="shelvesPerPage">
-                <UInputNumber
-                  v-model="state.shelvesPerPage"
-                  variant="subtle"
-                  color="neutral"
-                  :min="3"
-                  :ui="{
-                    increment: 'hidden',
-                    decrement: 'hidden',
-                  }"
-                />
-              </UFormField>
-
+              <input
+                v-model.number="formShelvesPerPage"
+                type="number"
+                min="3"
+                class="block w-full px-1 py-0.5 border border-default rounded text-sm focus:outline-none focus:ring"
+              >
               <UButton
                 type="submit"
+                loading-auto
                 label="Set"
                 color="neutral"
                 variant="subtle"
+                size="xs"
                 block
+                :disabled="!isNewStateDifferentFromOldState"
+                @click.prevent="onSubmit"
               />
-
-            </UForm>
+            </form>
             
           </template>
 
@@ -255,11 +247,27 @@
 </template>
 
 <script lang="ts" setup>
-import { z } from 'zod'
 import { LazyLibraryModalsNewAndEditShelf, LazyLibraryModalsShelfDeleteConfirmation } from '#components'
 
+const DEFAULT_SHELVES_PER_PAGE = 10
 const user = useSupabaseUser()
-const client = useSupabaseClient<Database>()
+
+const shelvesPerPage = ref(user.value?.user_metadata.shelvesPerPage ?? DEFAULT_SHELVES_PER_PAGE)
+const formShelvesPerPage = ref(shelvesPerPage.value)
+
+watch(
+  () => user.value?.user_metadata.shelvesPerPage,
+  (newValue) => {
+    shelvesPerPage.value = newValue ?? DEFAULT_SHELVES_PER_PAGE
+  },
+  { immediate: true },
+)
+
+watch(shelvesPerPage, (newPerPage) => {
+  formShelvesPerPage.value = newPerPage
+}, { immediate: true })
+
+const isNewStateDifferentFromOldState = computed(() => formShelvesPerPage.value !== shelvesPerPage.value)
 
 const { updateUser } = useAuth()
 const isPopoverOpen = ref(false)
@@ -280,24 +288,13 @@ const {
   method: 'PATCH',
 }, false)
 
-const schema = z.object({
-  shelvesPerPage: z.number().int().min(3, 'Shelves per page must be at least 3'),
-})
-
-const state = reactive<z.output<typeof schema>>({
-  shelvesPerPage: user.value?.user_metadata.shelvesPerPage || 10,
-})
-
 const shelfIdRef = ref<number>()
-
 const toast = useToast()
 const overlay = useOverlay()
 const newAndEditShelfModal = overlay.create(LazyLibraryModalsNewAndEditShelf)
 const shelfDeleteConfirmationModal = overlay.create(LazyLibraryModalsShelfDeleteConfirmation)
-
 const page = ref(1)
 
-const shelvesPerPage = computed(() => state.shelvesPerPage)
 const paginatedShelves = computed(() => {
   const start = (page.value - 1) * shelvesPerPage.value
   const end = start + shelvesPerPage.value
@@ -305,24 +302,28 @@ const paginatedShelves = computed(() => {
 })
 
 async function onSubmit() {
-  await updateUser({ shelvesPerPage: state.shelvesPerPage })
+
+  if (formShelvesPerPage.value < 3) {
+    toast.add({
+      title: 'Shelves per page must be at least 3',
+      color: 'error',
+      icon: 'lucide:circle-x',
+    })
+    return
+  }
+
+  shelvesPerPage.value = formShelvesPerPage.value
+
+  await updateUser({ shelvesPerPage: shelvesPerPage.value })
+
+  isPopoverOpen.value = false
 
   toast.add({
-    title: `Shelves per page set to ${state.shelvesPerPage}`,
+    title: `Shelves per page set to ${shelvesPerPage.value}`,
     color: 'success',
     icon: 'lucide:circle-check',
   })
 }
-
-client.auth.onAuthStateChange((event, session) => {
-  switch (event) {
-    case 'USER_UPDATED':
-      if (session) state.shelvesPerPage = session.user.user_metadata.shelvesPerPage || 10
-      break
-  }
-})
-
-
 
 watch(shelvesPerPage, (newPerPage) => {
   const total = shelves.value.length
@@ -356,7 +357,6 @@ watch([
     })
   }
 }, { immediate: true, deep: true })
-
 </script>
 
 <style scoped lang="css">

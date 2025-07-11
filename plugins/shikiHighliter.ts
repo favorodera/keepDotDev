@@ -1,16 +1,19 @@
-import { bundledLanguages, createHighlighter } from 'shiki'
+import { bundledLanguages, createHighlighter, type BundledLanguage, type BundledTheme, type HighlighterGeneric } from 'shiki'
+
+let shikiHighlighterInstance: HighlighterGeneric<BundledLanguage, BundledTheme> | undefined
 
 export default defineNuxtPlugin(async () => {
-
-  const shikiHighlighter = await createHighlighter({
-    langs: Object.keys(bundledLanguages),
-    themes: ['ayu-dark'],
-  })
+  
+  if (!shikiHighlighterInstance) {
+    shikiHighlighterInstance = await createHighlighter({
+      langs: Object.keys(bundledLanguages),
+      themes: ['ayu-dark'],
+    })
+  }
 
   return {
     provide: {
-      shikiHighlighter,
+      shikiHighlighter: shikiHighlighterInstance,
     },
   }
-
 })
