@@ -25,8 +25,8 @@
             :ui="{ content: 'bg-default p-2 max-w-35' }"
           >
             <UButton
-              icon="lucide:settings"
-              :label="`${itemsPerPage} Items per page`"
+              icon="lucide:layout-list"
+              :label="String(itemsPerPage)"
               size="xs"
               variant="soft"
               color="neutral"
@@ -54,18 +54,42 @@
             </template>
           </UPopover>
 
-          <UButton
-            icon="lucide:plus"
-            label="Add"
-            size="xs"
-            variant="soft"
-            color="neutral"
-            @click="newAndEditShelfItemModal.open({
-              shelfItem: {
-                shelfId: Number(routeParams.shelf),
+
+          <UDropdownMenu
+            arrow
+            :items="[
+              {
+                label: 'Add Item',
+                icon: 'lucide:plus',
+                onSelect: () => newAndEditShelfItemModal.open({
+                  shelfItem: {
+                    shelfId: Number(routeParams.shelf),
+                  },
+                }),
               },
-            })"
-          />
+              {
+                label: 'Read Mode',
+                icon: 'lucide:book-open',
+              },
+              {
+                label: 'Ask AI',
+                icon: 'lucide:bot',
+              },
+            ]"
+            :content="{ align: 'end' }"
+          >
+
+            <UButton
+              icon="lucide:align-right"
+              size="xs"
+              variant="soft"
+              color="neutral"
+            />
+        
+          </UDropdownMenu>
+
+
+          
         </div>
       </div>
 
@@ -116,6 +140,8 @@
                 <NuxtTime
                   :datetime="shelfItem.updated_at"
                   relative
+                  numeric="auto"
+                  style="long"
                 />
 
               </div>

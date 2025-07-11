@@ -18,10 +18,11 @@
             content: 'bg-default p-2 max-w-35',
           }"
         >
+        
           <UButton
-            icon="lucide:settings"
-            :label="`${shelvesPerPage} Shelves per page`"
-            size="sm"
+            icon="lucide:layout-list"
+            :label="String(shelvesPerPage)"
+            size="xs"
             variant="soft"
             color="neutral"
           />
