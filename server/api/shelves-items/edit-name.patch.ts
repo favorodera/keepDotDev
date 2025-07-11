@@ -3,7 +3,7 @@ import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
 
 const bodySchema = z.object({
-  newName: z.string().min(1, 'New name is required'),
+  name: z.string().min(1, 'New name is required'),
   shelfId: z.number().int().min(1, 'Shelf ID must be a positive integer starting from 1'),
   itemId: z.number().int().min(1, 'Item ID must be a positive integer starting from 1'),
 })
@@ -33,13 +33,13 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { newName, shelfId, itemId } = validatedBody
+    const { name, shelfId, itemId } = validatedBody
 
     const serverClient = await serverSupabaseClient<Database>(event)
 
     const { error, data } = await serverClient
       .from('shelves_items')
-      .update({ name: newName })
+      .update({ name })
       .match({ id: itemId, owner_id: authenticatedUser.id, shelf_id: shelfId })
       .select('name')
       .single()

@@ -40,7 +40,6 @@
               </div>
 
               <UDropdownMenu
-                :key="shelf.id"
                 :items="[
                   {
                     label: 'Edit',
@@ -194,7 +193,7 @@
 </template>
 
 <script lang="ts" setup>
-import { LazyLibraryNewAndEditShelfModal, LazyLibraryShelfDeleteConfirmationModal } from '#components'
+import { LazyLibraryModalsNewAndEditShelf, LazyLibraryModalsShelfDeleteConfirmation } from '#components'
 
 const { getShelves } = shelvesStore()
 const { getShelfItemsByShelfId } = shelvesItemsStore()
@@ -217,8 +216,8 @@ const shelfIdRef = ref<number>()
 
 const toast = useToast()
 const overlay = useOverlay()
-const newAndEditShelfModal = overlay.create(LazyLibraryNewAndEditShelfModal)
-const shelfDeleteConfirmationModal = overlay.create(LazyLibraryShelfDeleteConfirmationModal)
+const newAndEditShelfModal = overlay.create(LazyLibraryModalsNewAndEditShelf)
+const shelfDeleteConfirmationModal = overlay.create(LazyLibraryModalsShelfDeleteConfirmation)
 
 const shelvesGridContainer = useTemplateRef('shelvesGridContainer')
 const itemsPerPage = ref(1)

@@ -17,63 +17,18 @@
           to="/library"
         />
 
-        <UPopover
-          v-model:open="isPopoverOpen"
-          :ui="{
-            content: 'p-4',
-          }"
-        >
-
-          <UButton
-            icon="lucide:plus"
-            label="Add item"
-            size="sm"
-            variant="soft"
-            color="neutral"
-          />
-
-          <template #content>
-
-            <UForm
-              :state
-              class="space-y-4"
-              :schema
-              @submit="onSubmit"
-            >
-              <UFormField
-                required
-                name="name"
-                label="Name"
-              >
-
-                <UInput
-                  v-model="state.name"
-                  :disabled=" newShelfItemStatus=== 'pending'"
-                  :ui="{
-                    root: 'w-full',
-                  }"
-                  placeholder="Enter item name"
-                />
-              </UFormField>
-
-           
-              <UButton
-                label="Add"
-                :loading="newShelfItemStatus === 'pending'"
-                :disabled="newShelfItemStatus === 'pending'"
-                color="primary"
-                size="sm"
-                type="submit"
-                variant="soft"
-                block
-              />
-            
-
-            </UForm>
-          
-          </template>
-
-        </UPopover>
+        <UButton
+          icon="lucide:plus"
+          label="Add item"
+          size="sm"
+          variant="soft"
+          color="neutral"
+          @click="newAndEditShelfItemModal.open({
+            shelfItem: {
+              shelfId: Number(routeParams.shelf),
+            },
+          })"
+        />
 
       </div>
 
@@ -128,19 +83,48 @@
 
               </div>
 
-              <UButton
-                variant="ghost"
-                color="error"
-                icon="lucide:trash"
-                size="sm"
-                @click.prevent.stop="shelfItemDeleteConfirmationModal.open({
-                  shelfItem: {
-                    id: shelfItem.id,
-                    name: shelfItem.name,
-                    shelf_id: shelfItem.shelf_id,
+              <UDropdownMenu
+                :items="[
+                  {
+                    label: 'Edit',
+                    icon: 'lucide:edit',
+                    onSelect: () => {
+                      newAndEditShelfItemModal.open({
+                        shelfItem: {
+                          name: shelfItem.name,
+                          shelfId: shelfItem.shelf_id,
+                          itemId: shelfItem.id,
+                        },
+                      })
+                    },
                   },
-                })"
-              />
+                  {
+                    label: 'Delete',
+                    icon: 'lucide:trash',
+                    color: 'error',
+                    onSelect: () => shelfItemDeleteConfirmationModal.open({
+                      shelfItem: {
+                        id: shelfItem.id,
+                        name: shelfItem.name,
+                        shelf_id: shelfItem.shelf_id,
+                      },
+                    }),
+                  },
+                ]"
+                :content="{
+                  align: 'start',
+                  side: 'right',
+                }"
+              >
+
+                <UButton
+                  variant="ghost"
+                  color="neutral"
+                  icon="lucide:ellipsis-vertical"
+                  size="sm"
+                />
+                 
+              </UDropdownMenu>
 
             </div>
         
@@ -213,6 +197,19 @@
         :ui="{
           actions: 'justify-end',
         }"
+        :actions="[
+          {
+            label: 'Create shelf item',
+            onClick: () => {
+              newAndEditShelfItemModal.open({
+                shelfItem: {
+                  shelfId: Number(routeParams.shelf),
+                },
+              })
+            },
+            icon: 'lucide:plus',
+          },
+        ]"
         class="max-w-md m-auto"
       />
     </template>
@@ -222,17 +219,15 @@
 </template>
 
 <script lang="ts" setup>
-import { z } from 'zod'
-import { LazyLibraryShelfItemDeleteConfirmationModal } from '#components'
+import { LazyLibraryModalsNewAndEditShelfItem, LazyLibraryModalsShelfItemDeleteConfirmation } from '#components'
 
-const isPopoverOpen = ref(false)
-const toast = useToast()
 const routeParams = useRoute().params
 const shelvesItemsGridContainer = useTemplateRef('shelvesItemsGridContainer')
 const itemsPerPage = ref(1)
 const page = ref(1)
 const overlay = useOverlay()
-const shelfItemDeleteConfirmationModal = overlay.create(LazyLibraryShelfItemDeleteConfirmationModal)
+const shelfItemDeleteConfirmationModal = overlay.create(LazyLibraryModalsShelfItemDeleteConfirmation)
+const newAndEditShelfItemModal = overlay.create(LazyLibraryModalsNewAndEditShelfItem)
 
 function calculateItemsPerPage(entries: readonly ResizeObserverEntry[]) {
   nextTick(() => {
@@ -287,52 +282,6 @@ const paginatedShelvesItems = computed(() => {
   return getShelfItemsByShelfId(Number(routeParams.shelf)).slice(start, end)
 })
 
-const schema = z.object({
-  name: z.string().min(1, 'File name is required!'),
-})
-const state = reactive<z.output<typeof schema>>({
-  name: '',
-})
-
-const {
-  data: newShelfItemData,
-  execute: createNewShelfItem,
-  status: newShelfItemStatus,
-  error: newShelfItemError,
-} = useDollarFetch<AsyncSuccess, AsyncError>('/api/shelves-items/new', {
-  method: 'POST',
-}, false)
-
-
-function onSubmit() {
-  createNewShelfItem({
-    body: {
-      name: state.name,
-      shelfId: routeParams.shelf,
-    },
-  })
-}
-
-watch([newShelfItemData, newShelfItemStatus, newShelfItemError], ([newData, newStatus, newError]) => {
-  if (newStatus === 'success' && newData) {
-
-    isPopoverOpen.value = false
-
-    state.name = ''
-
-    toast.add({
-      title: newData.message,
-      color: 'success',
-      icon: 'lucide:circle-check',
-    })
-  } else if (newError && newStatus === 'error') {
-    toast.add({
-      title: newError.data?.message || 'Error creating file',
-      color: 'error',
-      icon: 'lucide:circle-x',
-    })
-  }
-}, { immediate: true })
 
 watch(itemsPerPage, (newPerPage) => {
   const total = paginatedShelvesItems.value.length

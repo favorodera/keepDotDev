@@ -121,7 +121,7 @@ const editorContent = ref(markdownTestContent())
 
 const computedEditorContent = computed(() => markdown.render(editorContent.value))
 
-const { markdown, copyCodeBlock } = await handleMarkdown()
+const { markdown, copyCodeBlock } = handleMarkdown()
 
 </script>
 

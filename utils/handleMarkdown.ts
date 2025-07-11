@@ -1,46 +1,10 @@
-import { bundledLanguages, createHighlighter } from 'shiki'
 import markdownItAnchor from 'markdown-it-anchor'
 import markdownIt from 'markdown-it'
 
 
-
-export default async function () {
-
-const shikiHighlighter = await createHighlighter({
-  langs: Object.keys(bundledLanguages),
-  themes: ['ayu-dark'],
-})
-
-  function copyCodeBlock(event: MouseEvent) {
-    const target = event.target as HTMLElement
-      
-    if (!target.classList.contains('code-block-copy')) return
-      
-    const codeId = target.getAttribute('data-code-id')
-    if (!codeId) return
-      
-    const codeElement = document.getElementById(codeId)
-    if (!codeElement) return
-      
-    const text = codeElement.innerText
-    navigator.clipboard.writeText(text)
-      .then(() => {
-        target.innerText = 'Copied!'
-        target.setAttribute('disabled', 'true')
-        setTimeout(() => {
-          target.innerText = 'Copy'
-          target.removeAttribute('disabled')
-        }, 1500)
-      })
-      .catch(() => {
-        target.innerText = 'Failed!'
-        setTimeout(() => {
-          target.innerText = 'Copy'
-        }, 1500)
-      })
-  }
-
-
+export default function () {
+  const { $shikiHighlighter } = useNuxtApp()
+ 
   const markdown = markdownIt({
     html: true,
     linkify: true,
@@ -51,11 +15,11 @@ const shikiHighlighter = await createHighlighter({
       let codeHtml = ''
       
       try {
-        const grammar = language ? shikiHighlighter.getLanguage(language) : null
-        codeHtml = shikiHighlighter.codeToHtml(code, { lang: language || 'plaintext', theme: 'ayu-dark' })
+        const grammar = language ? $shikiHighlighter.getLanguage(language) : null
+        codeHtml = $shikiHighlighter.codeToHtml(code, { lang: language || 'plaintext', theme: 'ayu-dark' })
         langLabel = grammar ? grammar.name : langLabel
       } catch {
-        codeHtml = shikiHighlighter.codeToHtml(code, { lang: 'plaintext', theme: 'ayu-dark' })
+        codeHtml = $shikiHighlighter.codeToHtml(code, { lang: 'plaintext', theme: 'ayu-dark' })
       }
       
       const codeMatch = codeHtml.match(/<code[^>]*>([\s\S]*?)<\/code>/)
@@ -88,6 +52,35 @@ const shikiHighlighter = await createHighlighter({
     const code = token.content
     const language = (token.info ? token.info.trim().split(/\s+/g)[0] : '') || 'plaintext'
     return options.highlight ? options.highlight(code, language, '') : ''
+  }
+
+  function copyCodeBlock(event: MouseEvent) {
+    const target = event.target as HTMLElement
+      
+    if (!target.classList.contains('code-block-copy')) return
+      
+    const codeId = target.getAttribute('data-code-id')
+    if (!codeId) return
+      
+    const codeElement = document.getElementById(codeId)
+    if (!codeElement) return
+      
+    const text = codeElement.innerText
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        target.innerText = 'Copied!'
+        target.setAttribute('disabled', 'true')
+        setTimeout(() => {
+          target.innerText = 'Copy'
+          target.removeAttribute('disabled')
+        }, 1500)
+      })
+      .catch(() => {
+        target.innerText = 'Failed!'
+        setTimeout(() => {
+          target.innerText = 'Copy'
+        }, 1500)
+      })
   }
 
   return {

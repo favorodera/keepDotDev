@@ -141,11 +141,11 @@
 </template>
 
 <script lang="ts" setup>
-import { LazyLibraryNewAndEditShelfModal, LazyLibrarySignOutModal } from '#components'
+import { LazyLibraryModalsNewAndEditShelf, LazyLibraryModalsSignOut } from '#components'
 
 const { isOpen, toggle } = useSideBar()
 const overlay = useOverlay()
-const signOutModal = overlay.create(LazyLibrarySignOutModal)
-const newAndEditShelfModal = overlay.create(LazyLibraryNewAndEditShelfModal)
+const signOutModal = overlay.create(LazyLibraryModalsSignOut)
+const newAndEditShelfModal = overlay.create(LazyLibraryModalsNewAndEditShelf)
 </script>
 

@@ -3,13 +3,7 @@ import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
 const bodySchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  shelfId: z.string().transform((value) => {
-    const number = Number.parseInt(value, 10)
-    if (Number.isNaN(number) || number <= 0) {
-      throw new Error('Shelf ID must be a positive integer starting from 1')
-    }
-    return number
-  }),
+  shelfId: z.number().int().min(1, 'Shelf ID must be a positive integer starting from 1'),
 })
 
 export default defineEventHandler(async (event) => {
