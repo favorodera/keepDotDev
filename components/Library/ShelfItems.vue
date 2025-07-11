@@ -17,19 +17,56 @@
           to="/library"
         />
 
-        <UButton
-          icon="lucide:plus"
-          label="Add item"
-          size="sm"
-          variant="soft"
-          color="neutral"
-          @click="newAndEditShelfItemModal.open({
-            shelfItem: {
-              shelfId: Number(routeParams.shelf),
-            },
-          })"
-        />
+        <div class="flex items-center gap-2">
+          <UPopover
+            v-model:open="isPopoverOpen"
+            arrow
+            :content="{ align: 'end' }"
+            :ui="{ content: 'bg-default p-2 max-w-35' }"
+          >
+            <UButton
+              icon="lucide:settings"
+              :label="`${itemsPerPage} Items per page`"
+              size="xs"
+              variant="soft"
+              color="neutral"
+            />
+            <template #content>
+              <form class="space-y-2">
+                <input
+                  v-model.number="formItemsPerPage"
+                  type="number"
+                  min="3"
+                  class="block w-full px-1 py-0.5 border border-default rounded text-sm focus:outline-none focus:ring"
+                >
+                <UButton
+                  type="submit"
+                  loading-auto
+                  label="Set"
+                  color="neutral"
+                  variant="subtle"
+                  size="xs"
+                  block
+                  :disabled="!isNewStateDifferentFromOldState"
+                  @click.prevent="onSubmit"
+                />
+              </form>
+            </template>
+          </UPopover>
 
+          <UButton
+            icon="lucide:plus"
+            label="Add"
+            size="xs"
+            variant="soft"
+            color="neutral"
+            @click="newAndEditShelfItemModal.open({
+              shelfItem: {
+                shelfId: Number(routeParams.shelf),
+              },
+            })"
+          />
+        </div>
       </div>
 
     </template>
@@ -221,52 +258,52 @@
 <script lang="ts" setup>
 import { LazyLibraryModalsNewAndEditShelfItem, LazyLibraryModalsShelfItemDeleteConfirmation } from '#components'
 
+const DEFAULT_ITEMS_PER_PAGE = 10
+const user = useSupabaseUser()
+const { updateUser } = useAuth()
+
 const routeParams = useRoute().params
 const shelvesItemsGridContainer = useTemplateRef('shelvesItemsGridContainer')
-const itemsPerPage = ref(1)
+const isPopoverOpen = ref(false)
+const itemsPerPage = ref(user.value?.user_metadata.itemsPerPage ?? DEFAULT_ITEMS_PER_PAGE)
+const formItemsPerPage = ref(itemsPerPage.value)
 const page = ref(1)
 const overlay = useOverlay()
 const shelfItemDeleteConfirmationModal = overlay.create(LazyLibraryModalsShelfItemDeleteConfirmation)
 const newAndEditShelfItemModal = overlay.create(LazyLibraryModalsNewAndEditShelfItem)
 
-function calculateItemsPerPage(entries: readonly ResizeObserverEntry[]) {
-  nextTick(() => {
-    const entry = entries[0]
+watch(
+  () => user.value?.user_metadata.itemsPerPage,
+  (newValue) => {
+    itemsPerPage.value = newValue ?? DEFAULT_ITEMS_PER_PAGE
+  },
+  { immediate: true },
+)
 
-    if (!entry) {
-      itemsPerPage.value = 3
-      return
-    }
+watch(itemsPerPage, (newPerPage) => {
+  formItemsPerPage.value = newPerPage
+}, { immediate: true })
 
-    const gap = 16
-    const cardElement = document.querySelector('.shelf-item-card')
+const isNewStateDifferentFromOldState = computed(() => formItemsPerPage.value !== itemsPerPage.value)
 
-    if (!cardElement) {
-      itemsPerPage.value = 3
-      return
-    }
-
-    const cardWidth = cardElement.clientWidth
-    const cardHeight = cardElement.clientHeight
-
-    const containerWidth = entry.contentRect.width
-    const containerHeight = entry.contentRect.height
-
-    const cardsPerRow = Math.floor((containerWidth + gap) / (cardWidth + gap))
-    const rowsPerPage = Math.floor((containerHeight + gap) / (cardHeight + gap))
-
-    itemsPerPage.value = Math.max(1, cardsPerRow * rowsPerPage)
+async function onSubmit() {
+  if (formItemsPerPage.value < 3) {
+    useToast().add({
+      title: 'Items per page must be at least 3',
+      color: 'error',
+      icon: 'lucide:circle-x',
+    })
+    return
+  }
+  itemsPerPage.value = formItemsPerPage.value
+  await updateUser({ itemsPerPage: itemsPerPage.value })
+  isPopoverOpen.value = false
+  useToast().add({
+    title: `Items per page set to ${itemsPerPage.value}`,
+    color: 'success',
+    icon: 'lucide:circle-check',
   })
 }
-
-const debounceCalculateItemsPerPage = useDebounceFn(calculateItemsPerPage, 100)
-
-useResizeObserver(shelvesItemsGridContainer, (entries) => {
-  return debounceCalculateItemsPerPage(entries)
-}, {
-  box: 'border-box',
-})
-
 
 const { getShelvesItems, getShelfItemsByShelfId } = shelvesItemsStore()
 
@@ -275,16 +312,14 @@ const {
   shelvesItemsFetchError,
 } = storeToRefs(shelvesItemsStore())
 
-
 const paginatedShelvesItems = computed(() => {
   const start = (page.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
   return getShelfItemsByShelfId(Number(routeParams.shelf)).slice(start, end)
 })
 
-
 watch(itemsPerPage, (newPerPage) => {
-  const total = paginatedShelvesItems.value.length
+  const total = getShelfItemsByShelfId(Number(routeParams.shelf)).length
   const maxPage = Math.max(1, Math.ceil(total / newPerPage))
   if (page.value > maxPage) {
     page.value = maxPage
