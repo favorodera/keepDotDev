@@ -23,6 +23,7 @@
     "@pinia/nuxt": "^0.11.1",
     "@tailwindcss/vite": "^4.1.11",
     "@types/markdown-it": "^14.1.2",
+    "@vueuse/nuxt": "^13.5.0",
     "ai": "^5.0.0-beta.20",
     "eslint": "^9.31.0",
     "isomorphic-dompurify": "^2.26.0",

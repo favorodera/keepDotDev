@@ -2,10 +2,9 @@ import z from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
 const bodySchema = z.object({
-  action: z.enum(['star', 'unstar'], {
-    errorMap: () => ({ message: 'Action is required' }),
-  }),
+  name: z.string().min(1, 'New name is required'),
   folderId: z.number().int().min(1, 'Folder ID must be a positive integer starting from 1'),
+  fileId: z.number().int().min(1, 'File ID must be a positive integer starting from 1'),
 })
 
 export default defineEventHandler(async (event) => {
@@ -28,13 +27,13 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { action, folderId } = validatedBody
+    const { name, folderId, fileId } = validatedBody
     const serverClient = await serverSupabaseClient<Database>(event)
 
     const { error, data } = await serverClient
-      .from('folders')
-      .update({ starred: action === 'star' })
-      .match({ id: folderId, owner_id: authenticatedUser.id })
+      .from('files')
+      .update({ name })
+      .match({ id: fileId, owner_id: authenticatedUser.id, folder_id: folderId })
       .select('name')
       .single()
 
@@ -45,10 +44,10 @@ export default defineEventHandler(async (event) => {
         message: error.message,
       })
     }
-
+    
     return {
       statusMessage: 'OPERATION_SUCCESSFUL',
-      message: `Folder "${data.name}" ${action === 'star' ? 'starred' : 'unstarred'} successfully`,
+      message: `File "${data.name}" name updated successfully`,
     }
   } catch (error) {
     return catchError(error)

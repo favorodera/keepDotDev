@@ -19,13 +19,16 @@
           }"
         >
         
-          <UButton
-            icon="lucide:layout-list"
-            :label="String(foldersPerPage)"
-            size="sm"
-            variant="soft"
-            color="neutral"
-          />
+          <UTooltip text="Folders per page">
+            <UButton
+              icon="lucide:cog"
+              :label="String(foldersPerPage)"
+              size="sm"
+              variant="soft"
+              color="neutral"
+            />
+          </UTooltip>
+         
 
           <template #content>
 

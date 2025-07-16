@@ -1,11 +1,21 @@
-import z from 'zod'
+import { z } from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
-const bodySchema = z.object({
-  action: z.enum(['star', 'unstar'], {
-    errorMap: () => ({ message: 'Action is required' }),
+const querySchema = z.object({
+  folderId: z.string().transform((value) => {
+    const number = Number.parseInt(value, 10)
+    if (Number.isNaN(number) || number <= 0) {
+      throw new Error('Folder ID must be a positive integer starting from 1')
+    }
+    return number
   }),
-  folderId: z.number().int().min(1, 'Folder ID must be a positive integer starting from 1'),
+  fileId: z.string().transform((value) => {
+    const number = Number.parseInt(value, 10)
+    if (Number.isNaN(number) || number <= 0) {
+      throw new Error('File ID must be a positive integer starting from 1')
+    }
+    return number
+  }),
 })
 
 export default defineEventHandler(async (event) => {
@@ -19,7 +29,7 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { data: validatedBody, error: validationError } = await readValidatedBody(event, body => bodySchema.safeParse(body))
+    const { data: validatedQuery, error: validationError } = await getValidatedQuery(event, query => querySchema.safeParse(query))
     if (validationError) {
       throw createError({
         statusCode: 400,
@@ -28,13 +38,13 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    const { action, folderId } = validatedBody
+    const { folderId, fileId } = validatedQuery
     const serverClient = await serverSupabaseClient<Database>(event)
 
     const { error, data } = await serverClient
-      .from('folders')
-      .update({ starred: action === 'star' })
-      .match({ id: folderId, owner_id: authenticatedUser.id })
+      .from('files')
+      .delete()
+      .match({ id: fileId, owner_id: authenticatedUser.id, folder_id: folderId })
       .select('name')
       .single()
 
@@ -45,10 +55,10 @@ export default defineEventHandler(async (event) => {
         message: error.message,
       })
     }
-
+    
     return {
       statusMessage: 'OPERATION_SUCCESSFUL',
-      message: `Folder "${data.name}" ${action === 'star' ? 'starred' : 'unstarred'} successfully`,
+      message: `File "${data.name}" deleted successfully`,
     }
   } catch (error) {
     return catchError(error)

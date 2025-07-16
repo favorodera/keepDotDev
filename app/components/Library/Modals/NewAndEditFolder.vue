@@ -143,27 +143,27 @@ const whatToSend = computed(() => {
 })
 
 const { execute, status } = useDollarFetch<AsyncSuccess, AsyncError>(
-  props.folder ? '/api/library/edit-folder' : '/api/library/new-folder', 
+  props.folder ? '/api/library/edit-folder' : '/api/library/new-folder',
   {
-  $fetch: { method: props.folder ? 'PATCH' : 'POST' },
-  hooks: {
-    onSuccess() {
-      isOpen.value = false
+    $fetch: { method: props.folder ? 'PATCH' : 'POST' },
+    hooks: {
+      onSuccess() {
+        isOpen.value = false
 
-      emit('close', false)
-      toast.add({
-        title: props.folder ? `Folder "${props.folder.name}" updated` : `Folder "${state.name}" created`,
-        color: 'success',
-        icon: 'lucide:circle-check',
-      })
+        emit('close', false)
+        toast.add({
+          title: props.folder ? `Folder "${props.folder.name}" updated` : `Folder "${state.name}" created`,
+          color: 'success',
+          icon: 'lucide:circle-check',
+        })
+      },
+      onError(error) {
+        toast.add({
+          title: error.data?.message || (props.folder ? 'Error updating folder' : 'Error creating folder'),
+          color: 'error',
+          icon: 'lucide:circle-x',
+        })
+      },
     },
-    onError(error) {
-      toast.add({
-        title: error.data?.message || (props.folder ? 'Error updating folder' : 'Error creating folder'),
-        color: 'error',
-        icon: 'lucide:circle-x',
-      })
-    },
-  },
-}, false)
+  }, false)
 </script>

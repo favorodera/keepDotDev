@@ -53,7 +53,11 @@ useSeoMeta({
 
 if (user.value) await callOnce('get-library', () => library.getLibrary())
 
-onMounted(() => { if (user.value) library.realtimeOn()} )
+onMounted(() => {
+  if (user.value) library.realtimeOn()
+})
 
-onUnmounted(() => { if (user.value) library.realtimeOff() })
+onUnmounted(() => {
+  if (user.value) library.realtimeOff()
+})
 </script>

@@ -4,12 +4,12 @@
 
     <section
       class="grid relative mx-auto w-full flex-auto max-w-8xl transition-all duration-300"
-      :class="isOpen
+      :class="sideBarRef?.isExpanded
         ? 'md:grid-cols-[16rem_1fr]'
         : 'md:grid-cols-[4rem_1fr]'"
     >
 
-      <LibrarySideBar />
+      <LibrarySideBar ref="sideBarRef" />
 
       <section class="flex flex-col">
         <LibraryNav />
@@ -25,5 +25,5 @@
 </template>
 
 <script lang="ts" setup>
-const { isOpen } = useSideBar()
+const sideBarRef = useTemplateRef('sideBarRef')
 </script>

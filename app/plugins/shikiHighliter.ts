@@ -1,4 +1,5 @@
-import { bundledLanguages, createHighlighter, type BundledLanguage, type BundledTheme, type HighlighterGeneric } from 'shiki'
+import { bundledLanguages, createHighlighter } from 'shiki'
+import type { BundledLanguage, BundledTheme, HighlighterGeneric } from 'shiki'
 
 let shikiHighlighterInstance: HighlighterGeneric<BundledLanguage, BundledTheme> | undefined
 

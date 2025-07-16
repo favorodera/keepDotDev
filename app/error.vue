@@ -17,7 +17,7 @@
         </h1>
 
         <p class="text-lg break-all">
-          {{ error.data.message || error.message }}
+          {{ error?.data?.message || error?.message || 'An unknown error occurred.' }}
         </p>
 
         <div class="flex items-center gap-4  w-full">
@@ -48,8 +48,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { NuxtError } from '#app'
 
-
-defineProps<{ error: NuxtError }>()
+defineProps<{ error: AsyncError }>()
 </script>

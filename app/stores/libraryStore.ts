@@ -54,25 +54,25 @@ const libraryStore = defineStore('library', () => {
     realtimeChannel.value = client
       .channel('library-updates')
       .on(
-        'postgres_changes', 
+        'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'folders',
           filter: `owner_id=eq.${user.value.id}`,
-        }, 
+        },
         (payload) => {
           switch (payload.eventType) {
             case 'UPDATE': {
               const updatedFolder = payload.new as Folder
               library.value = library.value.map(folder =>
-                folder.id === updatedFolder.id 
-                  ? { 
-                      ...folder, 
-                      ...updatedFolder, 
-                      files: folder.files 
-                    } 
-                  : folder
+                folder.id === updatedFolder.id
+                  ? {
+                      ...folder,
+                      ...updatedFolder,
+                      files: folder.files,
+                    }
+                  : folder,
               )
               break
             }
@@ -80,8 +80,8 @@ const libraryStore = defineStore('library', () => {
               const newFolder = payload.new as Folder
               if (!library.value.some(folder => folder.id === newFolder.id)) {
                 library.value = [
-                  ...library.value, 
-                  { ...newFolder, files: [] }
+                  ...library.value,
+                  { ...newFolder, files: [] },
                 ]
               }
               break
@@ -89,36 +89,36 @@ const libraryStore = defineStore('library', () => {
             case 'DELETE': {
               const deletedFolder = payload.old as Folder
               library.value = library.value.filter(
-                folder => folder.id !== deletedFolder.id
+                folder => folder.id !== deletedFolder.id,
               )
               break
             }
           }
-        }
+        },
       )
       .on(
-        'postgres_changes', 
+        'postgres_changes',
         {
           event: '*',
           schema: 'public',
           table: 'files',
           filter: `owner_id=eq.${user.value.id}`,
-        }, 
+        },
         (payload) => {
           switch (payload.eventType) {
             case 'UPDATE': {
               const updatedFile = payload.new as File
-              library.value = library.value.map(folder => 
+              library.value = library.value.map(folder =>
                 folder.id === updatedFile.folder_id
                   ? {
                       ...folder,
                       files: folder.files.map(file =>
-                        file.id === updatedFile.id 
-                          ? { ...file, ...updatedFile } 
-                          : file
-                      )
+                        file.id === updatedFile.id
+                          ? { ...file, ...updatedFile }
+                          : file,
+                      ),
                     }
-                  : folder
+                  : folder,
               )
               break
             }
@@ -129,11 +129,11 @@ const libraryStore = defineStore('library', () => {
                   ? {
                       ...folder,
                       files: [
-                        ...folder.files, 
-                        newFile
-                      ]
+                        ...folder.files,
+                        newFile,
+                      ],
                     }
-                  : folder
+                  : folder,
               )
               break
             }
@@ -144,15 +144,15 @@ const libraryStore = defineStore('library', () => {
                   ? {
                       ...folder,
                       files: folder.files.filter(
-                        file => file.id !== deletedFile.id
-                      )
+                        file => file.id !== deletedFile.id,
+                      ),
                     }
-                  : folder
+                  : folder,
               )
               break
             }
           }
-        }
+        },
       )
       .subscribe()
   }

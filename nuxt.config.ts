@@ -2,14 +2,14 @@
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
-  extends:['@favorodera/nuxt-helper'],
+  extends: ['@favorodera/nuxt-helper'],
   modules: [
     '@nuxt/ui',
     '@nuxt/eslint',
     '@nuxt/image',
     '@nuxtjs/supabase',
     '@pinia/nuxt',
+    '@nuxtjs/supabase',
     'nuxt-monaco-editor',
   ],
   ssr: true,
@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     '/auth': { prerender: true },
     '/read/**': { isr: 3600 },
   },
+  compatibilityDate: '2025-07-15',
   vite: {
     plugins: [
       tailwindcss(),
