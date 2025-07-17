@@ -1,5 +1,5 @@
 <template>
-  <nav class="sticky -top-1 z-10 p-4 w-full bg-default">
+  <nav class="sticky top-0 z-10 p-4 w-full bg-default">
   
     <ul class="flex justify-between items-center mx-auto w-full md:justify-end max-w-8xl">
 

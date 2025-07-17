@@ -30,56 +30,28 @@
 
     </div>
 
-    <div
-      v-if="file"
-      class="flex flex-col flex-auto gap-2 w-full"
-      :disabled="status === 'pending'"
-    >
 
-      <UTabs
-        :items="[
-          { label: 'Edit', slot: 'edit' as const, icon: 'lucide:code' },
-          { label: 'Preview', slot: 'preview' as const, icon: 'lucide:play' },
-        ]"
-        :ui="{
-          root: 'flex-auto w-full',
-          content: 'flex-auto flex flex-col p-4 max-h-[80dvh] border border-default rounded-md editor-tab-content-container',
-        }"
-        size="xs"
-        :unmount-on-hide="false"
-      >
-        
-        <template #edit>
-
-          <MdEditor
-            v-model="editorContent"
-            class="flex-auto"
-            theme="dark"
-            preview-theme="default"
-            code-theme="github"
-            language="english"
-            :toolbars-exclude="[
-              'github',
-              'htmlPreview',
-              'katex',
-              'fullscreen',
-            ]"
-          />
-        </template>
-
-        <template #preview>
-
-          <span
-            v-dompurify-html="compiledEditorContent"
-            class="prose"
-            @click="copyCodeBlock"
-          />
-        </template>
-      
-      </UTabs>
+    <MdEditor
+      v-model="editorContent"
+      class="flex-auto rounded-md"
+      theme="dark"
+      preview-theme="default"
+      code-theme="github"
+      language="en-US"
+      auto-detect-code
+      no-katex
+      show-code-row-number
+      :toolbars-exclude="[
+        'github',
+        'htmlPreview',
+        'fullscreen',
+        'sub',
+        'sup',
+        'save',
+        'katex',
+      ]"
+    />
   
-    </div>
-
   </main>
 
 </template>
@@ -88,7 +60,6 @@
 import { MdEditor } from 'md-editor-v3'
 
 const routeParams = useRoute().params
-const { markdown, copyCodeBlock } = handleMarkdown()
 const toast = useToast()
 
 const library = libraryStore()
@@ -99,7 +70,6 @@ const file = computed(() => library.getFileByFolderIdAndFileId(
 
 const editorContent = ref('')
 const lastSavedEditorContent = ref('')
-const compiledEditorContent = computed(() => markdown.render(editorContent.value || ''))
 
 const isNewStateDifferentFromOldState = computed(() => editorContent.value !== lastSavedEditorContent.value)
 

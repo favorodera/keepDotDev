@@ -65,6 +65,7 @@
               size="sm"
               variant="soft"
               color="neutral"
+              @click="navigateTo({ name: 'read-folder-file', params: { folder: paginatedFiles[0].folder_id, file: paginatedFiles[0].id } })"
             />
           </UTooltip>
 

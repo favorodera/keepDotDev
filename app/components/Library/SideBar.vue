@@ -1,6 +1,6 @@
 <template>
   <aside
-    class="hidden md:flex flex-col h-dvh min-h-dvh sticky -top-1 w-full border-x border-default bg-default transition-all duration-300"
+    class="hidden md:flex flex-col h-dvh min-h-dvh sticky top-0 w-full border-x border-default bg-default transition-all duration-300"
     :class="isExpanded ? 'max-w-2xs' : 'max-w-16'"
   >
     <header class="flex justify-between items-center p-4">

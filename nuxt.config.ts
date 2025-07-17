@@ -10,8 +10,6 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     '@pinia/nuxt',
     '@nuxtjs/supabase',
-    'nuxt-monaco-editor',
-    '@vueuse/nuxt',
   ],
   ssr: true,
   imports: {

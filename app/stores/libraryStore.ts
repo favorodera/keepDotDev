@@ -47,9 +47,7 @@ const libraryStore = defineStore('library', () => {
   }
 
   function realtimeOn() {
-    realtimeOff()
-  
-    if (!user.value) return
+    if (!user.value || realtimeChannel.value) return
   
     realtimeChannel.value = client
       .channel('library-updates')

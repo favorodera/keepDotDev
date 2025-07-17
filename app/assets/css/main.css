@@ -1,19 +1,17 @@
 @import 'tailwindcss';
 @import "@nuxt/ui";
-@import "md-editor-v3/lib/style.css";
 
 @theme static {
     --font-public-sans: 'Public Sans', sans-serif;
-
     --container-8xl: 90rem;
 }
 
-
-  
 :root {
     --ui-primary: black;
+    --scroll-padding-top: 5rem;
+
     scroll-behavior: smooth;
-    scroll-padding-top: 1rem;
+    scroll-padding-top: var(--scroll-padding-top);
 }
   
 .dark {
