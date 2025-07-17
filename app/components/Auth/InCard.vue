@@ -58,7 +58,7 @@
 
 
 <script setup lang="ts">
-const { signInWithOAuth } = useAuth()
+const { signInWithOAuth } = authUtils()
 
 const oAuthProviders = [
   {

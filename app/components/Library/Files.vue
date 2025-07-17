@@ -121,7 +121,7 @@
             v-for="file in paginatedFiles"
             :key="file.id"
             class="flex flex-col gap-2 p-3 transition-all duration-300 border border-default hover:-translate-y-0.5 rounded-md"
-            to="/"
+            :to="{ name: 'library-folder-file', params: { folder: file.folder_id, file: file.id } }"
           >
         
             <header class="flex gap-1 items-center w-full text-sm capitalize text-default">
@@ -138,9 +138,8 @@
             <div class="flex gap-2 justify-between items-center pt-2 mt-auto w-full">
 
               <div class="flex gap-1 items-center text-xs text-muted">
-                <UIcon
-                  name="lucide:calendar"
-                />
+
+                <span>Updated</span>
 
                 <NuxtTime
                   :datetime="file.updated_at"
@@ -170,6 +169,13 @@
                     label: 'Delete',
                     icon: 'lucide:trash',
                     color: 'error',
+                    onSelect: () => fileDeleteConfirmationModal.open({
+                      file: {
+                        id: file.id,
+                        name: file.name,
+                        folder_id: file.folder_id,
+                      },
+                    }),
                   },
                 ]"
                 :content="{
@@ -215,11 +221,11 @@
 </template>
 
 <script lang="ts" setup>
-import { LazyLibraryModalsNewAndEditFile } from '#components'
+import { LazyLibraryModalsFileDeleteConfirmation, LazyLibraryModalsNewAndEditFile } from '#components'
 
 const library = libraryStore()
 const user = useSupabaseUser()
-const auth = useAuth()
+const auth = authUtils()
 const routeParams = useRoute().params
 const toast = useToast()
 const isPopoverOpen = ref(false)
@@ -227,7 +233,7 @@ const isPopoverOpen = ref(false)
 const overlay = useOverlay()
 
 const newAndEditFileModal = overlay.create(LazyLibraryModalsNewAndEditFile)
-
+const fileDeleteConfirmationModal = overlay.create(LazyLibraryModalsFileDeleteConfirmation)
 
 const folder = computed(() => library.getFolderById(Number(routeParams.folder)))
 const files = computed(() => folder.value?.files ?? [])

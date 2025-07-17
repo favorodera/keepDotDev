@@ -47,5 +47,5 @@
 <script lang="ts" setup>
 const emit = defineEmits<{ close: [boolean] }>()
 
-const { signOut } = useAuth()
+const { signOut } = authUtils()
 </script>

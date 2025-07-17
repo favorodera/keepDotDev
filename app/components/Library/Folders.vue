@@ -259,7 +259,7 @@
 import { LazyLibraryModalsNewAndEditFolder, LazyLibraryModalsFolderDeleteConfirmation } from '#components'
 
 const user = useSupabaseUser()
-const auth = useAuth()
+const auth = authUtils()
 
 const folderIdRef = ref<number>()
 const library = libraryStore()

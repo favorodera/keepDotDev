@@ -1,14 +1,14 @@
 import type { AuthError, Provider } from '@supabase/supabase-js'
 
 export default function () {
-
   const toast = useToast()
   const client = useSupabaseClient()
   const overlay = useOverlay()
 
-  async function callAction(action: () => Promise<{ error: AuthError | null }>) {
+  async function callAuthUtil(util: () => Promise<{ error: AuthError | null }>) {
+
     try {
-      const { error } = await action()
+      const { error } = await util()
       if (error) {
         toast.add({
           title: error.message,
@@ -25,10 +25,11 @@ export default function () {
       })
       return
     }
+
   }
 
   async function signInWithOAuth(provider: Provider) {
-    await callAction(() =>
+    await callAuthUtil(() =>
       client.auth.signInWithOAuth({
         provider,
         options: {
@@ -39,7 +40,7 @@ export default function () {
   }
 
   async function signOut() {
-    await callAction(() => client.auth.signOut())
+    await callAuthUtil(() => client.auth.signOut())
 
     toast.add({
       title: 'Signed out successfully',
@@ -48,11 +49,11 @@ export default function () {
     })
 
     overlay.closeAll()
-    await navigateTo('/auth')
+    await nextTick(async () => await navigateTo('/auth'))
   }
 
   async function updateUser(value: Record<string, unknown>) {
-    await callAction(() => client.auth.updateUser(({
+    await callAuthUtil(() => client.auth.updateUser(({
       data: value,
     })))
   }
@@ -63,4 +64,3 @@ export default function () {
     updateUser,
   }
 }
-

@@ -18,43 +18,43 @@ export type Database = {
         Row: {
           content: string
           created_at: string
+          folder_id: number
           id: number
           name: string
           owner_id: string
-          folder_id: number
           updated_at: string
         }
         Insert: {
           content?: string
           created_at?: string
+          folder_id: number
           id?: number
           name: string
           owner_id: string
-          folder_id: number
           updated_at?: string
         }
         Update: {
           content?: string
           created_at?: string
+          folder_id?: number
           id?: number
           name?: string
           owner_id?: string
-          folder_id?: number
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: 'files_folder_id_fkey'
+            columns: ['folder_id']
+            isOneToOne: false
+            referencedRelation: 'folders'
+            referencedColumns: ['id']
+          },
           {
             foreignKeyName: 'shelves_items_owner_id_fkey'
             columns: ['owner_id']
             isOneToOne: false
             referencedRelation: 'users'
-            referencedColumns: ['id']
-          },
-          {
-            foreignKeyName: 'shelves_items_folder_id_fkey'
-            columns: ['folder_id']
-            isOneToOne: false
-            referencedRelation: 'folders'
             referencedColumns: ['id']
           },
         ]
