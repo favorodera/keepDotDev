@@ -9,9 +9,6 @@
 </template>
 
 <script setup lang="ts">
-const user = useSupabaseUser()
-const library = libraryStore()
-
 useHead({
   htmlAttrs: {
     lang: 'en',
@@ -50,10 +47,4 @@ useSeoMeta({
   twitterSite: '@favorodera',
   twitterCreator: '@favorodera',
 })
-
-if (user.value) await callOnce('get-library', () => library.getLibrary())
-
-onMounted(() => library.realtimeOn())
-
-onUnmounted(() => library.realtimeOff())
 </script>

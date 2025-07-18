@@ -36,4 +36,12 @@ import { MdCatalog } from 'md-editor-v3'
 import type { TocItem } from 'md-editor-v3/lib/types/MdCatalog/MdCatalog'
 
 const router = useRouter()
+
+const library = libraryStore()
+
+await callOnce('get-library', () => library.getLibrary())
+
+onMounted(() => library.realtimeOn())
+
+onUnmounted(() => library.realtimeOff())
 </script>

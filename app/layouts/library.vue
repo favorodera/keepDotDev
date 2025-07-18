@@ -25,5 +25,13 @@
 </template>
 
 <script lang="ts" setup>
+const library = libraryStore()
 const sideBarRef = useTemplateRef('sideBarRef')
+
+await callOnce('get-library', () => library.getLibrary())
+
+onMounted(() => library.realtimeOn())
+
+onUnmounted(() => library.realtimeOff())
 </script>
+
