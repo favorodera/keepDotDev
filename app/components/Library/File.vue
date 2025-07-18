@@ -40,7 +40,6 @@
       preview-theme="default"
       code-theme="github"
       language="en-US"
-      auto-detect-code
       no-katex
       :preview="false"
       show-code-row-number

@@ -1,5 +1,6 @@
 <template>
   <UApp :toaster="{ position: 'top-right', progress: false, duration: 4000 }">
+    <Analytics />
     <NuxtRouteAnnouncer />
     <NuxtLoadingIndicator color="white" />
     <NuxtLayout>
@@ -9,6 +10,8 @@
 </template>
 
 <script setup lang="ts">
+import { Analytics } from '@vercel/analytics/nuxt'
+
 useHead({
   htmlAttrs: {
     lang: 'en',

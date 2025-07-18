@@ -9,10 +9,15 @@ const querySchema = z.object({
     }
     return number
   }),
-  fileId: z.string().transform((value) => {
+  fileId: z.string().transform((value, ctx) => {
     const number = Number.parseInt(value, 10)
     if (Number.isNaN(number) || number <= 0) {
-      throw new Error('File ID must be a positive integer starting from 1')
+      ctx.issues.push({
+        code: 'custom',
+        message: 'File ID must be a positive integer starting from 1',
+        input: value,
+      })
+      return z.NEVER
     }
     return number
   }),
@@ -34,7 +39,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         statusMessage: 'VALIDATION_ERROR',
-        message: `${validationError.errors[0] ? `${validationError.errors[0].path}: ${validationError.errors[0].message}` : 'Invalid body parameters'}`,
+        message: `${validationError.issues[0] ? `${validationError.issues[0].path}: ${validationError.issues[0].message}` : 'Invalid body parameters'}`,
       })
     }
 

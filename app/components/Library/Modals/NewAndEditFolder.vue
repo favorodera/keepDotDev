@@ -113,8 +113,6 @@ const props = defineProps<{
 
 const toast = useToast()
 const emit = defineEmits<{ close: [boolean] }>()
-const { isOpen } = useSideBar()
-
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required!'),
@@ -148,7 +146,6 @@ const { execute, status } = useDollarFetch<AsyncSuccess, AsyncError>(
     $fetch: { method: props.folder ? 'PATCH' : 'POST' },
     hooks: {
       onSuccess() {
-        isOpen.value = false
 
         emit('close', false)
         toast.add({

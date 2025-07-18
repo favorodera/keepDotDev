@@ -2,7 +2,7 @@
 
   <UModal
     :dismissible="false"
-    :close="{ onClick: () => emit('close', false) }"
+    :close="{ onClick: () => emit('close', false), disabled: chat.status === 'streaming' || chat.status === 'submitted' }"
     :ui="{
       content: 'max-w-2xl',
       description: 'flex items-center gap-1',
@@ -73,7 +73,7 @@
           </div>
 
           <div
-            v-else
+            v-if="message.role === 'assistant'"
             class="self-start p-2 rounded-full bg-elevated size-10"
           >
             <UIcon
@@ -207,11 +207,10 @@ import z from 'zod'
 import { Chat } from '@ai-sdk/vue'
 import { MdPreview } from 'md-editor-v3'
 
-const library = libraryStore()
 const isStreaming = ref(null)
 
 const user = useSupabaseUser()
-const chat = new Chat({})
+const chat = new Chat({ maxSteps: 5 })
 const emit = defineEmits<{ close: [boolean] }>()
 
 const schema = z.object({
@@ -226,9 +225,7 @@ function sendPrompt() {
   chat.sendMessage(
     { text: state.message },
     {
-      body: {
-        library: library.folders,
-      },
+      headers: useRequestHeaders(['cookie']),
     },
   )
 

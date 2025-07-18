@@ -2,9 +2,7 @@ import z from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
 const bodySchema = z.object({
-  action: z.enum(['star', 'unstar'], {
-    errorMap: () => ({ message: 'Action is required' }),
-  }),
+  action: z.enum(['star', 'unstar'], { error: 'Action is required' }),
   folderId: z.number().int().min(1, 'Folder ID must be a positive integer starting from 1'),
 })
 
@@ -24,7 +22,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         statusMessage: 'VALIDATION_ERROR',
-        message: `${validationError.errors[0] ? `${validationError.errors[0].path}: ${validationError.errors[0].message}` : 'Invalid body parameters'}`,
+        message: `${validationError.issues[0] ? `${validationError.issues[0].path}: ${validationError.issues[0].message}` : 'Invalid body parameters'}`,
       })
     }
 
