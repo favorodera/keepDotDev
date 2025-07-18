@@ -9,15 +9,10 @@ const querySchema = z.object({
     }
     return number
   }),
-  fileId: z.string().transform((value, ctx) => {
+  fileId: z.string().transform((value) => {
     const number = Number.parseInt(value, 10)
     if (Number.isNaN(number) || number <= 0) {
-      ctx.issues.push({
-        code: 'custom',
-        message: 'File ID must be a positive integer starting from 1',
-        input: value,
-      })
-      return z.NEVER
+      throw new Error('File ID must be a positive integer starting from 1')
     }
     return number
   }),

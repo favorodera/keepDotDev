@@ -2,7 +2,10 @@ import z from 'zod'
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
 
 const bodySchema = z.object({
-  action: z.enum(['star', 'unstar'], { error: 'Action is required' }),
+  action: z.enum(['star', 'unstar'], {
+    errorMap: () => ({ message: 'Action is required' }),
+  }),
+
   folderId: z.number().int().min(1, 'Folder ID must be a positive integer starting from 1'),
 })
 
