@@ -11,7 +11,6 @@
 
     <span
       v-if="!hideText"
-      class="font-mono"
       :class="textClass"
     >
       keepdotdev

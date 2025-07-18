@@ -2,10 +2,7 @@
   <aside
     class="hidden sticky top-0 z-20 flex-col w-64 md:flex min-w-64 h-dvh min-h-dvh border-x border-default"
   >
-    <div class="p-4 border-b border-default">
-      <span class="text-xs text-muted">powered by</span>
-      <Logo />
-    </div>
+    
     
     <UNavigationMenu
       color="neutral"
@@ -21,6 +18,11 @@
         { label: 'Docs', icon: 'lucide:book', open: true, children: files },
       ]"
     />
+
+    <div class="p-4 border-t border-default mt-auto">
+      <span class="text-xs text-muted">powered by</span>
+      <Logo />
+    </div>
   </aside>
 </template>
 
@@ -30,6 +32,7 @@ const routeParams = useRoute().params
 const library = libraryStore()
 
 const folder = computed(() => library.getFolderById(Number(routeParams.folder)))
+
 const files = computed(() =>
   (folder.value?.files.map(file => ({
     label: file.name,

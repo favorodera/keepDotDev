@@ -41,6 +41,7 @@
       auto-detect-code
       no-katex
       show-code-row-number
+      :md-heading-id="(text) => mdHeadingId(text)"
       :toolbars-exclude="[
         'github',
         'htmlPreview',

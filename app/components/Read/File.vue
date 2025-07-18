@@ -9,7 +9,7 @@
     code-theme="github"
     language="en-US"
     show-code-row-number
-    :md-heading-id="(text) => text.trim().toLowerCase().replace(/[^\w]+/g, '-')"
+    :md-heading-id="(text) => mdHeadingId(text)"
   />
 
 </template>

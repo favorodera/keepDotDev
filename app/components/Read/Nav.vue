@@ -72,10 +72,8 @@ const files = computed(() => folder.value?.files.map((file) => {
   return {
     label: file.name,
     icon: 'lucide:file-text',
-    onSelect: async (_event: Event) => {
-      isDrawerOpen.value = false
-      await navigateTo({ name: 'read-folder-file', params: { folder: file.folder_id, file: file.id } })
-    },
+    to: { name: 'read-folder-file', params: { folder: file.folder_id, file: file.id } },
+    onSelect: (_event: Event) => nextTick(() => isDrawerOpen.value = false),
   }
 }))
 

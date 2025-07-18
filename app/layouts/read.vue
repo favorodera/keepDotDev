@@ -23,7 +23,7 @@
           editor-id="keepdotdev-markdown-preview"
           class="p-2"
           :md-heading-id="(text) => mdHeadingId(text)"
-          :offset-top="100"
+          :offset-top="500"
           @on-click="(event, toc:TocItem) => router.push({ hash: `#${mdHeadingId(toc.text)}` })"
         />
       </aside>

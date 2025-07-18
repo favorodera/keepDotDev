@@ -2,31 +2,25 @@
 @import "@nuxt/ui";
 
 @theme static {
-    --font-public-sans: 'Public Sans', sans-serif;
-    --container-8xl: 90rem;
+  --font-quantico: "Quantico", sans-serif;
+  --container-8xl: 90rem;
 }
 
 :root {
-    --ui-primary: black;
-    --scroll-padding-top: 5rem;
-
-    scroll-behavior: smooth;
-    scroll-padding-top: var(--scroll-padding-top);
+  --ui-primary: black;
+  --scroll-padding-top: 6rem;
 }
-  
+
 .dark {
-    --ui-primary: white;
+  --ui-primary: white;
 }
 
-html, body {
-    overscroll-behavior: contain;
-    font-family: var(--font-public-sans);
-    color: var(--ui-text);
-}
-
-#app {
-    font-family: inherit;
-    color: inherit;
+* {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--scroll-padding-top);
+  font-family: var(--font-quantico);
+  overscroll-behavior: contain;
+  color: var(--ui-text);
 }
 
 .page-enter-active,

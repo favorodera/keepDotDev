@@ -9,48 +9,62 @@
   @apply flex-wrap;
 }
 
-.md-editor-dark, .md-editor-catalog {
+.md-editor-dark,
+.md-editor-catalog {
   --md-bk-color: var(--ui-bg) !important;
 }
 
-.md-editor-preview h1 { @apply mt-4 mb-1 text-default; }
-.md-editor-preview h2 { @apply mt-3 mb-1 text-default; }
-.md-editor-preview h3 { @apply mt-2 mb-1 text-default; }
-.md-editor-preview h4 { @apply mt-2 mb-1 text-default; }
-.md-editor-preview h5 { @apply mt-1 mb-0.5 text-default; }
-.md-editor-preview h6 { @apply mt-1 mb-0.5 text-default; }
-.md-editor-preview p { @apply my-2 text-default; }
-
-.md-editor-code-lang, .md-editor-copy-button {
-  @apply font-mono uppercase;
+.md-editor-code-lang,
+.md-editor-copy-button {
+  @apply uppercase;
 }
 
 .md-editor-code-head {
-  @apply !z-5;
+  @apply !z-5 !relative;
 }
 
-.md-editor-catalog-indicator {
-  @apply bg-accented;
+.md-editor-preview h1 {
+  @apply mt-4 mb-1 text-default;
 }
 
-.md-editor-catalog-active {
-  @apply *:!text-muted hover:*:!text-default;
+.md-editor-preview h2 {
+  @apply mt-3 mb-1 text-default;
 }
 
-.md-editor-catalog-link span {
-  @apply hover:!text-muted;
+.md-editor-preview h3 {
+  @apply mt-2 mb-1 text-default;
 }
 
-.md-editor-preview .heading-anchor {
-  @apply mr-1 text-muted no-underline transition-all duration-150 align-middle hover:text-default;
+.md-editor-preview h4 {
+  @apply mt-2 mb-1 text-default;
 }
 
-.md-editor-preview ul { @apply list-disc ml-6 my-2 text-default; }
-.md-editor-preview ol { @apply list-decimal ml-6 my-2 text-default; }
-.md-editor-preview li { @apply my-0.5 pl-1; }
+.md-editor-preview h5 {
+  @apply mt-1 mb-0.5 text-default;
+}
+
+.md-editor-preview h6 {
+  @apply mt-1 mb-0.5 text-default;
+}
+
+.md-editor-preview p {
+  @apply my-2 text-default;
+}
+
+.md-editor-preview ul {
+  @apply list-disc ml-6 my-2 text-default;
+}
+
+.md-editor-preview ol {
+  @apply list-decimal ml-6 my-2 text-default;
+}
+
+.md-editor-preview li {
+  @apply my-0.5 pl-1;
+}
 
 .md-editor-preview code {
-  @apply font-mono text-sm px-1 py-0.5 rounded bg-muted text-primary;
+  @apply text-sm px-1 py-0.5 rounded bg-muted text-primary;
 }
 
 .md-editor-preview blockquote {
@@ -60,15 +74,40 @@
 .md-editor-preview table {
   @apply border-collapse my-3 w-full text-sm;
 }
-.md-editor-preview th, .md-editor-preview td {
+
+.md-editor-preview th,
+.md-editor-preview td {
   @apply border px-2 py-1 border-default;
 }
+
 .md-editor-preview th {
   @apply font-semibold bg-elevated text-default;
 }
 
-.md-editor-preview img { @apply max-w-full rounded my-1 block; }
+.md-editor-preview img {
+  @apply max-w-full rounded my-1 block;
+}
 
 .md-editor-preview a {
   @apply text-info hover:text-muted transition-colors duration-150;
+}
+
+.md-editor-preview .heading-anchor {
+  @apply mr-1 text-muted no-underline transition-all duration-150 align-middle hover:text-default;
+}
+
+.md-editor-catalog-fixed {
+  z-index: 5
+}
+
+.md-editor-catalog-indicator {
+  @apply bg-accented;
+}
+
+.md-editor-catalog-active span {
+  @apply !text-muted hover:!text-default;
+}
+
+.md-editor-catalog-link span {
+  @apply hover:!text-muted;
 }
