@@ -20,7 +20,6 @@
   scroll-padding-top: var(--scroll-padding-top);
   font-family: var(--font-quantico);
   overscroll-behavior: contain;
-  color: var(--ui-text);
 }
 
 .page-enter-active,

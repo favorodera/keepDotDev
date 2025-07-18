@@ -9,9 +9,17 @@
   @apply flex-wrap;
 }
 
-.md-editor-dark,
+.md-editor,
 .md-editor-catalog {
   --md-bk-color: var(--ui-bg) !important;
+}
+
+.md-editor * {
+  font-family: var(--font-quantico) !important;
+}
+
+.md-editor-menu .md-editor-menu-item-image:not(:first-child) {
+  display: none !important;
 }
 
 .md-editor-code-lang,
@@ -69,6 +77,34 @@
 
 .md-editor-preview blockquote {
   @apply border-l-4 my-3 pl-3 italic rounded text-base border-accented bg-elevated text-toned;
+}
+
+.md-editor-admonition-note,
+.md-editor-admonition-abstract,
+.md-editor-admonition-example{
+  @apply !border-primary/25 !bg-default *:!text-primary !ring !ring-inset !ring-primary/25;
+}
+
+.md-editor-admonition-tip,
+.md-editor-admonition-success {
+  @apply !border-success/25 !bg-default *:!text-success !ring !ring-inset !ring-success/25;
+}
+.md-editor-admonition-failure,
+.md-editor-admonition-danger,
+.md-editor-admonition-bug,
+.md-editor-admonition-error{
+  @apply !border-error/25 !bg-default *:!text-error !ring !ring-inset !ring-error/25;
+}
+
+.md-editor-admonition-info,
+.md-editor-admonition-hint,
+.md-editor-admonition-quote {
+  @apply !border-info/25 !bg-default *:!text-info !ring !ring-inset !ring-info/25;
+}
+
+.md-editor-admonition-caution,
+.md-editor-admonition-attention {
+  @apply !border-warning/25 !bg-default *:!text-warning !ring !ring-inset !ring-warning/25;
 }
 
 .md-editor-preview table {

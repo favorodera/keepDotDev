@@ -33,6 +33,8 @@
 
     <MdEditor
       v-model="editorContent"
+      no-upload-img
+      :disabled="status === 'pending'"
       class="flex-auto rounded-md"
       theme="dark"
       preview-theme="default"
@@ -40,6 +42,7 @@
       language="en-US"
       auto-detect-code
       no-katex
+      :preview="false"
       show-code-row-number
       :md-heading-id="(text) => mdHeadingId(text)"
       :toolbars-exclude="[
