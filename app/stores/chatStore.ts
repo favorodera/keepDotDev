@@ -6,7 +6,7 @@ const chatStore = createGlobalState(() => {
   const chat = useStorage<UIMessage[]>(
     'keepdotdev-ai-chat',
     [],
-    localStorage,
+    sessionStorage,
   )
 
   const computedChat = computed(() => chat.value)

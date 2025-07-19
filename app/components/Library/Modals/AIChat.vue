@@ -7,6 +7,7 @@
       content: 'max-w-2xl',
       description: 'flex items-center gap-1',
       footer: 'flex flex-col gap-1',
+      body: 'ai-chat-modal-body',
     }"
   >
 
@@ -182,6 +183,7 @@
               :disabled="chat.status === 'streaming' || chat.status === 'submitted'"
               size="lg"
               :rows="1"
+              name="message"
             />
 
             <UButton
@@ -219,6 +221,15 @@
 import z from 'zod'
 import { Chat } from '@ai-sdk/vue'
 import { MdPreview } from 'md-editor-v3'
+
+defineShortcuts({
+  meta_enter: {
+    usingInput: 'message',
+    handler: () => sendPrompt(),
+  },
+})
+
+const aiChatModalBodyRef = ref<Element | null>(null)
 
 const isStreaming = ref(null)
 const user = useSupabaseUser()
@@ -258,4 +269,34 @@ function sendPrompt() {
 
   state.message = ''
 }
+
+function scrollToBottom() {
+  nextTick(() => {
+    const element = aiChatModalBodyRef.value
+    if (element) {
+      element.scrollTop = element.scrollHeight
+    }
+  })
+}
+
+watch(
+  () => chat.messages.length,
+  () => scrollToBottom(),
+)
+
+onMounted(() => {
+
+  nextTick(() => {
+
+    const element = document.querySelector('.ai-chat-modal-body')
+
+    if (element) {
+      aiChatModalBodyRef.value = element
+
+      scrollToBottom()
+    }
+
+  })
+
+})
 </script>
