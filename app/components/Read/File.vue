@@ -98,7 +98,7 @@
 <script lang="ts" setup>
 import { MdPreview, MdCatalog } from 'md-editor-v3'
 import type { TocItem } from 'md-editor-v3/lib/types/MdCatalog/MdCatalog'
-import type { File } from '~~/shared/types/app'
+import type { File } from '#shared/types/app'
 
 const routeParams = useRoute().params
 const library = libraryStore()
