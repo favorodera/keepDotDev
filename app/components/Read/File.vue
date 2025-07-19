@@ -1,13 +1,13 @@
 <template>
 
-  <section class="flex flex-col w-full relative">
+  <section class="flex flex-col flex-auto w-full">
 
     <MdPreview
       id="keepdotdev-markdown-preview"
       :model-value="file.content"
       theme="dark"
       preview-theme="default"
-      class="flex-auto p-4 rounded-md"
+      class="p-4 flex-auto"
       code-theme="github"
       language="en-US"
       show-code-row-number
@@ -26,36 +26,42 @@
           <MdCatalog
             scroll-element="html"
             editor-id="keepdotdev-markdown-preview"
-            class="p-2 "
+            class="p-2"
             :md-heading-id="(text) => mdHeadingId(text)"
             :offset-top="500"
-            @on-click="(event, toc:TocItem) => router.push({ hash: `#${mdHeadingId(toc.text)}` })"
+            @on-click="(event, toc:TocItem) => navigateTo({ hash: `#${mdHeadingId(toc.text)}` })"
           />
         </aside>
 
       </Teleport>
+
     </ClientOnly>
     
-    <footer class="flex flex-wrap gap-8 justify-between p-4 w-full">
+    <footer class="p-4 w-full grid grid-cols-[repeat(auto-fit,minmax(min(12rem,100%),1fr))] gap-4 auto-rows-min border-t border-default">
 
       <UButton
         v-if="prevFile"
         :label="prevFile.name"
         icon="lucide:arrow-left"
-        variant="soft"
+        variant="link"
         color="neutral"
-        size="lg"
         :to="{ name: 'read-folder-file', params: { folder: prevFile.folder_id, file: prevFile.id } }"
+        :ui="{
+          base: 'justify-start',
+        }"
       />
 
       <UButton
         v-if="nextFile"
         :label="nextFile.name"
-        variant="soft"
+        variant="link"
         color="neutral"
-        size="lg"
         icon="lucide:arrow-right"
+        trailing
         :to="{ name: 'read-folder-file', params: { folder: nextFile.folder_id, file: nextFile.id } }"
+        :ui="{
+          base: 'justify-end',
+        }"
       />
 
     </footer>
@@ -68,8 +74,6 @@
 import { MdPreview, MdCatalog } from 'md-editor-v3'
 import type { TocItem } from 'md-editor-v3/lib/types/MdCatalog/MdCatalog'
 import type { File } from '~~/shared/types/app'
-
-const router = useRouter()
 
 const routeParams = useRoute().params
 const library = libraryStore()

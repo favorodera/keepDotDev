@@ -3,7 +3,6 @@
     class="hidden sticky top-0 z-20 flex-col w-64 md:flex min-w-64 h-dvh min-h-dvh border-x border-default"
   >
     
-    
     <UNavigationMenu
       color="neutral"
       variant="pill"

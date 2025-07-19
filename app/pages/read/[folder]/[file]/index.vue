@@ -1,6 +1,6 @@
 <template>
 
-  <main class="flex flex-col w-full min-h-dvh">
+  <main class="flex flex-col w-full flex-auto">
 
     <ReadFile />
     

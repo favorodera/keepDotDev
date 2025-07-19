@@ -3,8 +3,7 @@
 
     <section
       id="read-catalog-teleport-holder"
-      class="grid relative flex-auto mx-auto w-full transition-all duration-300 max-w-8xl"
-      :class="'md:grid-cols-[16rem_1fr_16rem]'"
+      class="grid md:grid-cols-[16rem_1fr_16rem] flex-auto mx-auto w-full transition-all duration-300 max-w-8xl"
     >
   
       <ReadSideBar />
