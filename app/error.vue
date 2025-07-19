@@ -10,9 +10,9 @@
     <section class="flex flex-col flex-auto justify-center items-center mx-auto w-full max-w-8xl p-4">
 
 
-      <div class="flex items-center p-4 w-full max-w-md flex-col gap-4 rounded-md border border-default justify-center">
+      <div class="flex items-center p-4 w-full max-w-3xl flex-col gap-4 rounded-md justify-center">
 
-        <h1 class="text-xl">
+        <h1 class="text-5xl">
           {{ error.statusCode }}
         </h1>
 
