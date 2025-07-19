@@ -15,7 +15,6 @@ import { Analytics } from '@vercel/analytics/nuxt'
 useHead({
   htmlAttrs: {
     lang: 'en',
-    class: 'dark',
   },
   meta: [
     { charset: 'utf-8' },

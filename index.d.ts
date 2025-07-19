@@ -1,3 +1,5 @@
+import type { PersistenceOptions } from 'pinia-plugin-persistedstate'
+
 declare module '@supabase/supabase-js' {
   interface UserMetadata {
     name: string

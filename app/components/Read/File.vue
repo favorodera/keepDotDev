@@ -50,9 +50,16 @@
 
         <aside class="hidden sticky top-0 z-20 flex-col col-span-2 w-full lg:flex h-dvh min-h-dvh border-x border-default">
 
-          <p class="px-4 py-7 border-b border-default">
-            On this page
-          </p>
+          <div class="border-b border-default px-4 py-6 flex items-center justify-between">
+
+            <p>
+              On this page
+            </p>
+
+            <ColorModeButton />
+
+          </div>
+
 
           <MdCatalog
             scroll-element="html"

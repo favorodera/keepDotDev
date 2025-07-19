@@ -175,7 +175,3 @@ const libraryStore = defineStore('library', () => {
 })
 
 export default libraryStore
-
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(libraryStore, import.meta.hot))
-}

@@ -135,6 +135,19 @@
         ]"
       />
 
+      <UButton
+        v-if="chat.status === 'ready' && chat.messages.length > 0"
+        color="neutral"
+        variant="outline"
+        label="Clear"
+        icon="lucide:trash"
+        size="sm"
+        :ui="{
+          base: 'mt-2',
+        }"
+        @click="clearAllChatReference"
+      />
+
     </template>
 
     <template #footer>
@@ -208,9 +221,23 @@ import { Chat } from '@ai-sdk/vue'
 import { MdPreview } from 'md-editor-v3'
 
 const isStreaming = ref(null)
-
 const user = useSupabaseUser()
-const chat = new Chat({ maxSteps: 5 })
+
+const chatRef = chatStore()
+
+const chat = new Chat({
+  messages: chatRef.chat.value,
+  maxSteps: 5,
+  onFinish() {
+    chatRef.appendMessages(chat.messages.slice(-2))
+  },
+})
+
+function clearAllChatReference() {
+  chat.messages = []
+  chatRef.clearChat()
+}
+
 const emit = defineEmits<{ close: [boolean] }>()
 
 const schema = z.object({

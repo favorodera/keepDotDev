@@ -10,25 +10,21 @@
         Released under the MIT License
       </p>
 
-      <ul class="flex flex-col gap-1 items-center w-full md:items-end md:w-auto">
+      <div class="flex flex-col gap-1 items-center w-full md:items-end md:w-auto">
 
-        <li>
-          <ULink
-            to="https://github.com/favorodera"
-            target="_blank"
-            class="text-sm underline underline-offset-2"
-          >
-            Created by Favour
-          </ULink>
-        </li>
+        <ULink
+          to="https://github.com/favorodera"
+          target="_blank"
+          class="text-sm underline underline-offset-2"
+        >
+          Built by Favour
+        </ULink>
 
-        <li>
-          <p>
-            Copyright &copy; {{ new Date().getFullYear() }} KeepDotDev
-          </p>
-        </li>
+        <p>
+          Copyright &copy; {{ new Date().getFullYear() }} KeepDotDev
+        </p>
 
-      </ul>
+      </div>
 
     </section>
 

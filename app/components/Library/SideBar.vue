@@ -2,6 +2,7 @@
   <aside
     class="hidden md:flex flex-col h-dvh min-h-dvh sticky top-0 w-full border-x border-default bg-default transition-all duration-300"
     :class="isExpanded ? 'max-w-2xs' : 'max-w-16'"
+    @click.self.prevent.stop="toggleExpansion"
   >
     <header class="flex justify-between items-center p-4">
 
@@ -85,12 +86,19 @@
           to="/library"
           active-variant="soft"
           exact
-          @click="isExpanded = false"
         />
       </UTooltip>
     </div>
 
     <footer class="flex flex-col gap-2 p-4 mt-auto border-t border-default">
+      <UTooltip
+        :disabled="isExpanded"
+        :content="{ side: 'right' }"
+        text="Logout"
+      >
+        <ColorModeButton show-label />
+      </UTooltip>
+
       <UTooltip
         :disabled="isExpanded"
         :content="{ side: 'right' }"

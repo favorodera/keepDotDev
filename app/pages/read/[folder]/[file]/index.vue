@@ -12,7 +12,6 @@
 const user = useSupabaseUser()
 
 definePageMeta({
-  colorMode: 'dark',
   layout: 'read',
 })
 

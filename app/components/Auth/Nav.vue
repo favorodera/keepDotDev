@@ -4,7 +4,13 @@
     <ul class="flex justify-between items-center mx-auto w-full max-w-8xl">
   
       <li>
-        <Logo />
+        <ULink to="/">
+          <Logo />
+        </ULink>
+      </li>
+
+      <li>
+        <ColorModeButton />
       </li>
   
     </ul>

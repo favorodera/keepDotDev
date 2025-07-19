@@ -77,6 +77,8 @@
               class="grow-1"
               @click="signOutModal.open()"
             />
+
+            <ColorModeButton />
           </template>
 
 
