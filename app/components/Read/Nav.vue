@@ -6,10 +6,10 @@
 
       <li>
         <header>
-          <h1 class="text-xl font-semibold">
+          <h1 class="text-xl font-semibold line-clamp-1">
             {{ folder?.name }}
           </h1>
-          <p class="text-sm text-muted">
+          <p class="text-sm text-muted line-clamp-1">
             {{ folder?.description }}
           </p>
         </header>
@@ -27,7 +27,7 @@
             variant="soft"
             color="neutral"
             size="sm"
-            :ui="{ base: 'md:hidden' }"
+            :ui="{ base: 'lg:hidden' }"
           />
 
           <template #content>

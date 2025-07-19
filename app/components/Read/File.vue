@@ -2,12 +2,43 @@
 
   <section class="flex flex-col flex-auto w-full">
 
+    <UCollapsible
+      :unmount-on-hide="false"
+      :ui="{
+        root: 'lg:hidden sticky top-20 z-20 bg-default backdrop-blur overflow-auto backdrop border-b border-default p-4 border-dashed',
+      }"
+    >
+
+      <UButton
+        label="On this page"
+        variant="link"
+        trailing-icon="lucide:chevron-down"
+        block
+        :ui="{
+          base: 'lg:hidden group',
+          trailingIcon: 'group-data-[state=open]:rotate-180 transition-transform duration-200',
+        }"
+      />
+
+      <template #content>
+        <MdCatalog
+          scroll-element="html"
+          editor-id="keepdotdev-markdown-preview"
+          class="p-2"
+          :md-heading-id="(text) => mdHeadingId(text)"
+          :offset-top="500"
+          @on-click="(event, toc:TocItem) => navigateTo({ hash: `#${mdHeadingId(toc.text)}` })"
+        />
+      </template>
+    
+    </UCollapsible>
+
     <MdPreview
       id="keepdotdev-markdown-preview"
       :model-value="file.content"
       theme="dark"
       preview-theme="default"
-      class="p-4 flex-auto"
+      class="flex-auto p-4"
       code-theme="github"
       language="en-US"
       show-code-row-number
@@ -17,7 +48,7 @@
     <ClientOnly>
       <Teleport to="#read-catalog-teleport-holder">
 
-        <aside class="hidden sticky top-0 z-20 flex-col w-64 md:flex min-w-64 h-dvh min-h-dvh border-x border-default">
+        <aside class="hidden sticky top-0 z-20 flex-col col-span-2 w-full lg:flex h-dvh min-h-dvh border-x border-default">
 
           <p class="px-4 py-7 border-b border-default">
             On this page
@@ -37,8 +68,7 @@
 
     </ClientOnly>
     
-    <footer class="p-4 w-full grid grid-cols-[repeat(auto-fit,minmax(min(12rem,100%),1fr))] gap-4 auto-rows-min border-t border-default">
-
+    <footer class="py-4 px-2 w-full flex gap-4 justify-between border-t border-default">
       <UButton
         v-if="prevFile"
         :label="prevFile.name"
@@ -46,9 +76,7 @@
         variant="link"
         color="neutral"
         :to="{ name: 'read-folder-file', params: { folder: prevFile.folder_id, file: prevFile.id } }"
-        :ui="{
-          base: 'justify-start',
-        }"
+        :ui="{ base: 'justify-start w-30', label: 'overflow-ellipsis ' }"
       />
 
       <UButton
@@ -59,11 +87,8 @@
         icon="lucide:arrow-right"
         trailing
         :to="{ name: 'read-folder-file', params: { folder: nextFile.folder_id, file: nextFile.id } }"
-        :ui="{
-          base: 'justify-end',
-        }"
+        :ui="{ base: 'justify-end ml-auto w-30', label: 'overflow-ellipsis ' }"
       />
-
     </footer>
 
   </section>

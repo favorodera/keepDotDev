@@ -3,12 +3,12 @@
 
     <section
       id="read-catalog-teleport-holder"
-      class="grid md:grid-cols-[16rem_1fr_16rem] flex-auto mx-auto w-full transition-all duration-300 max-w-8xl"
+      class="grid lg:grid-cols-10 grid-cols-1 flex-auto mx-auto w-full transition-all duration-300 max-w-8xl"
     >
   
       <ReadSideBar />
 
-      <section class="flex flex-col w-full">
+      <section class="flex flex-col w-full col-span-6">
 
         <ReadNav />
 

@@ -26,7 +26,8 @@
             icon="lucide:arrow-left"
             block
             size="sm"
-            variant="soft"
+            variant="link"
+            color="neutral"
             @click="useRouter().back"
           />
 
@@ -34,6 +35,8 @@
             label="Go Home"
             icon="lucide:home"
             block
+            color="neutral"
+            variant="link"
             size="sm"
             to="/"
           />
