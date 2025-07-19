@@ -223,19 +223,19 @@ import { MdPreview } from 'md-editor-v3'
 const isStreaming = ref(null)
 const user = useSupabaseUser()
 
-const chatRef = chatStore()
+const chatStoreRef = chatStore()
 
 const chat = new Chat({
-  messages: chatRef.chat.value,
+  messages: chatStoreRef.chat.value,
   maxSteps: 5,
   onFinish() {
-    chatRef.appendMessages(chat.messages.slice(-2))
+    chatStoreRef.appendMessages(chat.messages.slice(-2))
   },
 })
 
 function clearAllChatReference() {
   chat.messages = []
-  chatRef.clearChat()
+  chatStoreRef.clearChat()
 }
 
 const emit = defineEmits<{ close: [boolean] }>()
