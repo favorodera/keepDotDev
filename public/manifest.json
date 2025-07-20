@@ -1,0 +1,67 @@
+{
+  "name": "keepdotdev",
+  "short_name": "keepdotdev",
+  "description": "A modern, feature-rich platform for managing and reading your code documentations",
+  "start_url": "/library",
+  "display": "standalone",
+  "background_color": "#171717",
+  "theme_color": "#171717",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "id": "/",
+  "lang": "en",
+  "dir": "auto",
+  "categories": [
+    "productivity",
+    "utilities",
+    "notes",
+    "documents",
+    "programming"
+  ],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/logo-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/logo-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-edit.png",
+      "type": "image/png",
+      "label": "Write and Preview",
+      "form_factor": "wide",
+      "sizes": "1906x942"
+    },
+    {
+      "src": "/screenshot-read.png",
+      "type": "image/png",
+      "label": "Document reader",
+      "sizes": "1891x950"
+    }
+  ],
+  "related_applications": [],
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}
