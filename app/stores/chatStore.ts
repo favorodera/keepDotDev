@@ -1,5 +1,5 @@
 import type { UIMessage } from 'ai'
-import { createGlobalState, useStorage } from '@vueuse/core'
+import { useStorage } from '@vueuse/core'
 
 const chatStore = createGlobalState(() => {
 

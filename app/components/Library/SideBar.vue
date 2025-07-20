@@ -96,14 +96,6 @@
         :content="{ side: 'right' }"
         text="Logout"
       >
-        <ColorModeButton show-label />
-      </UTooltip>
-
-      <UTooltip
-        :disabled="isExpanded"
-        :content="{ side: 'right' }"
-        text="Logout"
-      >
         <UButton
           :class="['overflow-hidden transition-all duration-300', { 'pr-6': !isExpanded }]"
           label="Logout"
