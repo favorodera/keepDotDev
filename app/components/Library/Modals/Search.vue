@@ -6,15 +6,15 @@
     :ui="{
       content: 'max-w-2xl',
     }"
-    title="Search Library"
-    description="Search library"
+    title="Find Something in Your Library"
+    description="Quickly search folders and files by name or description"
   >
 
 
     <template #body>
 
       <UCommandPalette
-        placeholder="Search by name or description"
+        placeholder="Search by name or description..."
         :fuse="{ fuseOptions: { includeMatches: true } }"
         :groups="[
           { id: 'folders', label: 'Folders', items: folders },
@@ -43,6 +43,8 @@ const folders = computed(() => {
       label: folder.name,
       suffix: folder.description,
       icon: 'lucide:folder',
+      to: { name: 'library-folder', params: { folder: folder.id } },
+      onSelect: () => emit('close', false),
     }
 
   })
@@ -59,6 +61,8 @@ const files = computed(() => {
         label: file.name,
         prefix: `${library.getFolderById(file.folder_id)?.name} >`,
         icon: 'lucide:file-text',
+        to: { name: 'read-folder-file', params: { folder: file.folder_id, file: file.id } },
+        onSelect: () => emit('close', false),
       }
 
     })

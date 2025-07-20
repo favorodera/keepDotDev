@@ -13,7 +13,7 @@
       <span
         v-if="folder"
       >
-        Edit <span class="font-bold">{{ folder.name }}</span> shelf
+        Edit <span class="font-bold">{{ folder.name }}</span> folder
       </span>
       <span v-else>
         Create a new folder to organize your documentation

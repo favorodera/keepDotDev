@@ -21,6 +21,7 @@
           :ui="{
             content: 'h-dvh',
           }"
+          description="Browse and explore the contents of this folder"
         >
           <UButton
             icon="lucide:align-right"
@@ -30,11 +31,13 @@
             :ui="{ base: 'lg:hidden' }"
           />
 
-          <template #content>
-            <div class="p-2 border-b border-default">
-              <span class="text-xs text-muted">powered by</span>
-              <Logo />
-            </div>
+          <template #title>
+            <span class="text-xs text-muted">powered by</span>
+            <Logo />
+          </template>
+
+          <template #body>
+           
 
             <UNavigationMenu
               color="neutral"
@@ -42,11 +45,11 @@
               arrow
               orientation="vertical"
               :ui="{
-                root: 'w-full p-2',
+                root: 'w-full',
                 list: 'flex flex-col gap-2',
               }"
               :items="[
-                { label: 'To Library', icon: 'lucide:arrow-left', to: { name: 'library-folder', params: { shelf: routeParams.folder } } },
+                { label: 'To Library', icon: 'lucide:arrow-left', to: { name: 'library-folder', params: { folder: routeParams.folder } } },
                 { label: 'Docs', icon: 'lucide:book', open: true, children: [...files] },
               ]"
             />
