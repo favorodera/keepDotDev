@@ -217,6 +217,73 @@
 
     </template>
 
+    <template v-if="library.status === 'error' && library.error">
+        
+      <UAlert
+        :title="library.error.data?.message || 'Failed to load library'"
+        color="error"
+        variant="subtle"
+        icon="lucide:circle-x"
+        class="max-w-md m-auto"
+        :ui="{
+          actions: 'justify-end',
+        }"
+        :actions="[
+          {
+            label: 'Retry',
+            onClick: async () => {
+              await library.getLibrary()
+            },
+            color: 'primary',
+            variant: 'solid',
+            icon: 'lucide:refresh-cw',
+          },
+        ]"
+      />
+  
+    </template>
+
+    <template v-if="library.status === 'pending'">
+      <UAlert
+        title="Loading library..."
+        color="neutral"
+        variant="soft"
+        icon="lucide:loader-circle"
+        class="max-w-md m-auto"
+        :ui="{
+          icon: 'animate-spin',
+        }"
+      />
+    </template>
+
+    <template v-if="library.status === 'success' && paginatedFiles.length === 0">
+      
+      <UAlert
+        title="No file found!"
+        color="neutral"
+        variant="soft"
+        icon="lucide:file-x"
+        :ui="{
+          actions: 'justify-end',
+        }"
+        class="max-w-md m-auto"
+        :actions="[
+          {
+            label: 'Create a file',
+            onClick: () => {
+              if (!folder) return
+              newAndEditFileModal.open({
+                file: {
+                  folderId: folder.id,
+                },
+              })
+            },
+            icon: 'lucide:plus',
+          },
+        ]"
+      />
+    </template>
+
   </main>
 
 </template>

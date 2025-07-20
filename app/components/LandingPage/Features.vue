@@ -49,9 +49,24 @@
 
 <script lang="ts" setup>
 const features = ref([
-  { title: 'Easy to use', description: 'Easily create and edit code snippets with an intuitive and user-friendly interface, designed for efficiency.', icon: 'lucide:rocket' },
-  { title: 'Share and Collaborate', description: 'Effortlessly share your code snippets and collaborate with others in real time, making teamwork seamless.', icon: 'lucide:share-2' },
-  { title: 'Customizable', description: 'Customize your code snippets with your own tags, categories, and folders to keep everything organized just the way you like.', icon: 'lucide:palette' },
-  { title: 'Searchable', description: 'Quickly search your code snippets by title, description, and tags, so you can always find what you need when you need it.', icon: 'lucide:search' },
+  {
+    title: 'Easy to use',
+    description: 'Easily create and edit documentations with an intuitive and user-friendly interface, designed for efficiency.',
+    icon: 'lucide:rocket',
+  },
+  { title: 'Searchable',
+    description: 'Quickly search your code and documents by title and description so you can always find what you need when you need it.',
+    icon: 'lucide:search',
+  },
+  {
+    title: 'Markdown-powered',
+    description: 'Write documentation in Markdown with advanced editing and real-time preview for a seamless writing experience.',
+    icon: 'lucide:file-text',
+  },
+  {
+    title: 'AI-powered',
+    description: 'Leverage AI assistance to interact with your code and documents, boosting your productivity and learning.',
+    icon: 'lucide:bot',
+  },
 ])
 </script>

@@ -3,7 +3,6 @@
   <UModal
     :title="`Delete Folder`"
     :dismissible="false"
-    modal
     :ui="{
       content: 'max-w-sm',
       footer: 'flex justify-end',

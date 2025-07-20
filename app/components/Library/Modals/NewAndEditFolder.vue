@@ -3,7 +3,6 @@
   <UModal
     :title="folder ? 'Edit Folder' : 'New Folder'"
     :dismissible="false"
-    modal
     :ui="{
       footer: 'flex justify-end',
     }"

@@ -62,7 +62,7 @@
 
     </template>
 
-    <template v-if="library.status === 'success' && library.folders.length > 0">
+    <template v-if="library.status === 'success' && paginatedFolders.length > 0">
       <section class="flex flex-col justify-between flex-auto w-full gap-4">
 
         <TransitionGroup
@@ -219,7 +219,7 @@
 
     <template v-if="library.status === 'pending'">
       <UAlert
-        title="Loading shelves..."
+        title="Loading library..."
         color="neutral"
         variant="soft"
         icon="lucide:loader-circle"
@@ -230,19 +230,19 @@
       />
     </template>
 
-    <template v-if="library.status === 'success' && library.folders.length === 0">
+    <template v-if="library.status === 'success' && paginatedFolders.length === 0">
       <UAlert
-        title="No shelf found!"
+        title="No folder found!"
         color="neutral"
         variant="soft"
-        icon="lucide:file-x"
+        icon="lucide:folder-x"
         :ui="{
           actions: 'justify-end',
         }"
         class="max-w-md m-auto"
         :actions="[
           {
-            label: 'Create a shelf',
+            label: 'Create a folder',
             onClick: () => {
               newAndEditFolderModal.open()
             },

@@ -50,6 +50,7 @@
           variant="ghost"
           :class="['overflow-hidden transition-all duration-300', { 'pr-6': !isExpanded }]"
           square
+          @click="searchModal.open()"
         />
       </UTooltip>
       <UTooltip
@@ -111,14 +112,14 @@
 </template>
 
 <script lang="ts" setup>
-import { LazyLibraryModalsAIChat, LazyLibraryModalsNewAndEditFolder, LazyLibraryModalsSignOut } from '#components'
-import { ref } from 'vue'
+import { LazyLibraryModalsAIChat, LazyLibraryModalsNewAndEditFolder, LazyLibraryModalsSearch, LazyLibraryModalsSignOut } from '#components'
 
 const isExpanded = ref(false)
 const overlay = useOverlay()
 const signOutModal = overlay.create(LazyLibraryModalsSignOut)
 const newAndEditFolderModal = overlay.create(LazyLibraryModalsNewAndEditFolder)
 const aiChatModal = overlay.create(LazyLibraryModalsAIChat)
+const searchModal = overlay.create(LazyLibraryModalsSearch)
 
 function toggleExpansion() {
   isExpanded.value = !isExpanded.value

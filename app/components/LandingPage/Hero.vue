@@ -24,41 +24,28 @@
               name="lucide:code"
               class="absolute -top-2 left-6.5 size-5 animate-[floating-icon_10s_ease-in-out_infinite]"
             />
-          </span> Documentation and Sharing <br> Your own way!
+          </span> Documentation Your Own Way!
 
          
         </h1>
 
         <p class="text-base text-muted z-2">
-          Effortlessly organize, document, and share your code snippets.
+          Effortlessly organize, document your code.
         </p>
 
       </div>
 
-      <div class="flex gap-4 flex-wrap justify-center items-center w-full">
         
-        <UButton
-          color="primary"
-          variant="solid"
-          icon="lucide:rocket"
-          to="/auth"
-          size="lg"
-        >
-          Get Started
-        </UButton>
-
-        <UButton
-          color="neutral"
-          variant="outline"
-          icon="lucide:book"
-          to="/documentation"
-          size="lg"
-        >
-          Read Documentation
-        </UButton>
+      <UButton
+        color="primary"
+        variant="solid"
+        icon="lucide:rocket"
+        to="/auth"
+        size="lg"
+      >
+        Get Started
+      </UButton>
         
-      </div>
-
     </section>
 
   </header>

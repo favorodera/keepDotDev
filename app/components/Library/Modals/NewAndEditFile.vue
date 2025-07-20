@@ -2,7 +2,6 @@
   <UModal
     :title="shouldUpdate ? 'Edit File' : 'New File'"
     :dismissible="false"
-    modal
     :ui="{
       content: 'max-w-sm',
       footer: 'flex justify-end',

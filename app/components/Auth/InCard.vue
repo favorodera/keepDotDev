@@ -59,6 +59,7 @@
 
 <script setup lang="ts">
 const { signInWithOAuth } = authUtils()
+const user = useSupabaseUser()
 
 const oAuthProviders = [
   {
@@ -67,6 +68,12 @@ const oAuthProviders = [
     action: async () => await signInWithOAuth('github'),
   },
 ]
+
+watch(user, (newUser) => {
+  if (newUser) {
+    return navigateTo('auth/confirm')
+  }
+}, { immediate: true, deep: true })
 </script>
 
 
