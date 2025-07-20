@@ -11,16 +11,13 @@
 
 
       <li>
-        <div class="flex items-center gap-2">
-          <ColorModeButton />
 
-          <UButton
-            label="Login"
-            variant="solid"
-            icon="lucide:lock"
-            to="/auth"
-          />
-        </div>
+        <UButton
+          label="Login"
+          variant="solid"
+          icon="lucide:lock"
+          to="/auth"
+        />
       </li>
 
     </ul>

@@ -169,7 +169,7 @@
       >
         <UFormField name="message">
 
-          <div class="flex gap-2 items-end p-1 w-full rounded-md border border-default">
+          <div class="flex gap-2 items-end p-1 w-full rounded-md border border-default relative">
 
             <UTextarea
               v-model="state.message"
@@ -180,28 +180,20 @@
                 root: 'w-full',
               }"
               placeholder="Enter message"
-              :disabled="chat.status === 'streaming' || chat.status === 'submitted'"
               size="lg"
               :rows="1"
               name="message"
             />
 
             <UButton
-              v-if="chat.status === 'streaming' || chat.status === 'submitted'"
-              form="ai-chat-form"
-              color="neutral"
-              variant="soft"
-              icon="lucide:stop-circle"
-              @click="chat.stop"
-            />
-
-            <UButton
-              v-else
               type="submit"
               form="ai-chat-form"
               color="neutral"
               variant="soft"
-              :disabled="state.message === ''"
+              :ui="{
+                base: 'absolute right-1',
+              }"
+              :disabled="state.message === '' || chat.status === 'streaming' || chat.status === 'submitted'"
               icon="lucide:send"
             />
 

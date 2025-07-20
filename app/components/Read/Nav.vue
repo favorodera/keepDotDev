@@ -31,16 +31,11 @@
           />
 
           <template #content>
-            <div class="p-2 border-b border-default flex items-end justify-between">
-
-              <div>
-                <span class="text-xs text-muted">powered by</span>
-                <Logo />
-              </div>
-
-              <ColorModeButton />
+            <div class="p-2 border-b border-default">
+              <span class="text-xs text-muted">powered by</span>
+              <Logo />
             </div>
-    
+
             <UNavigationMenu
               color="neutral"
               variant="pill"

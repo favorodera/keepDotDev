@@ -13,6 +13,7 @@ const user = useSupabaseUser()
 
 definePageMeta({
   layout: 'read',
+  colorMode: 'dark',
 })
 
 useSeoMeta({

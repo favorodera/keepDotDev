@@ -8,10 +8,6 @@
           <Logo />
         </ULink>
       </li>
-
-      <li>
-        <ColorModeButton />
-      </li>
   
     </ul>
   
