@@ -14,7 +14,7 @@ export default defineNuxtConfig({
   ],
   ssr: true,
   imports: {
-    dirs: ['utils/**', 'stores/**'],
+    dirs: ['stores/**'],
   },
   devtools: { enabled: false },
   app: {
@@ -24,7 +24,6 @@ export default defineNuxtConfig({
     },
     pageTransition: { name: 'page', mode: 'out-in' },
     layoutTransition: { name: 'layout', mode: 'out-in' },
-    
   },
   css: ['~/assets/css/main.css', '~/assets/css/markdown.css'],
   runtimeConfig: {
@@ -32,8 +31,6 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/': { prerender: true },
-    '/auth': { prerender: true },
-    '/read/**': { isr: 3600 },
   },
   compatibilityDate: '2025-07-15',
   vite: {
@@ -59,7 +56,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: '/auth',
       callback: '/auth/confirm',
-      include: ['/library/**'],
+      include: ['/library/**', 'read/**'],
       exclude: ['/'],
       saveRedirectToCookie: true,
     },

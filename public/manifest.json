@@ -1,7 +1,7 @@
 {
   "name": "keepdotdev",
   "short_name": "keepdotdev",
-  "description": "A modern, feature-rich platform for managing and reading your code documentations",
+  "description": "A modern, feature-rich platform for managing your code documentations",
   "start_url": "/library",
   "display": "standalone",
   "background_color": "#171717",

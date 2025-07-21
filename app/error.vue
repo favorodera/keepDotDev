@@ -4,7 +4,7 @@
     class="flex flex-col min-h-dvh"
   >
 
-    <Title>KeepDotDev | Error | {{ error.statusCode }}</Title>
+    <Title>keepdotdev | Error | {{ error.statusCode }}</Title>
 
 
     <section class="flex flex-col flex-auto justify-center items-center mx-auto w-full max-w-8xl p-4">

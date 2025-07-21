@@ -51,13 +51,13 @@ useHead({
 
 useSeoMeta({
   titleTemplate: 'keepdotdev %s',
-  description: 'keepdotdev is a platform for creating and sharing your code snippets.',
+  description: 'A modern, feature-rich platform for managing your code documentations',
   ogTitle: 'keepdotdev',
-  ogDescription: 'keepdotdev is a platform for creating and sharing your code snippets.',
+  ogDescription: 'A modern, feature-rich platform for managing your code documentations',
   ogImage: '/logo.svg',
   ogUrl: 'https://keepdotdev.vercel.app',
   twitterTitle: 'keepdotdev',
-  twitterDescription: 'keepdotdev is a platform for creating and sharing your code snippets.',
+  twitterDescription: 'A modern, feature-rich platform for managing your code documentations',
   twitterImage: '/logo.svg',
   themeColor: '#000000',
   twitterCard: 'summary_large_image',

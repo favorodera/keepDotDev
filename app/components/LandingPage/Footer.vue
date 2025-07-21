@@ -21,7 +21,7 @@
         </ULink>
 
         <p>
-          Copyright &copy; {{ new Date().getFullYear() }} KeepDotDev
+          Copyright &copy; {{ new Date().getFullYear() }} keepdotdev
         </p>
 
       </div>
