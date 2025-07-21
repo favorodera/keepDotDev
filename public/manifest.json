@@ -47,17 +47,30 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshot-edit.png",
+      "src": "/screenshot-edit-wide.png",
       "type": "image/png",
       "label": "Write and Preview",
       "form_factor": "wide",
-      "sizes": "1906x942"
+      "sizes": "1152x720"
     },
     {
-      "src": "/screenshot-read.png",
+      "src": "/screenshot-edit-narrow.png",
+      "type": "image/png",
+      "label": "Write and Preview",
+      "sizes": "425x863"
+    },
+    {
+      "src": "/screenshot-read-wide.png",
       "type": "image/png",
       "label": "Document reader",
-      "sizes": "1891x950"
+      "form_factor": "wide",
+      "sizes": "1152x720"
+    },
+    {
+      "src": "/screenshot-read-narrow.png",
+      "type": "image/png",
+      "label": "Document reader",
+      "sizes": "425x863"
     }
   ],
   "related_applications": [],

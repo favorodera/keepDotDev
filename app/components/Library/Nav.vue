@@ -40,6 +40,7 @@
                 icon="lucide:search"
                 variant="ghost"
                 square
+                @click="searchModal.open()"
               />
 
               <UButton
@@ -112,7 +113,7 @@
 
 
 <script lang="ts" setup>
-import { LazyLibraryModalsAIChat, LazyLibraryModalsNewAndEditFolder, LazyLibraryModalsSignOut } from '#components'
+import { LazyLibraryModalsAIChat, LazyLibraryModalsNewAndEditFolder, LazyLibraryModalsSearch, LazyLibraryModalsSignOut } from '#components'
 
 const isSlideoverOpen = ref(false)
 const user = useSupabaseUser()
@@ -120,5 +121,6 @@ const overlay = useOverlay()
 const signOutModal = overlay.create(LazyLibraryModalsSignOut)
 const newAndEditFolderModal = overlay.create(LazyLibraryModalsNewAndEditFolder)
 const aiChatModal = overlay.create(LazyLibraryModalsAIChat)
+const searchModal = overlay.create(LazyLibraryModalsSearch)
 </script>
  
